@@ -69,8 +69,7 @@ function mapRow(row) {
 // Front image: use Card ID exactly
 function frontImagePath(card) {
     const id = txt(card.card_id);
-    const idext = txt("_vv1");
-    if (!(id + idtext)) return ''; // no ID → no image (warn in console)
+    if (!id) return ''; // no ID → no image (warn in console)
     return `${FRONT_DIR}/${encodeURIComponent(id)}.${FRONT_EXT}`;
 }
 
@@ -79,7 +78,8 @@ function renderTile(card) {
     const idKey = card.card_id || card.name; // selection key (ID strongly preferred)
     const selected = SELECTED.includes(idKey);
 
-    const front = frontImagePath(card);
+    const frontext = "_vv1";
+    const front = frontImagePath(card + frontext);
     if (!front) console.warn('Missing Card ID (no front image):', card.name);
 
     return `
