@@ -69,7 +69,8 @@ function mapRow(row) {
 // Front image: use Card ID exactly
 function frontImagePath(card) {
     const id = txt(card.card_id);
-    if (!id) return ''; // no ID → no image (warn in console)
+    const idext = txt("_vv1");
+    if (!(id + idtext)) return ''; // no ID → no image (warn in console)
     return `${FRONT_DIR}/${encodeURIComponent(id)}.${FRONT_EXT}`;
 }
 
@@ -210,7 +211,7 @@ function compareBlock(c) {
     <div class="small"><img src="${BACK_IMAGE}" alt="Card back"></div>
     <table class="meta-table">
       <tr><td>Name</td><td>${c.name}</td></tr>
-      <tr><td>ID</td><td>${c.card_id || '—'}</td></tr>
+      <tr><td>ID</td><td>${c.card_id || '-'}</td></tr>
       <tr><td>Type</td><td>${titleCase(c.type)}</td></tr>
       <tr><td>Rarity</td><td>${c.rarity}</td></tr>
       ${c.play_cost ? `<tr><td>Play Cost</td><td>${c.play_cost}</td></tr>` : ''}
