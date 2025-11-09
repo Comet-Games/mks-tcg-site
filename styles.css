@@ -455,3 +455,53 @@ body {
 .how{max-width:900px; margin:2rem auto; padding:0 1rem; color:#cfe2ff}
 .how ol{margin:.25rem 0 0 1.25rem}
 
+/* Carousel */
+/* === Card carousel === */
+.carousel { max-width: 1200px; margin: 1.5rem auto 2.5rem; padding: 0 1rem; }
+.carousel-viewport {
+  overflow: hidden;
+  position: relative;
+  border-radius: 1rem;
+  border: 1px solid #1b2836;
+  background: #0c1118cc;
+}
+.carousel-track {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem;
+  will-change: transform;
+  animation: scroll var(--duration, 60s) linear infinite;
+  /* set by JS: --travel (px), --duration (s) */
+}
+.carousel:hover .carousel-track { animation-play-state: paused; } /* pause on hover */
+
+@keyframes scroll {
+  to { transform: translateX(calc(-1 * var(--travel, 0px))); }
+}
+
+/* tiles */
+.carousel-tile {
+  flex: 0 0 auto;
+  width: clamp(8rem, 12vw, 11rem);
+  aspect-ratio: 5 / 7;
+  border-radius: .75rem;
+  overflow: hidden;
+  border: 1px solid #1b2836;
+  position: relative;
+}
+.carousel-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* faint rarity inset glow */
+.carousel-tile .ring { position:absolute; inset:-2px; border-radius:inherit; pointer-events:none; }
+.rarity-common  .ring { box-shadow: inset 0 0 18px #9aa4b244; }
+.rarity-uncommon.ring, .rarity-uncommon .ring { box-shadow: inset 0 0 18px #54c17a44; }
+.rarity-rare    .ring { box-shadow: inset 0 0 18px #6e8cff44; }
+.rarity-mythic  .ring { box-shadow: inset 0 0 18px #ffb84d44; }
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track { animation: none; }
+}
+
+
