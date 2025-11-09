@@ -153,6 +153,7 @@ main {
         /* soft luminous aura */
         filter: blur(0.5px) drop-shadow(0 0 8px var(--glow));
         opacity: 0.9;
+        animation: spin 12s linear infinite, pulse 3s ease-in-out infinite alternate;
     }
 
 /* rarities define glow colour */
@@ -171,6 +172,19 @@ main {
 .rarity-mythic {
     --glow: var(--mythic);
 }
+
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+        filter: blur(0.5px) drop-shadow(0 0 6px var(--glow));
+    }
+
+    100% {
+        opacity: 1;
+        filter: blur(1px) drop-shadow(0 0 12px var(--glow));
+    }
+}
+
 
 /* slow rotation */
 @keyframes spin {
