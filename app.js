@@ -1,10 +1,10 @@
-﻿// CSV path
+﻿// CSV + image locations
 const CSV_URL = 'data/MasterSheet.csv';
-
-// Shared back image for EVERY card
+const FRONT_DIR = 'images/cards';
+const FRONT_EXT = 'png';
 const BACK_IMAGE = 'images/back.png';
 
-// UI elements
+// UI
 const grid = document.getElementById('grid');
 const empty = document.getElementById('empty');
 const qEl = document.getElementById('search');
@@ -21,7 +21,7 @@ const closeModal = document.getElementById('closeModal');
 const compareArea = document.getElementById('compareArea');
 
 let CARDS = [];
-let SELECTED = []; // store Card IDs (or names if no ID)
+let SELECTED = []; // store Card IDs (or names if no ID – but ID is expected)
 
 // Helpers
 const lc = s => (s ?? '').toString().trim().toLowerCase();
@@ -36,7 +36,7 @@ function rarityClass(r) {
     return 'common';
 }
 
-// CSV mapping
+// Map your CSV columns
 function mapRow(row) {
     const out = {
         name: row['Card Name'] ?? '',
@@ -66,18 +66,20 @@ function mapRow(row) {
     return out;
 }
 
-// Front image from folder named exactly as the card name
-function frontImagePath(card, ext = 'png') {
-    const folder = encodeURIComponent(card.name);
-    return `images/cards/${folder}/front.${ext}`;
+// Front image: use Card ID exactly
+function frontImagePath(card) {
+    const id = txt(card.card_id);
+    if (!id) return ''; // no ID → no image (warn in console)
+    return `${FRONT_DIR}/${encodeURIComponent(id)}.${FRONT_EXT}`;
 }
 
 function renderTile(card) {
     const rar = rarityClass(card.rarity);
-    const idKey = card.card_id || card.name;
+    const idKey = card.card_id || card.name; // selection key (ID strongly preferred)
     const selected = SELECTED.includes(idKey);
 
     const front = frontImagePath(card);
+    if (!front) console.warn('Missing Card ID (no front image):', card.name);
 
     return `
   <div class="tile" data-id="${idKey}">
@@ -132,6 +134,7 @@ function loadCSV() {
 
 /* ===== Interactions ===== */
 function wireCards() {
+    // Flip on click/tap or Enter/Space
     grid.querySelectorAll('.card').forEach(cardEl => {
         cardEl.addEventListener('click', () => cardEl.classList.toggle('is-flipped'));
         cardEl.addEventListener('keydown', (e) => {
@@ -139,7 +142,7 @@ function wireCards() {
         });
     });
 
-    // Hover tilt (reactive)
+    // Reactive tilt
     grid.querySelectorAll('.card-wrap').forEach(w => {
         const maxTilt = 10;
         function setTilt(e) {
