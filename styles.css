@@ -100,6 +100,7 @@ main {
     position: relative;
     transform-style: preserve-3d;
     transition: transform .6s cubic-bezier(.2,.7,.2,1);
+    border-radius: 1rem;
 }
 
     .card.is-flipped {
@@ -130,47 +131,64 @@ main {
 /* ==== Animated clockwise rarity border glow ==== */
 .glow {
     position: absolute;
-    inset: -3px;
-    border-radius: 1rem;
+    inset: 0;
+    border-radius: inherit;
     pointer-events: none;
     overflow: hidden;
 }
 
+/* Thickness of the ring */
+.glow {
+    --ring: 3px;
+}
+
+    /* The moving arc */
     .glow::before {
         content: "";
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        padding: 3px;
-        /* Animated ring using a slowly rotating conic gradient */
-        background: conic-gradient( from var(--angle, 0deg), var(--glow) 0deg, transparent 60deg, transparent 360deg );
-        /* spin once every 12 seconds clockwise */
-        animation: spin 12s linear infinite;
-        /* hollow center (so it’s just an outer ring) */
+        /* Only draw along the border area */
+        padding: var(--ring);
+        /* The arc: widen 90–120deg so you can see it clearly */
+        background: conic-gradient(from var(--angle, 0deg), var(--glow) 0deg, /* colour start */
+        var(--glow) 110deg, /* arc length */
+        transparent 120deg, /* soft trailing edge */
+        transparent 360deg);
+        /* spin clockwise */
+        animation: ring-spin 10s linear infinite;
+        /* HOLLOW THE CENTER — works in Safari/Chrome */
         -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         -webkit-mask-composite: xor;
+        /* HOLLOW THE CENTER — works in Firefox */
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         mask-composite: exclude;
-        /* soft luminous aura */
-        filter: blur(0.5px) drop-shadow(0 0 8px var(--glow));
-        opacity: 0.9;
-        animation: spin 12s linear infinite, pulse 3s ease-in-out infinite alternate;
+        /* glow halo */
+        filter: drop-shadow(0 0 8px var(--glow)) drop-shadow(0 0 14px color-mix(in oklab, var(--glow), transparent 60%));
     }
 
-/* rarities define glow colour */
+/* Slow clockwise rotation */
+@keyframes ring-spin {
+    to {
+        --angle: 360deg;
+    }
+}
+
+/* Rarity colours */
 .rarity-common {
-    --glow: var(--common);
+    --glow: #9aa4b2;
 }
 
 .rarity-uncommon {
-    --glow: var(--uncommon);
+    --glow: #54c17a;
 }
 
 .rarity-rare {
-    --glow: var(--rare);
+    --glow: #6e8cff;
 }
 
 .rarity-mythic {
-    --glow: var(--mythic);
+    --glow: #ffb84d;
 }
 
 @keyframes pulse {
