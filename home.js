@@ -3,7 +3,7 @@ const CSV_URL   = 'data/MasterSheet.csv';
 const FRONT_DIR = 'images/cards';
 const FRONT_EXT = 'png';
 const IMG_VERSION_SUFFIX = '_vv1';                 // fronts like d001_vv1.png
-const CATALOGUE_HREF     = 'catalogue.html';
+const CATALOGUE_HREF = new URL('catalogue.html', location.href).pathname;
 
 // ====== DOM ======
 const carouselTrack = document.getElementById('carouselTrack'); // optional; only if carousel section exists
