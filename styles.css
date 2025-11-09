@@ -18,7 +18,7 @@
 
 html, body {
     margin: 0;
-    background: var(--bg);
+    /*background: var(--bg);*/
     color: var(--ink);
     font: 16px/1.55 'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif
 }
