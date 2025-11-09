@@ -3,11 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MKS TCG – Card Browser</title>
+    <title>MKS TCG – Cards</title>
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
     <script src="app.js" defer></script>
@@ -16,14 +14,13 @@
     <header class="topbar">
         <h1>MKS TCG</h1>
         <div class="controls">
-            <input id="search" type="search" placeholder="Search name / rules text…" />
+            <input id="search" type="search" placeholder="Search name / ID / text…" />
             <select id="type">
                 <option value="">All Types</option>
                 <option>Driver</option>
                 <option>Kart</option>
                 <option>Item</option>
                 <option>Utility</option>
-                <option>Track</option>
             </select>
             <select id="rarity">
                 <option value="">All Rarities</option>
@@ -33,14 +30,11 @@
                 <option>Mythic</option>
             </select>
             <select id="sort">
-                <option value="name">Sort: Name (A–Z)</option>
+                <option value="name">Sort: Name</option>
+                <option value="card_id">Sort: ID</option>
                 <option value="type">Sort: Type</option>
                 <option value="rarity">Sort: Rarity</option>
-                <option value="speed">Sort: Speed</option>
-                <option value="handling">Sort: Handling</option>
-                <option value="play_cost">Sort: Play Cost</option>
             </select>
-
         </div>
     </header>
 
@@ -49,8 +43,25 @@
         <div id="empty" class="empty" hidden>No cards match your filters.</div>
     </main>
 
+    <!-- Compare dock -->
+    <aside id="compareDock" class="compare-dock" hidden>
+        <div class="dock-inner">
+            <div class="sel-list" id="selList"></div>
+            <button id="compareBtn" class="btn" disabled>Compare</button>
+            <button id="clearSel" class="btn btn-ghost">Clear</button>
+        </div>
+    </aside>
+
+    <!-- Compare modal -->
+    <dialog id="compareModal" class="modal">
+        <div class="modal-body">
+            <header><h3>Compare</h3><button id="closeModal" class="btn btn-ghost">Close</button></header>
+            <div id="compareArea" class="compare-area"></div>
+        </div>
+    </dialog>
+
     <footer class="footer">
-        <span>Data source: <code>data/cards.csv</code></span>
+        <span>CSV: <code>data/MasterSheet.csv</code> · Fronts: <code>images/cards/&lt;Card Name&gt;/front.png</code> · Back: <code>images/back.png</code></span>
     </footer>
 </body>
 </html>

@@ -1,27 +1,15 @@
 :root {
-    /* Brand palette */
     --bg: #0b0f14;
     --panel: #111822;
     --ink: #eef4ff;
     --muted: #a9bad1;
-    --ring: #4484ff;
-    /* Type gradients */
-    --driver1: #0044aa;
-    --driver2: #001e55;
-    --kart1: #ff6a00;
-    --kart2: #8c2b00;
-    --item1: #ffd700;
-    --item2: #a57900;
-    --util1: #8b00ff;
-    --util2: #35006b;
-    --track1: #00ffbf;
-    --track2: #007a62;
-    /* Rarity tints */
-    --common: #2EFF46;
-    --uncommon: #FFEA2E;
-    --rare: #BD2EFF;
-    --mythic: #2EBDFF;
-    --cardW: #18rem;
+    --ring: #4da3ff;
+    --common: #9aa4b2;
+    --uncommon: #54c17a;
+    --rare: #6e8cff;
+    --mythic: #ffb84d;
+    --cardW: 18rem; /* responsive width */
+    --ratio: 5/7; /* 2.5x3.5 inch == 5:7 */
 }
 
 * {
@@ -43,7 +31,7 @@ html, body {
     align-items: center;
     gap: 1rem;
     padding: .8rem 1rem;
-    background: linear-gradient(180deg,#0b0f1495,#0b0f1400);
+    background: linear-gradient(180deg,#0b0f1490,#0b0f1400);
     border-bottom: 1px solid #16202b;
     backdrop-filter: blur(8px);
 }
@@ -72,7 +60,7 @@ html, body {
 
         .controls input:focus, .controls select:focus {
             border-color: var(--ring);
-            box-shadow: 0 0 0 3px #4484ff33
+            box-shadow: 0 0 0 3px #4da3ff33
         }
 
 main {
@@ -101,144 +89,264 @@ main {
     font-size: .9rem
 }
 
-/* === Signature Card === */
+/* ===== Card (flip) ===== */
+.card-wrap {
+    perspective: 1200px;
+}
+
 .card {
     width: var(--cardW);
-    border-radius: 1rem;
-    overflow: hidden;
+    aspect-ratio: var(--ratio);
     position: relative;
-    border: 2px solid currentColor;
-    color: var(--common);
-    background: linear-gradient(180deg,#121922,#0d141c);
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836;
-    display: flex;
-    flex-direction: column;
-    gap: .7rem;
-    padding: 1rem;
+    transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.2,.7,.2,1);
 }
 
-    .card:before { /* subtle diagonal racing texture */
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        opacity: .1;
-        background: repeating-linear-gradient(135deg, #fff, #fff 2px, transparent 2px, transparent 8px);
-        mix-blend-mode: overlay;
+    .card.is-flipped {
+        transform: rotateY(180deg);
     }
 
-    .card .top {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: .5rem
-    }
-
-.title {
-    font: 800 1.1rem/1 'Bebas Neue', sans-serif;
-    letter-spacing: .035em
+.face {
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    overflow: clip;
+    backface-visibility: hidden;
+    display: block;
 }
 
-.rarity {
-    font-size: .8rem;
-    padding: .2rem .55rem;
-    border-radius: .5rem;
-    border: 1px solid #2a3a4e;
-    color: inherit;
-    background: #0e141b
-}
-
-.type {
-    font-size: .85rem;
-    color: var(--muted)
-}
-
-.art {
-    width: 100%;
-    aspect-ratio: 3/2;
-    border-radius: .6rem;
-    border: 1px solid #1b2836;
-    overflow: hidden
-}
-
-    .art img {
+    .face img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block
     }
 
-.stats {
+    .face.back {
+        transform: rotateY(180deg);
+    }
+
+/* ===== Clockwise rarity glow ===== */
+.glow {
+    position: absolute;
+    inset: -3px;
+    border-radius: 1rem;
+    pointer-events: none;
+}
+
+    .glow::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        padding: 3px;
+        border-radius: inherit;
+        background: conic-gradient(from var(--a,0deg), var(--glow) 0deg, transparent 70deg, transparent 360deg);
+        animation: spin 6s linear infinite;
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        box-shadow: 0 0 18px 4px color-mix(in oklab, var(--glow), transparent 70%);
+    }
+
+.rarity-common {
+    --glow: var(--common);
+}
+
+.rarity-uncommon {
+    --glow: var(--uncommon);
+}
+
+.rarity-rare {
+    --glow: var(--rare);
+}
+
+.rarity-mythic {
+    --glow: var(--mythic);
+}
+
+@keyframes spin {
+    to {
+        --a: 360deg;
+    }
+}
+
+/* ===== Hover reactive tilt ===== */
+.card-wrap {
+    --rx: 0deg;
+    --ry: 0deg;
+    --tz: 0px;
+    transform: translateZ(0);
+}
+
+    .card-wrap:hover .card {
+        transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(var(--tz));
+    }
+
+    .card-wrap:hover .glow::before {
+        filter: brightness(1.15);
+    }
+
+/* Tile text & controls */
+.tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+.title {
+    margin-top: .2rem;
+    font: 700 1rem/1.1 'Bebas Neue', sans-serif;
+    letter-spacing: .03em;
+    text-align: center;
+}
+
+.meta {
+    font-size: .8rem;
+    color: var(--muted);
+    text-align: center;
+}
+
+.card-controls {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    display: flex;
+    gap: .25rem;
+    z-index: 2;
+}
+
+.icon-btn {
+    background: #0f1620cc;
+    color: #fff;
+    border: 1px solid #1c2a3a;
+    border-radius: .5rem;
+    padding: .25rem .45rem;
+    font-size: .8rem;
+    cursor: pointer;
+}
+
+    .icon-btn[aria-pressed="true"] {
+        outline: 2px solid var(--ring);
+    }
+
+/* Compare dock & modal */
+.compare-dock {
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(180deg,transparent, #0b0f14cc 30%, #0b0f14f0 100%);
+    border-top: 1px solid #16202b;
+    padding: .5rem 1rem;
+}
+
+.dock-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: .75rem
+}
+
+.sel-list {
     display: flex;
     gap: .5rem;
     flex-wrap: wrap
 }
 
-.stat {
-    font-size: .8rem;
-    padding: .2rem .45rem;
-    border-radius: .5rem;
+.sel-chip {
     background: #0f1620;
+    border: 1px solid #1c2a3a;
+    border-radius: .5rem;
+    padding: .25rem .5rem;
+    font-size: .8rem;
+}
+
+.btn {
+    background: #1a2433;
+    color: #fff;
+    border: 1px solid #2a3a4e;
+    border-radius: .6rem;
+    padding: .5rem .75rem;
+    cursor: pointer
+}
+
+    .btn:disabled {
+        opacity: .5;
+        cursor: not-allowed
+    }
+
+.btn-ghost {
+    background: transparent
+}
+
+.modal {
+    border: none;
+    border-radius: 1rem;
+    padding: 0;
+    max-width: min(95vw, 1200px);
+    width: 100%
+}
+
+    .modal::backdrop {
+        background: #0008
+    }
+
+.modal-body {
+    background: #0e151f;
     border: 1px solid #1b2836;
-    color: #cfe2ff
+    border-radius: 1rem;
+    padding: 1rem
 }
 
-.rules {
+    .modal-body header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: .5rem
+    }
+
+.compare-area {
     display: grid;
-    gap: .4rem
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem
 }
 
-    .rules h4 {
-        margin: .1rem 0;
-        font-size: .9rem;
-        color: #d7e7ff
+.compare-card {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    align-items: center;
+}
+
+.small {
+    width: min(16rem, 40vw);
+    aspect-ratio: var(--ratio);
+    border-radius: .8rem;
+    overflow: hidden;
+    position: relative;
+}
+
+    .small img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block
     }
 
-    .rules p {
-        margin: 0;
-        color: #c8dbf7
+.meta-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem
+}
+
+    .meta-table td {
+        padding: .25rem .4rem;
+        border-bottom: 1px solid #1b2836;
+        color: #cfe2ff
     }
 
-.flavour {
-    font-style: italic;
-    color: #a9bad1;
-    opacity: .95
-}
-
-/* Type gradients applied as inner glow */
-.card.type-driver {
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #0044aa40
-}
-
-.card.type-kart {
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #ff6a0040
-}
-
-.card.type-item {
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #ffd70040
-}
-
-.card.type-utility {
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #8b00ff40
-}
-
-.card.type-track {
-    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #00ffbf40
-}
-
-/* Rarity border color */
-.card.rarity-common {
-    color: var(--common)
-}
-
-.card.rarity-uncommon {
-    color: var(--uncommon)
-}
-
-.card.rarity-rare {
-    color: var(--rare)
-}
-
-.card.rarity-mythic {
-    color: var(--mythic)
-}
+        .meta-table td:nth-child(1) {
+            color: #9fb2cb;
+            width: 30%
+        }

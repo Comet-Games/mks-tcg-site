@@ -1,6 +1,10 @@
-﻿const CSV_URL = 'data/MasterSheet.csv';
+﻿// CSV path
+const CSV_URL = 'data/MasterSheet.csv';
 
-// UI
+// Shared back image for EVERY card
+const BACK_IMAGE = 'images/back.png';
+
+// UI elements
 const grid = document.getElementById('grid');
 const empty = document.getElementById('empty');
 const qEl = document.getElementById('search');
@@ -8,14 +12,21 @@ const tEl = document.getElementById('type');
 const rEl = document.getElementById('rarity');
 const sEl = document.getElementById('sort');
 
-let CARDS = [];
+const compareDock = document.getElementById('compareDock');
+const selList = document.getElementById('selList');
+const compareBtn = document.getElementById('compareBtn');
+const clearSel = document.getElementById('clearSel');
+const modal = document.getElementById('compareModal');
+const closeModal = document.getElementById('closeModal');
+const compareArea = document.getElementById('compareArea');
 
+let CARDS = [];
+let SELECTED = []; // store Card IDs (or names if no ID)
+
+// Helpers
 const lc = s => (s ?? '').toString().trim().toLowerCase();
 const txt = s => (s ?? '').toString().trim();
-const num = s => {
-    const n = parseFloat(s);
-    return Number.isFinite(n) ? n : null;
-};
+const titleCase = s => { s = txt(s); return s ? s[0].toUpperCase() + s.slice(1) : s; };
 
 function rarityClass(r) {
     const v = lc(r);
@@ -24,12 +35,8 @@ function rarityClass(r) {
     if (v.startsWith('un')) return 'uncommon';
     return 'common';
 }
-function titleCase(s) {
-    s = txt(s);
-    return s ? s[0].toUpperCase() + s.slice(1) : s;
-}
 
-// Map your exact columns → canonical keys the renderer expects
+// CSV mapping
 function mapRow(row) {
     const out = {
         name: row['Card Name'] ?? '',
@@ -50,89 +57,43 @@ function mapRow(row) {
         flavour: row['Flavour Text'] ?? '',
         artist: row['Artist'] ?? '',
         card_id: row['Card ID'] ?? '',
-        version: row['Version'] ?? '',
-        // image is optional; see auto-derive below
-        image: ''
+        version: row['Version'] ?? ''
     };
-
-    // Normalise text fields
     for (const k of ['flavour', 'off_text', 'def_text', 'utility_effect']) {
         out[k] = txt(out[k]).replaceAll('\\n', '\n');
     }
-    // Pretty rarity for display
     out.rarity = titleCase(out.rarity);
     return out;
 }
 
-// OPTIONAL: auto-derive an image path if you name files by Card ID
-// e.g., /images/<Card ID>.jpg (change extensions or path as you like)
-function deriveImage(card) {
-    if (!card.card_id) return '';
-    return `images/${card.card_id}.jpg`;
+// Front image from folder named exactly as the card name
+function frontImagePath(card, ext = 'png') {
+    const folder = encodeURIComponent(card.name);
+    return `images/cards/${folder}/front.${ext}`;
 }
 
-function renderCard(c) {
-    const typeCls = `type-${lc(c.type) || 'item'}`;
-    const rarCls = `rarity-${rarityClass(c.rarity)}`;
-    const imgSrc = c.image || deriveImage(c);
-    const art = imgSrc ? `<div class="art"><img loading="lazy" src="${imgSrc}" alt="Art for ${c.name}"></div>` : '';
+function renderTile(card) {
+    const rar = rarityClass(card.rarity);
+    const idKey = card.card_id || card.name;
+    const selected = SELECTED.includes(idKey);
 
-    // Stats row
-    const stats = [
-        c.play_cost && `Cost: ${c.play_cost}`,
-        c.burn_cost && `Burn: ${c.burn_cost}`,
-        c.hit_threshold && `Hit: ${c.hit_threshold}`,
-        (c.speed !== '' && c.speed != null) && `Speed: ${c.speed}`,
-        (c.handling !== '' && c.handling != null) && `Handling: ${c.handling}`
-    ].filter(Boolean).map(s => `<span class="stat">${s}</span>`).join('');
-
-    // Abilities
-    const offBlock = (c.off_ability || c.off_text || c.off_cost) ? `
-    <div>
-      <h4>Offensive${c.off_ability ? ` · ${c.off_ability}` : ''}${c.off_cost ? ` · Cost ${c.off_cost}` : ''}</h4>
-      ${c.off_text ? `<p>${c.off_text}</p>` : ''}
-    </div>` : '';
-
-    const defBlock = (c.def_ability || c.def_text || c.def_cost) ? `
-    <div>
-      <h4>Defensive${c.def_ability ? ` · ${c.def_ability}` : ''}${c.def_cost ? ` · Cost ${c.def_cost}` : ''}</h4>
-      ${c.def_text ? `<p>${c.def_text}</p>` : ''}
-    </div>` : '';
-
-    const utilBlock = c.utility_effect ? `
-    <div>
-      <h4>Utility</h4>
-      <p>${c.utility_effect}</p>
-    </div>` : '';
-
-    // Footer mini meta (Artist / ID / Version)
-    const meta = [c.artist && `Art: ${c.artist}`, c.card_id && `ID: ${c.card_id}`, c.version && `v${c.version}`]
-        .filter(Boolean).join(' • ');
-    const metaHtml = meta ? `<div class="flavour" style="opacity:.7; font-style:normal;">${meta}</div>` : '';
+    const front = frontImagePath(card);
 
     return `
-  <article class="card ${typeCls} ${rarCls}">
-    <div class="top">
-      <div>
-        <div class="title">${c.name || 'Untitled'}</div>
-        <div class="type">${titleCase(c.type)}${c.card_id ? ` • ${c.card_id}` : ''}</div>
+  <div class="tile" data-id="${idKey}">
+    <div class="card-wrap rarity-${rar}" data-name="${card.name}">
+      <div class="card" tabindex="0" aria-label="${card.name} card">
+        <div class="card-controls">
+          <button class="icon-btn mark-compare" aria-pressed="${selected}">Compare</button>
+        </div>
+        <span class="glow"></span>
+        <div class="face front"><img loading="lazy" src="${front}" alt="${card.name} (front)"></div>
+        <div class="face back"><img loading="lazy" src="${BACK_IMAGE}" alt="Card back"></div>
       </div>
-      <span class="rarity">${c.rarity}</span>
     </div>
-
-    ${art}
-
-    ${stats ? `<div class="stats">${stats}</div>` : ''}
-
-    <div class="rules">
-      ${offBlock}
-      ${defBlock}
-      ${utilBlock}
-    </div>
-
-    ${c.flavour ? `<div class="flavour">“${c.flavour}”</div>` : ''}
-    ${metaHtml}
-  </article>`;
+    <div class="title">${card.name}</div>
+    <div class="meta">${titleCase(card.type)}${card.card_id ? ` • ${card.card_id}` : ''} • ${card.rarity}</div>
+  </div>`;
 }
 
 function applyFilters() {
@@ -142,8 +103,8 @@ function applyFilters() {
 
     let rows = CARDS.filter(c => {
         const hay = lc([
-            c.name, c.type, c.rarity, c.off_text, c.def_text, c.utility_effect, c.flavour,
-            c.off_ability, c.def_ability, c.card_id, c.artist
+            c.name, c.card_id, c.type, c.rarity, c.off_text, c.def_text, c.utility_effect, c.flavour,
+            c.off_ability, c.def_ability, c.artist
         ].join(' '));
         const qOk = !q || hay.includes(q);
         const tOk = !t || lc(c.type) === t;
@@ -151,17 +112,14 @@ function applyFilters() {
         return qOk && tOk && rOk;
     });
 
-    // Sorting
     const key = sEl.value;
-    rows.sort((a, b) => {
-        if (['speed', 'handling', 'play_cost'].includes(key)) {
-            return (num(b[key]) ?? -1) - (num(a[key]) ?? -1);
-        }
-        return (a[key] ?? '').toString().localeCompare((b[key] ?? '').toString(), undefined, { numeric: true });
-    });
+    rows.sort((a, b) => (a[key] ?? '').toString().localeCompare((b[key] ?? '').toString(), undefined, { numeric: true }));
 
-    grid.innerHTML = rows.map(renderCard).join('');
+    grid.innerHTML = rows.map(renderTile).join('');
     empty.hidden = rows.length !== 0;
+
+    wireCards();
+    updateDock();
 }
 
 function loadCSV() {
@@ -170,6 +128,101 @@ function loadCSV() {
         complete: (res) => { CARDS = res.data.map(mapRow); applyFilters(); },
         error: (e) => { console.error(e); empty.textContent = 'Failed to load CSV.'; empty.hidden = false; }
     });
+}
+
+/* ===== Interactions ===== */
+function wireCards() {
+    grid.querySelectorAll('.card').forEach(cardEl => {
+        cardEl.addEventListener('click', () => cardEl.classList.toggle('is-flipped'));
+        cardEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cardEl.classList.toggle('is-flipped'); }
+        });
+    });
+
+    // Hover tilt (reactive)
+    grid.querySelectorAll('.card-wrap').forEach(w => {
+        const maxTilt = 10;
+        function setTilt(e) {
+            const r = w.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width;
+            const py = (e.clientY - r.top) / r.height;
+            const ry = (px - 0.5) * 2 * maxTilt;
+            const rx = (0.5 - py) * 2 * maxTilt;
+            w.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+            w.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+            w.style.setProperty('--tz', '12px');
+        }
+        function reset() { w.style.setProperty('--rx', '0deg'); w.style.setProperty('--ry', '0deg'); w.style.setProperty('--tz', '0px'); }
+        w.addEventListener('mousemove', setTilt);
+        w.addEventListener('mouseleave', reset);
+        w.addEventListener('touchstart', () => w.classList.add('touched'), { passive: true });
+    });
+
+    // Compare toggle
+    grid.querySelectorAll('.tile').forEach(tile => {
+        const id = tile.dataset.id;
+        const btn = tile.querySelector('.mark-compare');
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSelect(id);
+            btn.setAttribute('aria-pressed', SELECTED.includes(id));
+        });
+    });
+}
+
+function toggleSelect(id) {
+    if (SELECTED.includes(id)) {
+        SELECTED = SELECTED.filter(x => x !== id);
+    } else {
+        if (SELECTED.length >= 2) SELECTED.shift();
+        SELECTED.push(id);
+    }
+    updateDock();
+}
+
+function updateDock() {
+    if (SELECTED.length === 0) { compareDock.hidden = true; return; }
+    compareDock.hidden = false;
+    selList.innerHTML = SELECTED.map(id => `<span class="sel-chip">${id}</span>`).join('');
+    compareBtn.disabled = SELECTED.length !== 2;
+}
+
+// Compare modal
+compareBtn.addEventListener('click', () => {
+    const [aId, bId] = SELECTED;
+    const a = CARDS.find(c => (c.card_id || c.name) === aId);
+    const b = CARDS.find(c => (c.card_id || c.name) === bId);
+    renderCompare(a, b);
+    modal.showModal();
+});
+clearSel.addEventListener('click', () => { SELECTED = []; updateDock(); });
+closeModal.addEventListener('click', () => modal.close());
+
+function renderCompare(a, b) { compareArea.innerHTML = [a, b].map(c => c ? compareBlock(c) : '').join(''); }
+function compareBlock(c) {
+    const front = frontImagePath(c);
+    return `
+  <div class="compare-card">
+    <div class="small"><img src="${front}" alt="${c.name} front"></div>
+    <div class="small"><img src="${BACK_IMAGE}" alt="Card back"></div>
+    <table class="meta-table">
+      <tr><td>Name</td><td>${c.name}</td></tr>
+      <tr><td>ID</td><td>${c.card_id || '—'}</td></tr>
+      <tr><td>Type</td><td>${titleCase(c.type)}</td></tr>
+      <tr><td>Rarity</td><td>${c.rarity}</td></tr>
+      ${c.play_cost ? `<tr><td>Play Cost</td><td>${c.play_cost}</td></tr>` : ''}
+      ${c.burn_cost ? `<tr><td>Burn</td><td>${c.burn_cost}</td></tr>` : ''}
+      ${c.hit_threshold ? `<tr><td>Hit</td><td>${c.hit_threshold}</td></tr>` : ''}
+      ${c.speed !== '' ? `<tr><td>Speed</td><td>${c.speed}</td></tr>` : ''}
+      ${c.handling !== '' ? `<tr><td>Handling</td><td>${c.handling}</td></tr>` : ''}
+      ${c.off_ability || c.off_text ? `<tr><td>Offensive</td><td>${[c.off_ability, c.off_text].filter(Boolean).join(' — ')}</td></tr>` : ''}
+      ${c.def_ability || c.def_text ? `<tr><td>Defensive</td><td>${[c.def_ability, c.def_text].filter(Boolean).join(' — ')}</td></tr>` : ''}
+      ${c.utility_effect ? `<tr><td>Utility</td><td>${c.utility_effect}</td></tr>` : ''}
+      ${c.flavour ? `<tr><td>Flavour</td><td>${c.flavour}</td></tr>` : ''}
+      ${c.artist ? `<tr><td>Artist</td><td>${c.artist}</td></tr>` : ''}
+      ${c.version ? `<tr><td>Version</td><td>${c.version}</td></tr>` : ''}
+    </table>
+  </div>`;
 }
 
 // Wire up
