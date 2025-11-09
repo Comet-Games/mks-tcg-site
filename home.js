@@ -80,7 +80,7 @@ function renderCarousel(cards){
     const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(c.id)}`;
     const src  = frontImage(c.id + IMG_VERSION_SUFFIX);
     return `
-      <a class="carousel-tile rarity-${c.rarity}" href="${href}" title="${c.name}">
+      <a class="carousel-tile rarity-${c.rarity}" href="${"catalogue.html"}" title="${c.name}">
         <span class="ring"></span>
         <img loading="lazy" src="${src}" alt="${c.name}">
       </a>`;
