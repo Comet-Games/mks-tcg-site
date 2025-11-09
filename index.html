@@ -1,67 +1,72 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MKS TCG - Cards</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
-    <script src="app.js" defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MKS TCG - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="home.js" defer></script>
 </head>
-<body>
-    <header class="topbar">
-        <h1>STAFFS MARIO KART SOCIETY: THE TRADING CARD GAME</h1>
-        <div class="controls">
-            <input id="search" type="search" placeholder="Search name / ID / text..." />
-            <select id="type">
-                <option value="">All Types</option>
-                <option>Driver</option>
-                <option>Kart</option>
-                <option>Item</option>
-                <option>Utility</option>
-            </select>
-            <select id="rarity">
-                <option value="">All Rarities</option>
-                <option>Common</option>
-                <option>Uncommon</option>
-                <option>Rare</option>
-                <option>Mythic</option>
-            </select>
-            <select id="sort">
-                <option value="name">Sort: Name</option>
-                <option value="card_id">Sort: ID</option>
-                <option value="type">Sort: Type</option>
-                <option value="rarity">Sort: Rarity</option>
-            </select>
+<body class="home">
+  <header class="topbar">
+    <nav class="nav">
+      <a class="brand" href="/">MKS TCG</a>
+      <a class="nav-link" href="/catalogue.html">Catalogue</a>
+      <a class="nav-link" href="#">Rules</a>
+      <a class="nav-link" href="#">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <h1 class="hero-title">Mario Kart Society<br><span>The Trading Card Game</span></h1>
+        <p class="hero-sub">Collect. Dodge. Overtake. Build the deck, win the race.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-lg" href="/catalogue.html">View Catalogue</a>
+          <a class="btn btn-ghost btn-lg" href="#latest">Latest Cards</a>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <main>
-        <section id="grid" class="grid" aria-live="polite"></section>
-        <div id="empty" class="empty" hidden>No cards match your filters.</div>
-    </main>
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-num" id="totalCount">—</div>
+        <div class="stat-label">Total Cards</div>
+      </div>
+      <div class="stat"><div class="dot dot-common"></div><div class="stat-label">Common <span id="commonCount">—</span></div></div>
+      <div class="stat"><div class="dot dot-uncommon"></div><div class="stat-label">Uncommon <span id="uncommonCount">—</span></div></div>
+      <div class="stat"><div class="dot dot-rare"></div><div class="stat-label">Rare <span id="rareCount">—</span></div></div>
+      <div class="stat"><div class="dot dot-mythic"></div><div class="stat-label">Mythic <span id="mythicCount">—</span></div></div>
+    </section>
 
-    <!-- Compare dock -->
-    <aside id="compareDock" class="compare-dock" hidden>
-        <div class="dock-inner">
-            <div class="sel-list" id="selList"></div>
-            <button id="compareBtn" class="btn" disabled>Compare</button>
-            <button id="clearSel" class="btn btn-ghost">Clear</button>
-        </div>
-    </aside>
+    <!-- LATEST -->
+    <section class="latest" id="latest">
+      <div class="section-head">
+        <h2>Latest Additions</h2>
+        <a class="link" href="/catalogue.html">See all →</a>
+      </div>
+      <div id="latestGrid" class="latest-grid"></div>
+    </section>
 
-    <!-- Compare modal -->
-    <dialog id="compareModal" class="modal">
-        <div class="modal-body">
-            <header><h3>Compare</h3><button id="closeModal" class="btn btn-ghost">Close</button></header>
-            <div id="compareArea" class="compare-area"></div>
-        </div>
-    </dialog>
+    <!-- HOW TO PLAY (placeholder) -->
+    <section class="how">
+      <h2>How to Play</h2>
+      <ol>
+        <li>Pick a Driver & Kart. Build a 40 card deck.</li>
+        <li>Pick 10 Utilities and 10 Items, and fill the rest with Fuel</li>
+        <li>Spend Fuel to play Items/Utilities. Dodge, hit, overtake.</li>
+        <li>Highest position at race end wins. Simple—brutal—fun.</li>
+      </ol>
+    </section>
+  </main>
 
-    <footer class="footer">
-        <span>Created and maintained by lee pryce</span>
-    </footer>
+  <footer class="footer">
+    <span>© MKS • Data: <code>data/MasterSheet.csv</code></span>
+  </footer>
 </body>
 </html>

@@ -124,6 +124,17 @@ function applyFilters() {
     updateDock();
 }
 
+// after applyFilters() renders:
+const params = new URLSearchParams(location.search);
+const target = params.get('id');
+if (target) {
+  const tile = document.querySelector(`.tile[data-id="${CSS.escape(target)}"]`);
+  if (tile) {
+    tile.scrollIntoView({behavior:'smooth', block:'center'});
+    tile.animate([{outline:'3px solid #4da3ff00'},{outline:'3px solid #4da3ff'},{outline:'3px solid #4da3ff00'}], {duration:1500});
+  }
+}
+
 function loadCSV() {
     Papa.parse(CSV_URL, {
         download: true, header: true, skipEmptyLines: true,

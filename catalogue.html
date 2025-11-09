@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MKS TCG - Catalogue</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="app.js?v=cat-1" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <a class="brand" href="/">MKS TCG</a>
+      <a class="nav-link active" href="/catalogue.html">Catalogue</a>
+      <a class="nav-link" href="#">Rules</a>
+      <a class="nav-link" href="#">About</a>
+    </nav>
+        <div class="controls">
+            <input id="search" type="search" placeholder="Search name / ID / text..." />
+            <select id="type">
+                <option value="">All Types</option>
+                <option>Driver</option>
+                <option>Kart</option>
+                <option>Item</option>
+                <option>Utility</option>
+            </select>
+            <select id="rarity">
+                <option value="">All Rarities</option>
+                <option>Common</option>
+                <option>Uncommon</option>
+                <option>Rare</option>
+                <option>Mythic</option>
+            </select>
+            <select id="sort">
+                <option value="name">Sort: Name</option>
+                <option value="card_id">Sort: ID</option>
+                <option value="type">Sort: Type</option>
+                <option value="rarity">Sort: Rarity</option>
+            </select>
+        </div>
+    </header>
+
+    <main>
+        <section id="grid" class="grid" aria-live="polite"></section>
+        <div id="empty" class="empty" hidden>No cards match your filters.</div>
+    </main>
+
+    <!-- Compare dock -->
+    <aside id="compareDock" class="compare-dock" hidden>
+        <div class="dock-inner">
+            <div class="sel-list" id="selList"></div>
+            <button id="compareBtn" class="btn" disabled>Compare</button>
+            <button id="clearSel" class="btn btn-ghost">Clear</button>
+        </div>
+    </aside>
+
+    <!-- Compare modal -->
+    <dialog id="compareModal" class="modal">
+        <div class="modal-body">
+            <header><h3>Compare</h3><button id="closeModal" class="btn btn-ghost">Close</button></header>
+            <div id="compareArea" class="compare-area"></div>
+        </div>
+    </dialog>
+
+    <footer class="footer">
+        <span>Created and maintained by lee pryce</span>
+    </footer>
+</body>
+</html>
