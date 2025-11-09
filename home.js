@@ -6,7 +6,6 @@ const IMG_VERSION_SUFFIX = '_vv1';                 // fronts like d001_vv1.png
 const CATALOGUE_HREF     = 'mks-tcg-site/catalogue.html';
 
 // ====== DOM ======
-const latestGrid  = document.getElementById('latestGrid');
 const carouselTrack = document.getElementById('carouselTrack'); // optional; only if carousel section exists
 
 // ====== Utils ======
@@ -32,20 +31,6 @@ function mapRow(row){
   };
 }
 
-// ====== Latest grid ======
-function renderLatest(cards){
-  if (!latestGrid) return;
-  latestGrid.innerHTML = cards.map(c => `
-    <a class="latest-tile rarity-${rarityKey(c.rarity)}"
-       href="${CATALOGUE_HREF}?id=${encodeURIComponent(c.card_id || c.name)}"
-       title="${c.name}">
-      <span class="lt-glow"></span>
-      <img loading="lazy" src="${frontImage((c.card_id || '') + IMG_VERSION_SUFFIX)}" alt="${c.name}" />
-      <div class="lt-name">${c.name}</div>
-    </a>
-  `).join('');
-}
-
 function fillCounts(cards){
   const total  = cards.length;
   const counts = { common:0, uncommon:0, rare:0, mythic:0 };
@@ -57,17 +42,6 @@ function fillCounts(cards){
   if (el('uncommonCount')) el('uncommonCount').textContent = counts.uncommon;
   if (el('rareCount'))     el('rareCount').textContent     = counts.rare;
   if (el('mythicCount'))   el('mythicCount').textContent   = counts.mythic;
-}
-
-function pickLatest(cards, n=6){
-  // If a Date column is added later, sort by it. For now: Card ID desc, then Version desc.
-  const sorted = [...cards].sort((a,b)=>{
-    const A = (a.card_id||'').toString();
-    const B = (b.card_id||'').toString();
-    if (A === B) return (b.version||'').localeCompare(a.version||'', undefined, {numeric:true});
-    return B.localeCompare(A, undefined, {numeric:true});
-  });
-  return sorted.slice(0,n);
 }
 
 // ====== Carousel (optional section) ======
@@ -140,12 +114,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     skipEmptyLines: true,
     complete: (res)=>{
       const rows = res.data.map(mapRow).filter(r=>r.name);
-
-      // Stats + latest
       fillCounts(rows);
-      renderLatest(pickLatest(rows, 6));
-
-      // Carousel from all cards
       renderCarousel(rows);
     },
     error: (e)=> console.error(e)
