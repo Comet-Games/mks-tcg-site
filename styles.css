@@ -127,27 +127,35 @@ main {
     }
 
 /* ===== Clockwise rarity glow ===== */
+/* ==== Animated clockwise rarity border glow ==== */
 .glow {
     position: absolute;
     inset: -3px;
     border-radius: 1rem;
     pointer-events: none;
+    overflow: hidden;
 }
 
     .glow::before {
         content: "";
         position: absolute;
         inset: 0;
-        padding: 3px;
         border-radius: inherit;
-        background: conic-gradient(from var(--a,0deg), var(--glow) 0deg, transparent 70deg, transparent 360deg);
-        animation: spin 6s linear infinite;
+        padding: 3px;
+        /* Animated ring using a slowly rotating conic gradient */
+        background: conic-gradient( from var(--angle, 0deg), var(--glow) 0deg, transparent 60deg, transparent 360deg );
+        /* spin once every 12 seconds clockwise */
+        animation: spin 12s linear infinite;
+        /* hollow center (so it’s just an outer ring) */
         -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
-        box-shadow: 0 0 18px 4px color-mix(in oklab, var(--glow), transparent 70%);
+        /* soft luminous aura */
+        filter: blur(0.5px) drop-shadow(0 0 8px var(--glow));
+        opacity: 0.9;
     }
 
+/* rarities define glow colour */
 .rarity-common {
     --glow: var(--common);
 }
@@ -164,11 +172,13 @@ main {
     --glow: var(--mythic);
 }
 
+/* slow rotation */
 @keyframes spin {
     to {
-        --a: 360deg;
+        --angle: 360deg;
     }
 }
+
 
 /* ===== Hover reactive tilt ===== */
 .card-wrap {
