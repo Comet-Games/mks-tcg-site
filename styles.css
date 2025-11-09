@@ -374,3 +374,40 @@ main {
             color: #9fb2cb;
             width: 30%
         }
+
+/* BACKGROUND STUFF*/
+/* ==== Subtle animated background ==== */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: radial-gradient(circle at 20% 30%, #1e293b 0%, #0b0f14 80%);
+}
+
+/* layered gradient haze that moves slowly */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(600px at 10% 20%, rgba(77,163,255,0.15), transparent 80%), radial-gradient(800px at 80% 80%, rgba(255,184,77,0.15), transparent 80%), radial-gradient(900px at 50% 60%, rgba(138,77,255,0.1), transparent 90%);
+    background-repeat: no-repeat;
+    animation: drift 60s linear infinite;
+    filter: blur(60px);
+    opacity: 0.6;
+}
+
+@keyframes drift {
+    0% {
+        background-position: 10% 20%, 80% 80%, 50% 60%;
+    }
+
+    50% {
+        background-position: 20% 30%, 75% 70%, 45% 65%;
+    }
+
+    100% {
+        background-position: 10% 20%, 80% 80%, 50% 60%;
+    }
+}
