@@ -28,7 +28,7 @@ function mapRow(row){
 
 function renderLatest(cards){
   latestGrid.innerHTML = cards.map(c => `
-      <a class="latest-tile rarity-${rarityKey(c.rarity)}"href="catalogue.html?id=${encodeURIComponent(c.card_id || c.name)}"title="${c.name}">
+      <a class="latest-tile rarity-${rarityKey(c.rarity)}"href="catalogue.html?id=${encodeURIComponent(c.card_id + "_vv1")}"title="${c.name}">
       <span class="lt-glow"></span>
       <img loading="lazy" src="${frontImage(c.card_id)}" alt="${c.name}" />
       <div class="lt-name">${c.name}</div>
