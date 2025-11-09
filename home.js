@@ -3,7 +3,7 @@ const CSV_URL   = 'data/MasterSheet.csv';
 const FRONT_DIR = 'images/cards';
 const FRONT_EXT = 'png';
 const IMG_VERSION_SUFFIX = '_vv1';                 // fronts like d001_vv1.png
-const CATALOGUE_HREF     = 'mks-tcg-site/catalogue.html';
+const CATALOGUE_HREF     = 'catalogue.html';
 
 // ====== DOM ======
 const carouselTrack = document.getElementById('carouselTrack'); // optional; only if carousel section exists
@@ -80,7 +80,7 @@ function renderCarousel(cards){
     const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(c.id)}`;
     const src  = frontImage(c.id + IMG_VERSION_SUFFIX);
     return `
-      <a class="carousel-tile rarity-${c.rarity}" href="${catalogue.html}" title="${c.name}">
+      <a class="carousel-tile rarity-${c.rarity}" href="${href}" title="${c.name}">
         <span class="ring"></span>
         <img loading="lazy" src="${src}" alt="${c.name}">
       </a>`;
