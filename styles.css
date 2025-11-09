@@ -1,3 +1,244 @@
-body {
-    font-family: sans-serif
+:root {
+    /* Brand palette */
+    --bg: #0b0f14;
+    --panel: #111822;
+    --ink: #eef4ff;
+    --muted: #a9bad1;
+    --ring: #4484ff;
+    /* Type gradients */
+    --driver1: #0044aa;
+    --driver2: #001e55;
+    --kart1: #ff6a00;
+    --kart2: #8c2b00;
+    --item1: #ffd700;
+    --item2: #a57900;
+    --util1: #8b00ff;
+    --util2: #35006b;
+    --track1: #00ffbf;
+    --track2: #007a62;
+    /* Rarity tints */
+    --common: #9aa4b2;
+    --uncommon: #54c17a;
+    --rare: #6e8cff;
+    --mythic: #ffb84d;
+    --cardW: 18rem;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.55 'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .8rem 1rem;
+    background: linear-gradient(180deg,#0b0f1495,#0b0f1400);
+    border-bottom: 1px solid #16202b;
+    backdrop-filter: blur(8px);
+}
+
+    .topbar h1 {
+        margin: 0;
+        font: 600 1.25rem/1 'Bebas Neue', sans-serif;
+        letter-spacing: .04em
+    }
+
+.controls {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-left: auto
+}
+
+    .controls input, .controls select {
+        background: #0f1620;
+        color: var(--ink);
+        border: 1px solid #1c2a3a;
+        border-radius: .65rem;
+        padding: .55rem .75rem;
+        outline: none;
+    }
+
+        .controls input:focus, .controls select:focus {
+            border-color: var(--ring);
+            box-shadow: 0 0 0 3px #4484ff33
+        }
+
+main {
+    max-width: 1300px;
+    margin: 1rem auto;
+    padding: 0 1rem
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(var(--cardW),1fr));
+    gap: 1rem
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+    margin: 3rem 0
+}
+
+.footer {
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: var(--muted);
+    font-size: .9rem
+}
+
+/* === Signature Card === */
+.card {
+    width: var(--cardW);
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid currentColor;
+    color: var(--common);
+    background: linear-gradient(180deg,#121922,#0d141c);
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    padding: 1rem;
+}
+
+    .card:before { /* subtle diagonal racing texture */
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .1;
+        background: repeating-linear-gradient(135deg, #fff, #fff 2px, transparent 2px, transparent 8px);
+        mix-blend-mode: overlay;
+    }
+
+    .card .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: .5rem
+    }
+
+.title {
+    font: 800 1.1rem/1 'Bebas Neue', sans-serif;
+    letter-spacing: .035em
+}
+
+.rarity {
+    font-size: .8rem;
+    padding: .2rem .55rem;
+    border-radius: .5rem;
+    border: 1px solid #2a3a4e;
+    color: inherit;
+    background: #0e141b
+}
+
+.type {
+    font-size: .85rem;
+    color: var(--muted)
+}
+
+.art {
+    width: 100%;
+    aspect-ratio: 3/2;
+    border-radius: .6rem;
+    border: 1px solid #1b2836;
+    overflow: hidden
+}
+
+    .art img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block
+    }
+
+.stats {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap
+}
+
+.stat {
+    font-size: .8rem;
+    padding: .2rem .45rem;
+    border-radius: .5rem;
+    background: #0f1620;
+    border: 1px solid #1b2836;
+    color: #cfe2ff
+}
+
+.rules {
+    display: grid;
+    gap: .4rem
+}
+
+    .rules h4 {
+        margin: .1rem 0;
+        font-size: .9rem;
+        color: #d7e7ff
+    }
+
+    .rules p {
+        margin: 0;
+        color: #c8dbf7
+    }
+
+.flavour {
+    font-style: italic;
+    color: #a9bad1;
+    opacity: .95
+}
+
+/* Type gradients applied as inner glow */
+.card.type-driver {
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #0044aa40
+}
+
+.card.type-kart {
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #ff6a0040
+}
+
+.card.type-item {
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #ffd70040
+}
+
+.card.type-utility {
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #8b00ff40
+}
+
+.card.type-track {
+    box-shadow: 0 10px 24px #0009, inset 0 0 0 1px #1b2836, inset 0 0 24px 0 #00ffbf40
+}
+
+/* Rarity border color */
+.card.rarity-common {
+    color: var(--common)
+}
+
+.card.rarity-uncommon {
+    color: var(--uncommon)
+}
+
+.card.rarity-rare {
+    color: var(--rare)
+}
+
+.card.rarity-mythic {
+    color: var(--mythic)
 }
