@@ -77,9 +77,10 @@ function renderCarousel(cards){
   seqA.style.gap = '.75rem';
 
   const tile = (c) => {
+    const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(c.id)}`;
     const src  = frontImage(c.id + IMG_VERSION_SUFFIX);
     return `
-      <a class="carousel-tile rarity-${c.rarity}" href="${CATALOGUE_HREF}" title="${c.name}">
+      <a class="carousel-tile rarity-${c.rarity}" href="${CATALOGUE_HREF.html}" title="${c.name}">
         <span class="ring"></span>
         <img loading="lazy" src="${src}" alt="${c.name}">
       </a>`;
