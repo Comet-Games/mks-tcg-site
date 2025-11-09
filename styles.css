@@ -17,10 +17,10 @@
     --track1: #00ffbf;
     --track2: #007a62;
     /* Rarity tints */
-    --common: #9aa4b2;
-    --uncommon: #54c17a;
-    --rare: #6e8cff;
-    --mythic: #ffb84d;
+    --common: 2EFF46;
+    --uncommon: FFEA2E;
+    --rare: BD2EFF;
+    --mythic: 2EBDFF;
     --cardW: 18rem;
 }
 
