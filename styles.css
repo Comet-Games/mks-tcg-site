@@ -624,7 +624,7 @@ body {
 }
 
 .example-card-frame {
-    width: clamp(110px, 16vw, 140px); /* smaller, responsive */
+    width: clamp(60px, 16vw, 140px); /* smaller, responsive */
     aspect-ratio: 5 / 7;
     border-radius: .75rem;
     overflow: hidden;
