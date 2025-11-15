@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MKS TCG – Rules</title>
+    <title>MKS TCG - Rules</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
@@ -24,7 +24,7 @@
         <!-- HERO -->
         <section class="rules-hero">
             <h1>How to Play</h1>
-            <p>Race for <strong>Position</strong>, not life total. Build a deck, dodge like a maniac, and cross the line first.</p>
+            <p>Race for <strong>place</strong>, not life total. Build a deck, dodge like a maniac, and cross the line first.</p>
             <div class="rules-hero-actions">
                 <a class="btn btn-lg" href="catalogue.html">Open Card Catalogue</a>
                 <button id="shuffleExamples" class="btn btn-ghost btn-lg" type="button">Shuffle Example Cards</button>
@@ -36,7 +36,7 @@
                 <a href="#setup">Setup</a>
                 <a href="#turn">Turn</a>
                 <a href="#card-types">Card Types</a>
-                <a href="#position">Position</a>
+                <a href="#place">place</a>
                 <a href="#hits">Hits & Dodges</a>
                 <a href="#faq">FAQ</a>
                 <a href="#tools">Play Tools</a>
@@ -47,13 +47,13 @@
         <section id="objective" class="rules-section">
             <h2>Objective</h2>
             <p>
-                The winner is the player with the highest <strong>Position</strong> when the race ends.
-                Position is your place in the race. Cards move you forward or shove others back.
+                The winner is the player with the highest <strong>place</strong> when the race ends.
+                place is where you are on the track. Cards move you forward or shove others back.
             </p>
             <ul>
-                <li>Everyone starts at Position <strong>0</strong>.</li>
-                <li>Card effects will say things like “Gain 8 Position” or “Target loses 6 Position”.</li>
-                <li>At the end of the final turn, whoever is furthest ahead wins.</li>
+                <li>Everyone starts at <strong>0</strong>.</li>
+                <li>Card effects will say things like “Gain 8 places” or “Target loses 6 places”.</li>
+                <li>Whoever reaches the finish line first, wins!.</li>
             </ul>
         </section>
 
@@ -62,18 +62,19 @@
             <h2>Setup</h2>
             <ol>
                 <li>Each player chooses <strong>1 Driver</strong> and <strong>1 Kart</strong>.</li>
-                <li>Build a deck of <strong>12–15</strong> cards (Items and Utilities).</li>
-                <li>Shuffle your deck and draw <strong>5</strong> cards.</li>
-                <li>Everyone starts at Position <strong>0</strong>.</li>
+                <li>Build a deck of <strong>20</strong> cards (Items and Utilities).</li>
+                <li>Then add <strong>20</strong> fuel to your deck.</li>
+                <li>Shuffle your deck and draw <strong>7</strong> cards.</li>
+                <li>Everyone starts at place <strong>0</strong>.</li>
             </ol>
 
             <div class="rules-row">
                 <div class="rules-col">
                     <h3>Drivers</h3>
-                    <p>Drivers are your character card. They usually give a unique ability or once-per-turn trick.</p>
+                    <p>Drivers are your character card. They have a unique ability or once-per-turn trick.</p>
                     <ul>
                         <li>Only one Driver per player.</li>
-                        <li>Some Drivers generate fuel, copy abilities, or bend dodge rules.</li>
+                        <li>Some Drivers swap positions, copy abilities, or bend dodge rules.</li>
                     </ul>
                 </div>
                 <div class="rules-col rules-example">
@@ -89,7 +90,7 @@
                     <ul>
                         <li><strong>Speed</strong> – how fast you can move up the track.</li>
                         <li><strong>Handling</strong> – how good you are at dodging attacks.</li>
-                        <li>Many Karts have a passive bonus (“When you dodge…”, “When you play a Utility…” etc.).</li>
+                        <li>All Karts have a passive ability (“When you dodge…”, “When you play a Utility…” etc.).</li>
                     </ul>
                 </div>
                 <div class="rules-col rules-example">
@@ -105,12 +106,13 @@
             <ol class="rules-steps">
                 <li><strong>Start:</strong> Resolve any “at the start of your turn” effects.</li>
                 <li><strong>Draw:</strong> Draw 1 card.</li>
-                <li><strong>Main:</strong> Play Items and Utilities, equip things, activate abilities.</li>
-                <li><strong>Race:</strong> Apply Position changes for this turn.</li>
-                <li><strong>End:</strong> Resolve “end of turn” effects, discard if a card tells you to.</li>
+                <li><strong>Draw:</strong> Place 1 fuel card.</li>
+                <li><strong>Race:</strong> Roll your movement for this turn.</li>
+                <li><strong>Main:</strong> Play Items and Utilities, activate abilities.</li>
+                <li><strong>End:</strong> Check any passive abilities, discard down to 7 cards if you have more than that.</li>
             </ol>
             <p class="rules-note">
-                First player is chosen randomly. If you want to be fancy, player with the lowest total Speed + Handling picks who goes first.
+                First player is chosen by rolling the highest number. Then it goes clockwise.
             </p>
         </section>
 
@@ -123,9 +125,9 @@
                     <h3>Items</h3>
                     <p>Items are the chaos. Shells, bombs, dodgy mushrooms… all the good stuff.</p>
                     <ul>
-                        <li>Usually have an <strong>Offensive</strong> and a <strong>Defensive</strong> mode.</li>
-                        <li>Offensive: you target another driver and roll to see if you hit.</li>
-                        <li>Defensive: you boost your dodge or blunt an incoming attack.</li>
+                        <li>They usually have <strong>2</strong> abilities</li>
+                        <li>Some of these abilities attack other player(s).</li>
+                        <li>Other abilities help you dodge or move places!</li>
                     </ul>
                 </div>
                 <div class="rules-col rules-example">
@@ -137,10 +139,11 @@
             <div class="rules-row">
                 <div class="rules-col">
                     <h3>Utilities</h3>
-                    <p>Utilities are one-shot tactical plays. They don’t usually require hit rolls.</p>
+                    <p>Utilities are one-shot tactical plays. They don’t require hit rolls.</p>
                     <ul>
-                        <li>Draw extra cards, recycle your discard, or spike someone’s Position.</li>
+                        <li>Draw extra cards, recycle your discard, or spike someone’s place.</li>
                         <li>Often say things like “For the rest of this turn…” or “This round…”.</li>
+                        <li>These are special cards that do lots of cool things.</li>
                     </ul>
                 </div>
                 <div class="rules-col rules-example">
@@ -150,19 +153,19 @@
             </div>
         </section>
 
-        <!-- POSITION -->
-        <section id="position" class="rules-section">
-            <h2>Position & Movement</h2>
+        <!-- place -->
+        <section id="place" class="rules-section">
+            <h2>places & Movement</h2>
             <p>
-                Most effects either gain you Position or make someone else lose it.
+                Most effects either gain you places or make someone else lose it.
             </p>
             <ul>
-                <li>If a card says “gain 10 Position”, move yourself forward 10.</li>
-                <li>If it says “target loses 6 Position”, they move backwards 6.</li>
+                <li>If a card says “gain 10 places”, move yourself forward 10.</li>
+                <li>If it says “target driver loses 6 places”, they move backwards 6.</li>
                 <li>Some effects care whether a driver is <strong>ahead</strong> or <strong>behind</strong> you.</li>
             </ul>
             <p class="rules-note">
-                If an effect would take someone below 0, they just stay at 0. No negative track.
+                If an effect would take someone below 0, they just stay at 0. No negative track... yet.
             </p>
         </section>
 
@@ -170,14 +173,12 @@
         <section id="hits" class="rules-section">
             <h2>Hits, Dodges & Handling</h2>
             <ul>
-                <li>Most Offensive Item abilities have a <strong>Hit</strong> value (like “Hit 7+”).</li>
-                <li>Roll the die: if your roll + any bonuses meets or beats the Hit, the attack lands.</li>
-                <li>Defending: you usually roll to dodge. Your <strong>Handling</strong> adds to dodge rolls.</li>
+                <li>Most Item abilities have a <strong>Hit</strong> value (like “Hit 17+”).</li>
+                <li>Target Driver must Roll the die: if their roll + handling beats the Hit, they dodge the attack.</li>
                 <li>Some cards add flat bonuses to hit/dodge, or say “unblockable” (no dodging).</li>
             </ul>
             <p class="rules-note">
-                If an attack’s target becomes illegal before it resolves (for example they’re no longer in range),
-                it fizzles and does nothing.
+                Write something here as a little tip.
             </p>
         </section>
 
