@@ -624,14 +624,13 @@ body {
 }
 
 .example-card-frame {
-    width: clamp(90px, 14vw, 100px); /* smaller, responsive */
-    aspect-ratio: 5 / 7;
-    border-radius: .75rem;
+    width: clamp(160px, 22vw, 220px); /* same size as catalogue cards */
+    aspect-ratio: 2.5 / 3.5;
+    border-radius: 1rem;
     overflow: hidden;
     border: 1px solid #1b2836;
-    box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    box-shadow: 0 6px 18px rgba(0,0,0,.4);
 }
-
 
     .example-card-frame img {
         width: 100%;
@@ -640,11 +639,15 @@ body {
         display: block;
     }
 
+
 .example-card-name {
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: .03em;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    margin-top: .3rem;
+    color: #e6f0ff;
 }
+
 
 /* FAQ details */
 .rules-section details {
