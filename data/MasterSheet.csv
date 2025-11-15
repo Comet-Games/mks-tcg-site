@@ -35,7 +35,7 @@ super star,item,mythical,0,,,unstoppable:,for the rest of this round successfull
 yoshi egg,item,uncommon,0,,,egg toss:,"draw a card, target any driver, on fail they lose 10 places",3,lucky hatch:,"add 3 to your dodge, if you dodge successfully draw 1 card",1,17,,,Crack open a surprise,lee pryce,s034,v1
 ? Block,item,rare,0,,,mystery draw,"draw the top 2 cards of your deck, immediately play 1 for free",2,lucky pull:,reveal the top card of your deck. if its an item you can play it instantly for free as a defence for this attack,2,0,,,Expect the unexpected,lee pryce,s035,v1
 blue shell,item,mythical,0,,,track breaker:,Target the leading Driver. they lose 18 Places. All others passed lose 8 Places,3,detonation guard:,Negate the attack. All drivers within 10 places of you lose 6 places,2,0,,,No one stays first forever,lee pryce,s036,v1
-thunder cloud,item,mythical,0,,,passing storm:,"When drawn: Immediately place this card into your Item Slot and activate it. (discard the card that was in there... if any) Roll an extra d6 each movement phase. If you pass another driver, give them this card. After 2 rounds, if you still have it, lose 8 places and –2 Speed next turn",0,,,0,0,,,Jamie you tosser!,lee pryce,s037,v1
+thunder cloud,item,mythical,0,,,passing storm:,"When drawn: Immediately place this card into your Item Slot and activate it. (discard the card that was in there... if any) Roll an extra d6 each movement phase. If you pass another driver, give them this card. After 2 rounds, if you still have it, lose 8 places and -2 Speed next turn",0,,,0,0,,,Jamie you tosser!,lee pryce,s037,v1
 jamie - grandad jam,driver,mythical,0,3,3,jack of trades,Copy the ability of another Driver in play. It costs 1 extra Fuel burnt to activate,,,,,,0,,Well that was easy,lee pryce,d001,v1
 dom - funky kong,driver,mythical,0,5,1,monkey business,Ignore incoming item,,,,,,3,,flavour text,lee pryce,d002,v1
 brandon - the off roader,driver,mythical,0,2,4,top formula,"For each Fuel burned, roll 1d6 and move forward that many places",,,,,,1-4,,FerBrando is faster than you,lee pryce,d003,v1
@@ -56,14 +56,14 @@ draft boost,utility,uncommon,1,,,,,,,,,,,"if the driver ahead is within 14 place
 item box,utility,rare,3,,,,,,,,,,,draw until you get 2 item cards. Keep 1 and shuffle the rest into the deck,Mystery in a box,lee pryce,u007,v1
 lakitu,utility,rare,2,,,,,,,,,,,return to your previous position if you lost places this turn,The sky crane's got you,lee pryce,u008,v1
 mks is massive,utility,rare,3,,,,,,,,,,,"draw 3 cards, pick 2 and shuffle the other into the deck",We are massive,lee pryce,u009,v1
-oil spill,utility,uncommon,2,,,,,,,,,,,all other drivers roll for handling. If they don’t roll higher than 15 they lose 13 places,Mind your step,lee pryce,u010,v1
+oil spill,utility,uncommon,2,,,,,,,,,,,all other drivers roll for handling. If they don't roll higher than 15 they lose 13 places,Mind your step,lee pryce,u010,v1
 overclock,utility,uncommon,1,,,,,,,,,,,you may play an extra fuel card this turn,Redline the rig,lee pryce,u011,v1
 panic burn,utility,uncommon,1,,,,,,,,,,,discard up to 4 cards. For each card discarded gain 4 places,Torch the plan,lee pryce,u012,v1
 photo finish,utility,rare,2,,,,,,,,,,,if first place is within 12 places from you gain 9 places and draw 1 card,Smile for the tape,lee pryce,u013,v1
 pit stop,utility,uncommon,2,,,,,,,,,,,discard your hand and draw 4 cards. This ends your turn,"In, out, new rubber",lee pryce,u014,v1
 position swap,utility,mythical,3,,,,,,,,,,,choose a driver within 15 places. Swap places with them,Not fair? Not my problem,lee pryce,u015,v1
 quick fix,utility,uncommon,0,,,,,,,,,,,untap 1 of your tapped fuels,"Wrench, twist, go",lee pryce,u016,v1
-red lantern,utility,uncommon,2,,,,,,,,,,,each driver ahead of you rolls handling. If they don’t roll higher than 17 they lose 15 places,"Eyes up, oil down",lee pryce,u017,v1
+red lantern,utility,uncommon,2,,,,,,,,,,,each driver ahead of you rolls handling. If they don't roll higher than 17 they lose 15 places,"Eyes up, oil down",lee pryce,u017,v1
 reflector,utility,rare,2,,,,,,,,,,,redirect an item targeting you to another random driver,Return to sender,lee pryce,u018,v1
 refuel,utility,uncommon,0,,,,,,,,,,,add 2 temporary fuel that can only be used this turn,Quick splash-and-dash,lee pryce,u019,v1
 reset box,utility,uncommon,1,,,,,,,,,,,shuffle your hand into the deck. Draw that many cards,"New loot, same odds",lee pryce,u020,v1
@@ -81,45 +81,45 @@ wild draw,utility,uncommon,1,,,,,,,,,,,reveal the top 3 cards of your deck. Choo
 tire change,utility,common,1,,,,,,,,,,,add 3 to your handling roll for this defence,"Fresh grip, fresh hope",lee pryce,u032,v1
 standard bike,kart,common,0,1,1,PASSIVE ABILITY,when you roll your max possible speed gain 5 places,,,,,,,,"Light, nimble, and built for the daredevil who never brakes",lee pryce,k001,v1
 standard kart,kart,common,0,1,1,PASSIVE ABILITY,gain 3 places after each turn,,,,,,,,The reliable all-rounder. Nothing fancy — just fast enough to win,lee pryce,k002,v1
-standard atv,kart,common,0,1,1,PASSIVE ABILITY,"when targeted by an item from behind, add 3 to your dodge roll",,,,,,,,For drivers who think ‘off-road’ means ‘shortcut,lee pryce,k003,v1
+standard atv,kart,common,0,1,1,PASSIVE ABILITY,"when targeted by an item from behind, add 3 to your dodge roll",,,,,,,,For drivers who think 'off-road' means 'shortcut,lee pryce,k003,v1
 pipe frame,kart,rare,0,0,2,PASSIVE ABILITY,draw a card every time you successfully dodge an item,,,,,,,,"A classic from the old days — still leaks, still quick",lee pryce,k004,v1
 egg 1,kart,uncommon,0,0,2,PASSIVE ABILITY,when you successfully dodge an item gain 4 places,,,,,,,,"Lightweight, slippery, and full of surprises — just like its rider",lee pryce,k005,v1
-yellow taxi,kart,uncommon,0,-1,3,PASSIVE ABILITY,when you play an item to successfully block or dodge an item gain 4 places,,,,,,,,The meter’s running. Hope your rivals have deep pockets,lee pryce,k006,v1
+yellow taxi,kart,uncommon,0,-1,3,PASSIVE ABILITY,when you play an item to successfully block or dodge an item gain 4 places,,,,,,,,The meter's running. Hope your rivals have deep pockets,lee pryce,k006,v1
 gherkin,kart,uncommon,0,2,0,PASSIVE ABILITY,"the first time you play a fuel card each turn, gain 3 places",,,,,,,,Odd name. Odd shape. Oddly unstoppable,lee pryce,k007,v1
 bowser bike,kart,rare,0,3,-1,PASSIVE ABILITY,"when you successfully hit a driver with an item, gain 2 places",,,,,,,,"Raw power, zero manners. Just the way Bowser likes it",lee pryce,k008,v1
 barrel train,kart,rare,0,2,0,PASSIVE ABILITY,when you move more than 10 places in a single turn gain 2 places,,,,,,,,"All aboard the chaos express — no brakes, no mercy",lee pryce,k009,v1
 mach rocket,kart,mythical,0,1,1,PASSIVE ABILITY,when you play an utility item gain 3 places,,,,,,,,Built for one thing: reaching top speed before anyone else blinks,lee pryce,k010,v1
 circuit special,kart,mythical,0,3,-1,PASSIVE ABILITY,"when you move more than 10 places in a turn, draw a card",,,,,,,,Precision engineering and pure style — the pride of the racetrack,lee pryce,k011,v1
 mario,driver,common,0,3,3,momentum rush,gain 10 places,,,,,,2,,Balanced to perfection,lee pryce,d012,v1
-luigi,driver,common,0,2,4,slipstream copy,copy the position gain of the driver ahead,,,,,,1,,Always in Mario’s shadow. . . until now,lee pryce,d013,v1
+luigi,driver,common,0,2,4,slipstream copy,copy the position gain of the driver ahead,,,,,,1,,Always in Mario's shadow. . . until now,lee pryce,d013,v1
 peach,driver,common,0,2,4,heart charm,redirect incoming item to another driver,,,,,,2,,Elegance at 200cc,lee pryce,d014,v1
 yoshi,driver,common,0,4,2,tongue catch,take the top card of your discard pile into your hand,,,,,,2,,"Fast, friendly, and fearless.",lee pryce,d015,v1
-toad,driver,common,0,1,5,mini turbo,"if you moved less than 10 places this turn, gain 8 places",,,,,,2,,Yah! Let’s-a gooo,lee pryce,d016,v1
+toad,driver,common,0,1,5,mini turbo,"if you moved less than 10 places this turn, gain 8 places",,,,,,2,,Yah! Let's-a gooo,lee pryce,d016,v1
 bowser,driver,common,0,5,1,intimidate,all drivers behind you lose 6 places,,,,,,1,,The only thing heavier than his kart is his ego,lee pryce,d017,v1
 donkey kong,driver,common,0,3,3,ground pound,the driver directly behind you skips their next movement roll,,,,,,4,,Big heart. Bigger arms,lee pryce,d018,v1
 wario,driver,common,0,3,3,fuel heist,steal 1 fuel from target driver,,,,,,2,,Greed makes speed,lee pryce,d019,v1
-waluigi,driver,common,0,3,3,petty revenge,if you are last gain 15 places,,,,,,2,,It’s-a Waluigi time!,lee pryce,d020,v1
+waluigi,driver,common,0,3,3,petty revenge,if you are last gain 15 places,,,,,,2,,It's-a Waluigi time!,lee pryce,d020,v1
 daisy,driver,common,0,2,4,cheer squad,you and the driver directly behind each gain 14 places,,,,,,2,,"The louder the cheer, the faster she goes!",lee pryce,d021,v1
 cloud 9,kart,mythical,0,2,0,PASSIVE ABILITY,"When you roll exactly 5 on a movement roll, gain 3 places.",,,,,,,,Feels lighter than air until you hit a jump. Then it feels too light,lee pryce,k012,v1
 Prancer,kart,common,0,0,2,PASSIVE ABILITY,"When you fail a dodge roll, add 2 to your next one.",,,,,,,,Elegance meets exhaust fumes - grace at any pace,lee pryce,k013,v1
 Steel Driver,kart,common,0,1,1,PASSIVE ABILITY,"When an Item makes you lose Places, lose 2 less instead",,,,,,,,"Built like a tank, drives like one too - just harder to knock around",lee pryce,k014,v1
 Landship,kart,common,0,0,2,PASSIVE ABILITY,"When you burn 3 or more fuel in a single turn, draw 1 card.",,,,,,,,"Wood, metal, and pure stubbornness holding together at top speed",lee pryce,k015,v1
-Streetle,kart,common,0,2,0,PASSIVE ABILITY,"When you successfully dodge an Item, draw 1 card.",,,,,,,,"Tiny tires, big attitude. Don’t step on it — drive it",lee pryce,k016,v1
+Streetle,kart,common,0,2,0,PASSIVE ABILITY,"When you successfully dodge an Item, draw 1 card.",,,,,,,,"Tiny tires, big attitude. Don't step on it — drive it",lee pryce,k016,v1
 royal racer,kart,uncommon,0,1,1,PASSIVE ABILITY,"When you start your turn in last place, gain 4 Places",,,,,,,,Royalty always finds a way back to the front,lee pryce,k017,v1
 sneakster,kart,uncommon,0,2,0,PASSIVE ABILITY,"The first time you draw a Utility card each turn, draw 1 extra card",,,,,,,,Quieter than it looks. Smarter too,lee pryce,k018,v1
 wild wiggler,kart,uncommon,0,0,2,PASSIVE ABILITY,"When you fail a dodge roll, gain 4 Places",,,,,,,,It wriggles harder every time it almost wipes out,lee pryce,k019,v1
 sports coupe,kart,uncommon,0,1,1,PASSIVE ABILITY,"When your hand becomes empty, immediately draw 2 cards",,,,,,,,Refuels itself in the fast lane,lee pryce,k020,v1
 badwagon,kart,rare,0,2,0,PASSIVE ABILITY,"After another driver passes you, gain 3 Places",,,,,,,,"Heavy, loud, and allergic to being overtaken",lee pryce,k021,v1
 jet bike,kart,uncommon,0,0,2,PASSIVE ABILITY,"When you successfully play an Item ability that targets yourself, gain 3 Places",,,,,,,,"all throttle, no fear — and barely any brakes",lee pryce,k022,v1
-b-dasher,kart,mythical,0,2,0,PASSIVE ABILITY,for every 2 fuel in your fuel zone: move 1 place at the end of your turn,,,,,,,,Speed feeds on fuel — and this one’s always hungry,lee pryce,k023,v1
-blue falcon,kart,mythical,0,3,-1,PASSIVE ABILITY,"When you play an Item, roll 1d6. On 4–6, gain 5 extra Places",,,,,,,,"A machine from the future, tuned for chaos",lee pryce,k024,v1
+b-dasher,kart,mythical,0,2,0,PASSIVE ABILITY,for every 2 fuel in your fuel zone: move 1 place at the end of your turn,,,,,,,,Speed feeds on fuel — and this one's always hungry,lee pryce,k023,v1
+blue falcon,kart,mythical,0,3,-1,PASSIVE ABILITY,"When you play an Item, roll 1d6. On 4-6, gain 5 extra Places",,,,,,,,"A machine from the future, tuned for chaos",lee pryce,k024,v1
 plushbuggy,kart,common,0,1,1,PASSIVE ABILITY,"When you play an Item ability, gain 2 Places",,,,,,,,"Soft, slow, and somehow unstoppable",lee pryce,k025,v1
-zoom buggy,kart,common,0,2,0,PASSIVE ABILITY,"When you roll 4–6 on a movement roll, gain 3 Places",,,,,,,,Blink and it’s already halfway to victory,lee pryce,k026,v1
+zoom buggy,kart,common,0,2,0,PASSIVE ABILITY,"When you roll 4-6 on a movement roll, gain 3 Places",,,,,,,,Blink and it's already halfway to victory,lee pryce,k026,v1
 rally kart,kart,rare,0,2,0,PASSIVE ABILITY,"When you play a Fuel card, gain 3 Places",,,,,,,,"Built for dirt, danger, and dramatic comebacks",lee pryce,k027,v1
 baby blooper,kart,mythical,0,0,2,PASSIVE ABILITY,"When you roll exactly 6 for movement, gain 5 Places",,,,,,,,"Tiny squid, big attitude — and a bigger mess",lee pryce,k028,v1
 chargin' truck,kart,common,0,3,-1,PASSIVE ABILITY,"When you pass another driver, gain 3 Places",,,,,,,,Subtlety? Never heard of it,lee pryce,k029,v1
-cute scoot,kart,common,0,1,1,PASSIVE ABILITY,"When you succeed on a dodge roll, draw 1 card and gain 2 Places",,,,,,,,It’s adorable until it laps you twice,lee pryce,k030,v1
-hyper pipe,kart,rare,0,2,0,PASSIVE ABILITY,"When you play an Item ability, roll 1d6 — on 5–6 gain 5 Places. Otherwise gain 2 places",,,,,,,,Warning: may cause extreme tunnel vision,lee pryce,k031,v1
+cute scoot,kart,common,0,1,1,PASSIVE ABILITY,"When you succeed on a dodge roll, draw 1 card and gain 2 Places",,,,,,,,It's adorable until it laps you twice,lee pryce,k030,v1
+hyper pipe,kart,rare,0,2,0,PASSIVE ABILITY,"When you play an Item ability, roll 1d6 — on 5-6 gain 5 Places. Otherwise gain 2 places",,,,,,,,Warning: may cause extreme tunnel vision,lee pryce,k031,v1
 rally bike,kart,mythical,0,2,0,PASSIVE ABILITY,"When you move 8 or more Places in a turn, gain 3 Places",,,,,,,,Kicks up more dust than manners,lee pryce,k032,v1
 funky dorrie,kart,uncommon,0,1,1,PASSIVE ABILITY,"When you dodge successfully, gain 3 Places",,,,,,,,The friendliest fish with the wildest drift,lee pryce,k033,v1
 hot rod,kart,common,0,3,-1,PASSIVE ABILITY,"When you start your turn behind 2nd place, gain 3 Places",,,,,,,,Smells like burnt rubber and poor decisions,lee pryce,k034,v1
@@ -127,7 +127,7 @@ roadster royale,kart,common,0,2,0,PASSIVE ABILITY,"When you roll exactly 6 on yo
 buggybud,kart,mythical,0,0,2,PASSIVE ABILITY,"When you succeed a dodge roll, gain 4 Places and draw 1 card",,,,,,,,Never races alone; always brings the vibes,lee pryce,k036,v1
 ribbit revster,kart,uncommon,0,2,0,PASSIVE ABILITY,"When you play an Item ability, your next dodge roll gains +2; if you dodge, gain 2 Places",,,,,,,,"Croaks loudly, drives louder",lee pryce,k037,v1
 rally romper,kart,common,0,3,-1,PASSIVE ABILITY,"When targeted by any ability, add +1 to your dodge roll; if you dodge, gain 3 Places",,,,,,,,"Bounces off walls, barriers, and expectations",lee pryce,k038,v1
-tune thumper,kart,rare,0,-1,3,PASSIVE ABILITY,"When you play an Item ability, gain 4 Places",,,,,,,,Every turn’s a beat drop waiting to happen,lee pryce,k039,v1
+tune thumper,kart,rare,0,-1,3,PASSIVE ABILITY,"When you play an Item ability, gain 4 Places",,,,,,,,Every turn's a beat drop waiting to happen,lee pryce,k039,v1
 w-twin chopper,kart,mythical,0,2,0,PASSIVE ABILITY,"When you play an Item ability that targets yourself, gain 4 Places",,,,,,,,"Double the engines, double the chaos",lee pryce,k040,v1
 dread sled,kart,common,0,1,1,PASSIVE ABILITY,"When you play a utility, gain 2 Places",,,,,,,,Spooky fast. Terrifyingly smooth,lee pryce,k041,v1
 junkyard hog,kart,uncommon,0,3,-1,PASSIVE ABILITY,"When you fail a dodge roll, gain 3 Places",,,,,,,,Powered by scraps and pure spite,lee pryce,k042,v1
