@@ -56,22 +56,22 @@ function pickRandom(arr) {
 function exampleTile(card) {
     const id = card.card_id;
     const rar = rarityKey(card.rarity);
-    const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(id || card.name)}`;
+    const href = `catalogue.html?id=${encodeURIComponent(id)}`;
     const front = id ? frontImage(id + IMG_VERSION_SUFFIX) : '';
 
     return `
-    <a class="ex-card-wrap" href="${href}" title="Open in catalogue">
-      <div class="ex-card rarity-${rar}" data-name="${card.name}">
-        <span class="ex-glow"></span>
+    <a class="ex-card-wrap" href="${href}">
+      <div class="ex-card rarity-${rar}">
         <div class="ex-inner">
-          <img class="ex-face front" loading="lazy" src="${front}" alt="${card.name} (front)">
-          <img class="ex-face back"  loading="lazy" src="${BACK_IMAGE}" alt="Card back">
+          <img class="ex-face front" loading="lazy" src="${front}">
+          <img class="ex-face back"  loading="lazy" src="images/back.png">
         </div>
+        <span class="ex-glow"></span>
       </div>
       <div class="ex-meta">${card.name}</div>
-    </a>
-  `;
+    </a>`;
 }
+
 function injectExample(slot, card) {
     if (!slot) return;
     slot.innerHTML = card ? exampleTile(card) : `<div class="muted">No example found.</div>`;
@@ -81,7 +81,6 @@ function injectExample(slot, card) {
     if (!wrap || !cardEl) return;
 
     wrap.addEventListener('click', (e) => {
-        // If user clicks the card, flip instead of navigating
         if (e.target.closest('.ex-card')) {
             e.preventDefault();
             cardEl.classList.toggle('is-flipped');
