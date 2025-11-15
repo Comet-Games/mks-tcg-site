@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>MKS TCG – Rules</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
-    <script src="rules.js" defer></script>
+    <script src="rules.js?v=2" defer></script>
 </head>
-<body>
+<body class="rules-page">
     <header class="topbar">
         <nav class="nav">
             <a class="brand" href="index.html">MKS TCG</a>
@@ -19,162 +20,199 @@
         </nav>
     </header>
 
-    <main class="rules-wrap">
-        <!-- Hero -->
+    <main class="rules-main">
+        <!-- HERO -->
         <section class="rules-hero">
-            <h1 class="hero-title">How to Play</h1>
-            <p class="hero-sub">Collect. Dodge. Overtake. Simple to learn—savage to master.</p>
-            <div class="hero-ctas">
-                <a class="btn btn-lg" href="catalogue.html">Browse Cards</a>
-                <button id="rerollExamples" class="btn btn-ghost btn-lg">Shuffle Examples</button>
+            <h1>How to Play</h1>
+            <p>Race for <strong>Position</strong>, not life total. Build a deck, dodge like a maniac, and cross the line first.</p>
+            <div class="rules-hero-actions">
+                <a class="btn btn-lg" href="catalogue.html">Open Card Catalogue</a>
+                <button id="shuffleExamples" class="btn btn-ghost btn-lg" type="button">Shuffle Example Cards</button>
+            </div>
+
+            <!-- chip nav -->
+            <div class="rules-nav-chips">
+                <a href="#objective">Objective</a>
+                <a href="#setup">Setup</a>
+                <a href="#turn">Turn</a>
+                <a href="#card-types">Card Types</a>
+                <a href="#position">Position</a>
+                <a href="#hits">Hits & Dodges</a>
+                <a href="#faq">FAQ</a>
+                <a href="#tools">Play Tools</a>
             </div>
         </section>
 
-        <!-- Contents -->
-        <aside class="rules-toc">
-            <h3>Quick Nav</h3>
-            <a href="#objective">Objective</a>
-            <a href="#setup">Setup</a>
-            <a href="#turn">Turn Structure</a>
-            <a href="#cards">Card Types</a>
-            <a href="#keywords">Keywords</a>
-            <a href="#rolling">Rolling & Hits</a>
-            <a href="#faq">FAQ</a>
-            <a href="#quiz">Mini Quiz</a>
-            <a href="#tools">Play Tools</a>
-        </aside>
-
-        <!-- Sections -->
+        <!-- OBJECTIVE -->
         <section id="objective" class="rules-section">
             <h2>Objective</h2>
-            <p>Finish the race ahead of your rivals. You don’t attack life totals—you race for <strong>place</strong>. Highest place at the end wins.</p>
-            <details class="callout">
-                <summary>What’s “place” exactly?</summary>
-                <p>Think of place as your place in the race. Cards move you forward or push others back. Some effects care about being ahead/behind.</p>
-            </details>
-        </section>
-
-        <section id="setup" class="rules-section">
-            <h2>Setup</h2>
-            <ol>
-                <li>Each player picks a <strong>Driver</strong> and a <strong>Kart</strong>.</li>
-                <li>Build a deck of <strong>12–15</strong> cards (Items/Utilities). Shuffle it.</li>
-                <li>Everyone starts at place <strong>0</strong>. Draw <strong>5</strong> cards.</li>
-            </ol>
-            <div class="split">
-                <div>
-                    <h3>Drivers</h3>
-                    <p>Drivers define signature tricks. Some copy abilities, some manipulate fuel, some bend dodge rules.</p>
-                </div>
-                <div id="driverExample" class="example-slot" aria-live="polite"></div>
-            </div>
-            <div class="split">
-                <div>
-                    <h3>Karts</h3>
-                    <p>Karts have <strong>Speed</strong> and <strong>Handling</strong>, plus a passive bonus that shapes your playstyle.</p>
-                </div>
-                <div id="kartExample" class="example-slot" aria-live="polite"></div>
-            </div>
-        </section>
-
-        <section id="turn" class="rules-section">
-            <h2>Turn Structure</h2>
-            <div class="timeline">
-                <div class="t-step"><span>1</span> Start: resolve “start of turn” effects.</div>
-                <div class="t-step"><span>2</span> Draw: draw 1 card.</div>
-                <div class="t-step"><span>3</span> Main: play Items/Utilities, equip, activate, target.</div>
-                <div class="t-step"><span>4</span> Race: move place (by card effects, Speed bonuses, etc.).</div>
-                <div class="t-step"><span>5</span> End: discard down if required, resolve end effects.</div>
-            </div>
-            <details class="callout">
-                <summary>Who goes first?</summary>
-                <p>Random player. If tied races matter, the player with lower total Speed + Handling chooses who starts.</p>
-            </details>
-        </section>
-
-        <section id="cards" class="rules-section">
-            <h2>Card Types</h2>
-
-            <div class="split">
-                <div>
-                    <h3>Items</h3>
-                    <p>Play to attack, defend, or replace. Items have <strong>Offensive</strong> and <strong>Defensive</strong> modes with costs and hit thresholds.</p>
-                    <ul class="bul">
-                        <li><strong>Offensive:</strong> target a driver; on hit, apply effect.</li>
-                        <li><strong>Defensive:</strong> boost your dodge or blunt an attack.</li>
-                    </ul>
-                </div>
-                <div id="itemExample" class="example-slot" aria-live="polite"></div>
-            </div>
-
-            <div class="split">
-                <div>
-                    <h3>Utilities</h3>
-                    <p>One-shot tactical plays: draw, replace, manipulate fuel, lock targets, etc.</p>
-                    <p class="muted">Utilities rarely require hit rolls; they often resolve immediately.</p>
-                </div>
-                <div id="utilityExample" class="example-slot" aria-live="polite"></div>
-            </div>
-        </section>
-
-        <section id="keywords" class="rules-section">
-            <h2>Keywords (Plain English)</h2>
-            <div class="keyword-grid">
-                <div class="kw"><strong>On Reveal</strong><span>Triggers as the card resolves.</span></div>
-                <div class="kw"><strong>Ongoing</strong><span>Stays active while the source remains.</span></div>
-                <div class="kw"><strong>Destroy</strong><span>Remove a card from play; send to discard.</span></div>
-                <div class="kw"><strong>Discard</strong><span>Randomly or by choice—card leaves your hand.</span></div>
-                <div class="kw"><strong>Move</strong><span>Shift place (you or a target).</span></div>
-                <div class="kw"><strong>Regenerate</strong><span>Come back in altered form (Drivers only).</span></div>
-                <div class="kw"><strong>Activate</strong><span>Pay cost to trigger a Kart/Utility effect.</span></div>
-            </div>
-        </section>
-
-        <section id="rolling" class="rules-section">
-            <h2>Rolling & Hit Thresholds</h2>
-            <p>When you attack with an Item, you’ll usually roll a die and compare to the card’s <strong>Hit</strong> (e.g., <em>7+</em>).</p>
-            <ul class="bul">
-                <li><strong>Handling</strong> adds to your <em>dodge</em> rolls.</li>
-                <li>Some Items add flat bonuses or penalties to hit or dodge.</li>
-                <li>“Unblockable” ignores standard defensive modifiers.</li>
+            <p>
+                The winner is the player with the highest <strong>Position</strong> when the race ends.
+                Position is your place in the race. Cards move you forward or shove others back.
+            </p>
+            <ul>
+                <li>Everyone starts at Position <strong>0</strong>.</li>
+                <li>Card effects will say things like “Gain 8 Position” or “Target loses 6 Position”.</li>
+                <li>At the end of the final turn, whoever is furthest ahead wins.</li>
             </ul>
         </section>
 
+        <!-- SETUP -->
+        <section id="setup" class="rules-section">
+            <h2>Setup</h2>
+            <ol>
+                <li>Each player chooses <strong>1 Driver</strong> and <strong>1 Kart</strong>.</li>
+                <li>Build a deck of <strong>12–15</strong> cards (Items and Utilities).</li>
+                <li>Shuffle your deck and draw <strong>5</strong> cards.</li>
+                <li>Everyone starts at Position <strong>0</strong>.</li>
+            </ol>
+
+            <div class="rules-row">
+                <div class="rules-col">
+                    <h3>Drivers</h3>
+                    <p>Drivers are your character card. They usually give a unique ability or once-per-turn trick.</p>
+                    <ul>
+                        <li>Only one Driver per player.</li>
+                        <li>Some Drivers generate fuel, copy abilities, or bend dodge rules.</li>
+                    </ul>
+                </div>
+                <div class="rules-col rules-example">
+                    <h4>Example Driver</h4>
+                    <div id="driverExample" class="example-card-slot"></div>
+                </div>
+            </div>
+
+            <div class="rules-row">
+                <div class="rules-col">
+                    <h3>Karts</h3>
+                    <p>Karts define how your racer handles.</p>
+                    <ul>
+                        <li><strong>Speed</strong> – how fast you can move up the track.</li>
+                        <li><strong>Handling</strong> – how good you are at dodging attacks.</li>
+                        <li>Many Karts have a passive bonus (“When you dodge…”, “When you play a Utility…” etc.).</li>
+                    </ul>
+                </div>
+                <div class="rules-col rules-example">
+                    <h4>Example Kart</h4>
+                    <div id="kartExample" class="example-card-slot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TURN -->
+        <section id="turn" class="rules-section">
+            <h2>Turn Structure</h2>
+            <ol class="rules-steps">
+                <li><strong>Start:</strong> Resolve any “at the start of your turn” effects.</li>
+                <li><strong>Draw:</strong> Draw 1 card.</li>
+                <li><strong>Main:</strong> Play Items and Utilities, equip things, activate abilities.</li>
+                <li><strong>Race:</strong> Apply Position changes for this turn.</li>
+                <li><strong>End:</strong> Resolve “end of turn” effects, discard if a card tells you to.</li>
+            </ol>
+            <p class="rules-note">
+                First player is chosen randomly. If you want to be fancy, player with the lowest total Speed + Handling picks who goes first.
+            </p>
+        </section>
+
+        <!-- CARD TYPES -->
+        <section id="card-types" class="rules-section">
+            <h2>Card Types</h2>
+
+            <div class="rules-row">
+                <div class="rules-col">
+                    <h3>Items</h3>
+                    <p>Items are the chaos. Shells, bombs, dodgy mushrooms… all the good stuff.</p>
+                    <ul>
+                        <li>Usually have an <strong>Offensive</strong> and a <strong>Defensive</strong> mode.</li>
+                        <li>Offensive: you target another driver and roll to see if you hit.</li>
+                        <li>Defensive: you boost your dodge or blunt an incoming attack.</li>
+                    </ul>
+                </div>
+                <div class="rules-col rules-example">
+                    <h4>Example Item</h4>
+                    <div id="itemExample" class="example-card-slot"></div>
+                </div>
+            </div>
+
+            <div class="rules-row">
+                <div class="rules-col">
+                    <h3>Utilities</h3>
+                    <p>Utilities are one-shot tactical plays. They don’t usually require hit rolls.</p>
+                    <ul>
+                        <li>Draw extra cards, recycle your discard, or spike someone’s Position.</li>
+                        <li>Often say things like “For the rest of this turn…” or “This round…”.</li>
+                    </ul>
+                </div>
+                <div class="rules-col rules-example">
+                    <h4>Example Utility</h4>
+                    <div id="utilityExample" class="example-card-slot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POSITION -->
+        <section id="position" class="rules-section">
+            <h2>Position & Movement</h2>
+            <p>
+                Most effects either gain you Position or make someone else lose it.
+            </p>
+            <ul>
+                <li>If a card says “gain 10 Position”, move yourself forward 10.</li>
+                <li>If it says “target loses 6 Position”, they move backwards 6.</li>
+                <li>Some effects care whether a driver is <strong>ahead</strong> or <strong>behind</strong> you.</li>
+            </ul>
+            <p class="rules-note">
+                If an effect would take someone below 0, they just stay at 0. No negative track.
+            </p>
+        </section>
+
+        <!-- HITS & DODGES -->
+        <section id="hits" class="rules-section">
+            <h2>Hits, Dodges & Handling</h2>
+            <ul>
+                <li>Most Offensive Item abilities have a <strong>Hit</strong> value (like “Hit 7+”).</li>
+                <li>Roll the die: if your roll + any bonuses meets or beats the Hit, the attack lands.</li>
+                <li>Defending: you usually roll to dodge. Your <strong>Handling</strong> adds to dodge rolls.</li>
+                <li>Some cards add flat bonuses to hit/dodge, or say “unblockable” (no dodging).</li>
+            </ul>
+            <p class="rules-note">
+                If an attack’s target becomes illegal before it resolves (for example they’re no longer in range),
+                it fizzles and does nothing.
+            </p>
+        </section>
+
+        <!-- FAQ -->
         <section id="faq" class="rules-section">
-            <h2>FAQ</h2>
+            <h2>FAQ (Quick Rulings)</h2>
             <details>
-                <summary>Can I play both an Item and a Utility in the same turn?</summary>
-                <p>Yes, if you can pay the costs and nothing forbids it.</p>
+                <summary>Can I play more than one card in a turn?</summary>
+                <p>Yes, as long as you can pay all costs and nothing on the table says you can’t.</p>
             </details>
             <details>
-                <summary>What if two effects trigger at the same time?</summary>
-                <p>Active player orders their effects; then the next player, and so on.</p>
+                <summary>What if two things trigger at the same time?</summary>
+                <p>The current player chooses the order their effects go on the stack. Then the next player, and so on.</p>
             </details>
             <details>
-                <summary>What if a target becomes invalid?</summary>
-                <p>If a card can’t find its legal target on resolution, it fizzles (no effect).</p>
+                <summary>What if a card doesn’t say when it ends?</summary>
+                <p>Unless it clearly says “this round” or “this turn”, treat it as a one-off effect that resolves and is done.</p>
             </details>
         </section>
 
-        <section id="quiz" class="rules-section">
-            <h2>Mini Quiz</h2>
-            <p class="muted">Quick check: 3 questions. No pressure.</p>
-            <div id="quizRoot" class="quiz-root"></div>
-        </section>
-
+        <!-- TOOLS -->
         <section id="tools" class="rules-section">
             <h2>Play Tools</h2>
-            <div class="tools">
-                <button id="rollD6" class="btn">Roll d6</button>
-                <span id="d6Result" class="tool-result">—</span>
-                <button id="coinFlip" class="btn">Flip Coin</button>
-                <span id="coinResult" class="tool-result">—</span>
+            <p>Don’t have dice on you? Use these.</p>
+            <div class="rules-tools">
+                <button id="rollD6" type="button" class="btn">Roll d6</button>
+                <span id="d6Result" class="tool-badge">–</span>
+                <button id="flipCoin" type="button" class="btn">Flip Coin</button>
+                <span id="coinResult" class="tool-badge">–</span>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-        <span>© MKS • Data: <code>data/MasterSheet.csv</code> • Art paths: <code>images/cards/&lt;CardID&gt;_vv1.png</code></span>
+        <span>© MKS • Rules page uses <code>data/MasterSheet.csv</code> and <code>images/cards/&lt;CardID&gt;_vv1.png</code></span>
     </footer>
 </body>
 </html>

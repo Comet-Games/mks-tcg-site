@@ -492,168 +492,186 @@ body {
   .carousel-track { animation: none; }
 }
 
-/* ================================================
-   RULES MASTER LAYOUT (FIXED + RESPONSIVE)
-   ================================================ */
-.rules-wrap {
-    max-width: 1200px;
+/* =======================
+   MKS TCG – RULES PAGE
+   ======================= */
+
+.rules-page .rules-main {
+    max-width: 1100px;
     margin: 1rem auto 2rem;
-    padding: 0 1.25rem;
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 1.5rem;
+    padding: 0 1rem 2rem;
 }
 
-/* Sidebar */
-.rules-toc {
-    position: sticky;
-    top: 72px;
-    align-self: start;
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .75rem;
-    padding: .85rem 1rem;
-    max-height: calc(100vh - 100px);
-    overflow-y: auto;
-    z-index: 0; /* ensures it doesn't overlap text */
-}
-
-    /* Sidebar links */
-    .rules-toc h3 {
-        margin: .1rem 0 .6rem;
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 1.4rem;
-    }
-
-    .rules-toc a {
-        display: block;
-        padding: .35rem .5rem;
-        color: #acc6e2;
-        text-decoration: none;
-        border-radius: .4rem;
-    }
-
-        .rules-toc a:hover {
-            background: #1a2532;
-            color: white;
-        }
-
-/* Main rules sections */
-.rules-section {
-    background: #0e151f;
-    border: 1px solid #1b2836;
-    border-radius: 1rem;
-    padding: 1.25rem;
-    overflow: hidden; /* prevents card overflow */
-}
-
-/* HERO full-width */
+/* Hero */
 .rules-hero {
-    grid-column: 1 / -1;
-    padding: 2rem 1rem 1.5rem;
-    background: linear-gradient(180deg, #0e151f, rgba(0,0,0,0));
-    border: 1px solid #1b2836;
+    margin: 0 0 1.25rem;
+    padding: 1.75rem 1.25rem 1.5rem;
     border-radius: 1rem;
+    border: 1px solid #1b2836;
+    background: radial-gradient(circle at 0 0, #1f2937 0, #0b0f14 60%);
 }
 
-/* Two-column splits */
-.split {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 1.25rem;
-    align-items: center;
-}
-
-@media(max-width:900px) {
-    .rules-wrap {
-        grid-template-columns: 1fr;
+    .rules-hero h1 {
+        margin: 0 0 .4rem;
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: .04em;
+        font-size: 2.4rem;
     }
 
-    .rules-toc {
-        position: static;
-        max-height: none;
+    .rules-hero p {
+        margin: 0 0 1rem;
     }
 
-    .split {
-        grid-template-columns: 1fr;
-    }
-}
-/* ================================================
-   EXAMPLE CARD — FIXED VERSION
-   ================================================ */
-.example-slot {
+.rules-hero-actions {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: visible;
-    padding: .5rem 0;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 1rem;
 }
 
-.ex-card-wrap {
+/* chips */
+.rules-nav-chips {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
+    flex-wrap: wrap;
     gap: .5rem;
 }
 
-.ex-card {
-    width: 230px;
-    aspect-ratio: 5 / 7;
-    perspective: 1200px;
-    position: relative;
-}
-
-.ex-inner {
-    position: absolute;
-    inset: 0;
-    border-radius: 1rem;
-    transition: transform .6s cubic-bezier(.2, .7, .2, 1);
-    transform-style: preserve-3d;
-}
-
-.ex-card.is-flipped .ex-inner {
-    transform: rotateY(180deg);
-}
-
-.ex-face {
-    position: absolute;
-    inset: 0;
-    border-radius: 1rem;
-    backface-visibility: hidden;
-    background: #000;
-    object-fit: cover;
-}
-
-    .ex-face.back {
-        transform: rotateY(180deg);
+    .rules-nav-chips a {
+        font-size: .85rem;
+        padding: .3rem .6rem;
+        border-radius: 999px;
+        border: 1px solid #1b2836;
+        background: #0f1620;
+        color: #cfd8ea;
+        text-decoration: none;
     }
 
-.ex-glow {
-    position: absolute;
-    inset: -4px;
-    border-radius: inherit;
-    pointer-events: none;
+        .rules-nav-chips a:hover {
+            background: #1b2836;
+        }
+
+/* sections */
+.rules-section {
+    border-radius: 1rem;
+    border: 1px solid #1b2836;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
+    background: #0e151f;
 }
 
-.rarity-common .ex-glow {
-    box-shadow: inset 0 0 18px #9aa4b255;
+    .rules-section h2 {
+        margin-top: 0;
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: .04em;
+        font-size: 1.6rem;
+    }
+
+    .rules-section h3 {
+        margin-bottom: .35rem;
+    }
+
+.rules-steps {
+    padding-left: 1.3rem;
 }
 
-.rarity-uncommon .ex-glow {
-    box-shadow: inset 0 0 18px #54c17a55;
+.rules-note {
+    margin-top: .5rem;
+    font-size: .9rem;
+    color: #9fb2cb;
 }
 
-.rarity-rare .ex-glow {
-    box-shadow: inset 0 0 18px #6e8cff55;
+/* two-column rows that collapse nicely */
+.rules-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(220px, 260px);
+    gap: 1rem;
+    margin-top: .75rem;
 }
 
-.rarity-mythic .ex-glow {
-    box-shadow: inset 0 0 18px #ffb84d55;
+.rules-col {
+    min-width: 0;
 }
 
-.ex-meta {
-    font-family: 'Bebas Neue';
-    font-size: 1.2rem;
-    color: #d7e6ff;
+.rules-example h4 {
+    margin: 0 0 .25rem;
+    font-size: .95rem;
+    color: #cfe2ff;
+}
+
+@media (max-width: 800px) {
+    .rules-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* example card */
+.example-card-slot {
+    background: #0f1620;
+    border-radius: .75rem;
+    border: 1px solid #1b2836;
+    padding: .6rem .5rem .7rem;
+    display: flex;
+    justify-content: center;
+}
+
+.example-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+}
+
+.example-card-frame {
+    width: 180px;
+    aspect-ratio: 5 / 7;
+    border-radius: .75rem;
+    overflow: hidden;
+    border: 1px solid #1b2836;
+    box-shadow: 0 6px 18px rgba(0,0,0,.5);
+}
+
+    .example-card-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+.example-card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: .03em;
+    font-size: 1rem;
+}
+
+/* FAQ details */
+.rules-section details {
+    background: #0f1620;
+    border-radius: .6rem;
+    border: 1px solid #1b2836;
+    padding: .45rem .6rem;
+    margin-bottom: .4rem;
+}
+
+    .rules-section details summary {
+        cursor: pointer;
+    }
+
+/* tools */
+.rules-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .5rem;
+}
+
+.tool-badge {
+    min-width: 2.2rem;
+    text-align: center;
+    padding: .25rem .35rem;
+    border-radius: .4rem;
+    border: 1px solid #1b2836;
+    background: #0f1620;
 }

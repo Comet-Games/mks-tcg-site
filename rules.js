@@ -1,150 +1,71 @@
-// ===== Config: match your site =====
+// rules.js – simple, clean, no layout shenanigans
+
 const CSV_URL = 'data/MasterSheet.csv';
 const FRONT_DIR = 'images/cards';
 const FRONT_EXT = 'png';
-const BACK_IMAGE = 'images/back.png';
-const IMG_VERSION_SUFFIX = '_vv1'; // e.g., d001_vv1.png
+const IMG_VERSION_SUFFIX = '_vv1'; // e.g. d001_vv1.png
 
-const CATALOGUE_HREF = 'catalogue.html';
-
-// ===== DOM targets for examples =====
-const driverSlot = document.getElementById('driverExample');
-const kartSlot = document.getElementById('kartExample');
-const itemSlot = document.getElementById('itemExample');
-const utilSlot = document.getElementById('utilityExample');
-
-const rerollBtn = document.getElementById('rerollExamples');
-
-// Tools & quiz
-const d6Btn = document.getElementById('rollD6');
-const d6Out = document.getElementById('d6Result');
-const coinBtn = document.getElementById('coinFlip');
-const coinOut = document.getElementById('coinResult');
-const quizRoot = document.getElementById('quizRoot');
-
-let ALL = [];
-
-// ===== Helpers =====
 const t = s => (s ?? '').toString().trim();
 const lc = s => t(s).toLowerCase();
+
+function frontImage(cardId) {
+    if (!cardId) return '';
+    return `${FRONT_DIR}/${encodeURIComponent(cardId + IMG_VERSION_SUFFIX)}.${FRONT_EXT}`;
+}
 
 function mapRow(row) {
     return {
         name: t(row['Card Name']),
-        type: t(row['Card Type']), // Driver/Kart/Item/Utility
+        type: t(row['Card Type']),   // Driver / Kart / Item / Utility
         rarity: t(row['Rarity']) || 'Common',
         card_id: t(row['Card ID']),
-        version: t(row['Version'])
     };
 }
-function frontImage(id) { return `${FRONT_DIR}/${encodeURIComponent(id)}.${FRONT_EXT}`; }
-function byType(cards, type) { return cards.filter(c => lc(c.type) === lc(type)); }
 
-function rarityKey(r) {
-    const v = lc(r);
-    if (v.startsWith('myth')) return 'mythic';
-    if (v.startsWith('rare') && !v.includes('un')) return 'rare';
-    if (v.startsWith('un')) return 'uncommon';
-    return 'common';
-}
-function pickRandom(arr) {
-    if (!arr.length) return null;
-    return arr[Math.floor(Math.random() * arr.length)];
+function filterByType(cards, type) {
+    return cards.filter(c => lc(c.type) === lc(type) && c.card_id);
 }
 
-// ===== Example card tile (flip on click) =====
-function exampleTile(card) {
-    const id = card.card_id;
-    const rar = rarityKey(card.rarity);
-    const href = `catalogue.html?id=${encodeURIComponent(id)}`;
-    const front = id ? frontImage(id + IMG_VERSION_SUFFIX) : '';
-
-    return `
-    <a class="ex-card-wrap" href="${href}">
-      <div class="ex-card rarity-${rar}">
-        <div class="ex-inner">
-          <img class="ex-face front" loading="lazy" src="${front}">
-          <img class="ex-face back"  loading="lazy" src="images/back.png">
-        </div>
-        <span class="ex-glow"></span>
-      </div>
-      <div class="ex-meta">${card.name}</div>
-    </a>`;
+function pickRandom(list) {
+    if (!list.length) return null;
+    return list[Math.floor(Math.random() * list.length)];
 }
 
-function injectExample(slot, card) {
+function renderExampleCard(slotId, card) {
+    const slot = document.getElementById(slotId);
     if (!slot) return;
-    slot.innerHTML = card ? exampleTile(card) : `<div class="muted">No example found.</div>`;
 
-    const wrap = slot.querySelector('.ex-card-wrap');
-    const cardEl = slot.querySelector('.ex-card');
-    if (!wrap || !cardEl) return;
+    if (!card) {
+        slot.innerHTML = '<p class="rules-note">No card of this type found.</p>';
+        return;
+    }
 
-    wrap.addEventListener('click', (e) => {
-        if (e.target.closest('.ex-card')) {
-            e.preventDefault();
-            cardEl.classList.toggle('is-flipped');
-        }
-    });
-}
+    const imgSrc = frontImage(card.card_id);
+    const href = `catalogue.html?id=${encodeURIComponent(card.card_id)}`;
 
-// ===== Reroll all examples =====
-function rerollExamples() {
-    injectExample(driverSlot, pickRandom(byType(ALL, 'Driver')));
-    injectExample(kartSlot, pickRandom(byType(ALL, 'Kart')));
-    injectExample(itemSlot, pickRandom(byType(ALL, 'Item')));
-    injectExample(utilSlot, pickRandom(byType(ALL, 'Utility')));
-}
-
-// ===== Simple mini quiz =====
-function renderQuiz() {
-    if (!quizRoot) return;
-    const Q = [
-        {
-            q: 'What determines your chance to dodge?',
-            a: ['Handling', 'Speed', 'Rarity', 'Play Cost'],
-            i: 0
-        },
-        {
-            q: 'What wins the game?',
-            a: ['Most cards in hand', 'Highest Position at race end', 'Most mythics revealed'],
-            i: 1
-        },
-        {
-            q: 'Items usually need…',
-            a: ['A hit roll against a threshold', 'A sacrifice of your Driver', 'No cost at all'],
-            i: 0
-        }
-    ];
-    quizRoot.innerHTML = Q.map((q, i) => `
-    <div class="quiz-q">
-      <div class="qq">${i + 1}. ${q.q}</div>
-      <div class="qa">
-        ${q.a.map((opt, j) => `<button class="btn quiz-opt" data-q="${i}" data-a="${j}">${opt}</button>`).join('')}
+    slot.innerHTML = `
+    <a class="example-card-link" href="${href}" title="Open in catalogue">
+      <div class="example-card-frame">
+        <img src="${imgSrc}" alt="${card.name}">
       </div>
-      <div class="qr" id="qr-${i}"> </div>
-    </div>
-  `).join('');
-
-    quizRoot.querySelectorAll('.quiz-opt').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const qi = parseInt(btn.dataset.q, 10);
-            const ai = parseInt(btn.dataset.a, 10);
-            const correct = ai === Q[qi].i;
-            const r = document.getElementById(`qr-${qi}`);
-            r.textContent = correct ? 'Correct! ✅' : 'Try again. ❌';
-            r.style.color = correct ? '#54c17a' : '#ff8686';
-        });
-    });
+      <div class="example-card-name">${card.name}</div>
+    </a>
+  `;
 }
 
-// ===== Tools =====
+// mini tools
 function wireTools() {
+    const d6Btn = document.getElementById('rollD6');
+    const d6Out = document.getElementById('d6Result');
+    const coinBtn = document.getElementById('flipCoin');
+    const coinOut = document.getElementById('coinResult');
+
     if (d6Btn && d6Out) {
         d6Btn.addEventListener('click', () => {
             d6Out.textContent = (1 + Math.floor(Math.random() * 6)).toString();
         });
     }
+
     if (coinBtn && coinOut) {
         coinBtn.addEventListener('click', () => {
             coinOut.textContent = Math.random() < 0.5 ? 'Heads' : 'Tails';
@@ -152,17 +73,29 @@ function wireTools() {
     }
 }
 
-// ===== Boot =====
 document.addEventListener('DOMContentLoaded', () => {
     wireTools();
-    renderQuiz();
 
     Papa.parse(CSV_URL, {
-        download: true, header: true, skipEmptyLines: true,
+        download: true,
+        header: true,
+        skipEmptyLines: true,
         complete: (res) => {
-            ALL = res.data.map(mapRow).filter(r => r.name);
-            rerollExamples();
-            if (rerollBtn) rerollBtn.addEventListener('click', rerollExamples);
+            const cards = res.data.map(mapRow).filter(c => c.name);
+
+            function reroll() {
+                renderExampleCard('driverExample', pickRandom(filterByType(cards, 'Driver')));
+                renderExampleCard('kartExample', pickRandom(filterByType(cards, 'Kart')));
+                renderExampleCard('itemExample', pickRandom(filterByType(cards, 'Item')));
+                renderExampleCard('utilityExample', pickRandom(filterByType(cards, 'Utility')));
+            }
+
+            reroll();
+
+            const shuffleBtn = document.getElementById('shuffleExamples');
+            if (shuffleBtn) {
+                shuffleBtn.addEventListener('click', reroll);
+            }
         },
         error: (e) => console.error(e)
     });
