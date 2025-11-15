@@ -624,13 +624,14 @@ body {
 }
 
 .example-card-frame {
-    width: 180px;
+    width: clamp(110px, 16vw, 140px); /* smaller, responsive */
     aspect-ratio: 5 / 7;
     border-radius: .75rem;
     overflow: hidden;
     border: 1px solid #1b2836;
-    box-shadow: 0 6px 18px rgba(0,0,0,.5);
+    box-shadow: 0 4px 12px rgba(0,0,0,.5);
 }
+
 
     .example-card-frame img {
         width: 100%;
