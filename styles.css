@@ -492,118 +492,124 @@ body {
   .carousel-track { animation: none; }
 }
 
-/* ===== Rules layout (fixed) ===== */
+/* ================================================
+   RULES MASTER LAYOUT (FIXED + RESPONSIVE)
+   ================================================ */
 .rules-wrap {
     max-width: 1200px;
     margin: 1rem auto 2rem;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: 240px 1fr; /* sidebar + main */
-}
-
-@media (max-width: 880px) {
-    .rules-wrap {
-        grid-template-columns: 1fr; /* stack on mobile */
-    }
-
-    .rules-toc {
-        position: static;
-    }
-    /* no sticky on small screens */
-}
-
-.rules-hero {
-    grid-column: 1 / -1;
-    padding: 2rem 1rem 1rem;
-    background: linear-gradient(180deg, #0e151f, transparent);
-    border: 1px solid #1b2836;
-    border-radius: 1rem;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
 }
 
 /* Sidebar */
 .rules-toc {
     position: sticky;
-    top: 64px; /* just below your header */
+    top: 72px;
     align-self: start;
-    z-index: 0; /* never sit over main content */
     background: #0f1620;
     border: 1px solid #1b2836;
-    border-radius: .8rem;
-    padding: .75rem;
-    max-height: calc(100vh - 80px);
-    overflow: auto; /* scroll inside if long */
+    border-radius: .75rem;
+    padding: .85rem 1rem;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    z-index: 0; /* ensures it doesn't overlap text */
 }
 
+    /* Sidebar links */
     .rules-toc h3 {
-        margin: .1rem 0 .5rem;
-        font: 700 1.1rem/1 'Bebas Neue',sans-serif
+        margin: .1rem 0 .6rem;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.4rem;
     }
 
     .rules-toc a {
         display: block;
-        color: #a9bad1;
+        padding: .35rem .5rem;
+        color: #acc6e2;
         text-decoration: none;
-        padding: .25rem .4rem;
-        border-radius: .4rem
+        border-radius: .4rem;
     }
 
         .rules-toc a:hover {
-            background: #101a25;
-            color: #fff
+            background: #1a2532;
+            color: white;
         }
 
-/* Main sections */
+/* Main rules sections */
 .rules-section {
     background: #0e151f;
     border: 1px solid #1b2836;
     border-radius: 1rem;
-    padding: 1rem;
+    padding: 1.25rem;
+    overflow: hidden; /* prevents card overflow */
 }
 
+/* HERO full-width */
+.rules-hero {
+    grid-column: 1 / -1;
+    padding: 2rem 1rem 1.5rem;
+    background: linear-gradient(180deg, #0e151f, rgba(0,0,0,0));
+    border: 1px solid #1b2836;
+    border-radius: 1rem;
+}
+
+/* Two-column splits */
 .split {
     display: grid;
-    grid-template-columns: 1fr minmax(220px, 320px);
-    gap: 1rem;
+    grid-template-columns: 1fr 260px;
+    gap: 1.25rem;
     align-items: center;
 }
 
-@media (max-width: 700px) {
+@media(max-width:900px) {
+    .rules-wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .rules-toc {
+        position: static;
+        max-height: none;
+    }
+
     .split {
         grid-template-columns: 1fr;
     }
 }
-/* ===== Example card (fixed flip + containment) ===== */
+/* ================================================
+   EXAMPLE CARD — FIXED VERSION
+   ================================================ */
 .example-slot {
     display: flex;
     justify-content: center;
+    align-items: center;
+    overflow: visible;
+    padding: .5rem 0;
 }
 
-/* wrapper is a link; card inside is the flipper */
 .ex-card-wrap {
-    text-decoration: none;
-    color: inherit;
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-decoration: none;
     gap: .5rem;
 }
 
 .ex-card {
-    position: relative;
-    width: clamp(10rem, 22vw, 14rem);
+    width: 230px;
     aspect-ratio: 5 / 7;
-    border-radius: .8rem;
-    overflow: hidden; /* contain faces */
-    perspective: 1200px; /* give 3D space */
+    perspective: 1200px;
+    position: relative;
 }
 
-/* inner element that actually rotates */
 .ex-inner {
     position: absolute;
     inset: 0;
+    border-radius: 1rem;
+    transition: transform .6s cubic-bezier(.2, .7, .2, 1);
     transform-style: preserve-3d;
-    transition: transform .6s cubic-bezier(.2,.7,.2,1);
 }
 
 .ex-card.is-flipped .ex-inner {
@@ -613,11 +619,9 @@ body {
 .ex-face {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
+    border-radius: 1rem;
     backface-visibility: hidden;
-    border-radius: inherit;
+    background: #000;
     object-fit: cover;
 }
 
@@ -627,32 +631,29 @@ body {
 
 .ex-glow {
     position: absolute;
-    inset: -2px;
+    inset: -4px;
     border-radius: inherit;
     pointer-events: none;
-    z-index: 2;
 }
 
 .rarity-common .ex-glow {
-    box-shadow: inset 0 0 18px #9aa4b255
+    box-shadow: inset 0 0 18px #9aa4b255;
 }
 
 .rarity-uncommon .ex-glow {
-    box-shadow: inset 0 0 18px #54c17a55
+    box-shadow: inset 0 0 18px #54c17a55;
 }
 
 .rarity-rare .ex-glow {
-    box-shadow: inset 0 0 18px #6e8cff55
+    box-shadow: inset 0 0 18px #6e8cff55;
 }
 
 .rarity-mythic .ex-glow {
-    box-shadow: inset 0 0 18px #ffb84d55
+    box-shadow: inset 0 0 18px #ffb84d55;
 }
 
 .ex-meta {
-    font: 700 .95rem/1 'Bebas Neue',sans-serif;
-    letter-spacing: .02em;
-    color: #cfe2ff;
-    text-align: center;
+    font-family: 'Bebas Neue';
+    font-size: 1.2rem;
+    color: #d7e6ff;
 }
-
