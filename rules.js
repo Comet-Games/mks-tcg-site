@@ -1,4 +1,4 @@
-﻿// ===== Config: match your site =====
+// ===== Config: match your site =====
 const CSV_URL = 'data/MasterSheet.csv';
 const FRONT_DIR = 'images/cards';
 const FRONT_EXT = 'png';
@@ -58,12 +58,15 @@ function exampleTile(card) {
     const rar = rarityKey(card.rarity);
     const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(id || card.name)}`;
     const front = id ? frontImage(id + IMG_VERSION_SUFFIX) : '';
+
     return `
     <a class="ex-card-wrap" href="${href}" title="Open in catalogue">
       <div class="ex-card rarity-${rar}" data-name="${card.name}">
         <span class="ex-glow"></span>
-        <img class="ex-front" loading="lazy" src="${front}" alt="${card.name} (front)">
-        <img class="ex-back"  loading="lazy" src="${BACK_IMAGE}" alt="Card back">
+        <div class="ex-inner">
+          <img class="ex-face front" loading="lazy" src="${front}" alt="${card.name} (front)">
+          <img class="ex-face back"  loading="lazy" src="${BACK_IMAGE}" alt="Card back">
+        </div>
       </div>
       <div class="ex-meta">${card.name}</div>
     </a>
@@ -72,15 +75,17 @@ function exampleTile(card) {
 function injectExample(slot, card) {
     if (!slot) return;
     slot.innerHTML = card ? exampleTile(card) : `<div class="muted">No example found.</div>`;
-    // flip on click (prevent link while flipping)
-    const link = slot.querySelector('.ex-card-wrap');
+
+    const wrap = slot.querySelector('.ex-card-wrap');
     const cardEl = slot.querySelector('.ex-card');
-    if (!cardEl || !link) return;
-    let flipped = false;
-    cardEl.addEventListener('click', (e) => {
-        e.preventDefault();
-        flipped = !flipped;
-        cardEl.classList.toggle('is-flipped', flipped);
+    if (!wrap || !cardEl) return;
+
+    wrap.addEventListener('click', (e) => {
+        // If user clicks the card, flip instead of navigating
+        if (e.target.closest('.ex-card')) {
+            e.preventDefault();
+            cardEl.classList.toggle('is-flipped');
+        }
     });
 }
 

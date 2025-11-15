@@ -492,14 +492,25 @@ body {
   .carousel-track { animation: none; }
 }
 
-/* ===== Rules layout ===== */
+/* ===== Rules layout (fixed) ===== */
 .rules-wrap {
     max-width: 1200px;
     margin: 1rem auto 2rem;
     padding: 0 1rem;
     display: grid;
     gap: 1rem;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 240px 1fr; /* sidebar + main */
+}
+
+@media (max-width: 880px) {
+    .rules-wrap {
+        grid-template-columns: 1fr; /* stack on mobile */
+    }
+
+    .rules-toc {
+        position: static;
+    }
+    /* no sticky on small screens */
 }
 
 .rules-hero {
@@ -510,14 +521,18 @@ body {
     border-radius: 1rem;
 }
 
+/* Sidebar */
 .rules-toc {
     position: sticky;
-    top: 72px;
+    top: 64px; /* just below your header */
     align-self: start;
+    z-index: 0; /* never sit over main content */
     background: #0f1620;
     border: 1px solid #1b2836;
     border-radius: .8rem;
     padding: .75rem;
+    max-height: calc(100vh - 80px);
+    overflow: auto; /* scroll inside if long */
 }
 
     .rules-toc h3 {
@@ -538,6 +553,7 @@ body {
             color: #fff
         }
 
+/* Main sections */
 .rules-section {
     background: #0e151f;
     border: 1px solid #1b2836;
@@ -547,193 +563,14 @@ body {
 
 .split {
     display: grid;
-    grid-template-columns: 1fr minmax(220px, 300px);
+    grid-template-columns: 1fr minmax(220px, 320px);
     gap: 1rem;
     align-items: center;
 }
 
-.muted {
-    color: #9fb2cb;
-    opacity: .85
-}
-
-.bul {
-    padding-left: 1.25rem;
-}
-
-/* timeline */
-.timeline {
-    display: grid;
-    gap: .4rem;
-    margin-top: .5rem
-}
-
-.t-step {
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .6rem;
-    padding: .5rem .6rem
-}
-
-    .t-step span {
-        background: #1b2836;
-        border-radius: .4rem;
-        padding: .1rem .45rem;
-        margin-right: .4rem
+@media (max-width: 700px) {
+    .split {
+        grid-template-columns: 1fr;
     }
-
-/* callouts & details */
-.callout {
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .6rem;
-    padding: .5rem .6rem;
-    margin-top: .6rem
-}
-
-    .callout > summary {
-        cursor: pointer;
-        color: #cfe2ff
-    }
-
-/* keyword grid */
-.keyword-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-    gap: .6rem
-}
-
-.kw {
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .6rem;
-    padding: .5rem
-}
-
-    .kw strong {
-        display: block;
-        margin-bottom: .25rem
-    }
-
-/* ===== Example card mini component ===== */
-.example-slot {
-    display: flex;
-    justify-content: center;
-}
-
-.ex-card-wrap {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .4rem
-}
-
-.ex-card {
-    width: clamp(10rem, 22vw, 14rem);
-    aspect-ratio: 5/7;
-    position: relative;
-    border-radius: .8rem;
-    overflow: hidden;
-    transform-style: preserve-3d;
-    transition: transform .5s cubic-bezier(.2,.7,.2,1);
-}
-
-    .ex-card:hover {
-        transform: translateY(-2px)
-    }
-
-    .ex-card.is-flipped {
-        transform: rotateY(180deg)
-    }
-
-.ex-front, .ex-back {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    backface-visibility: hidden;
-}
-
-.ex-back {
-    transform: rotateY(180deg)
-}
-
-.ex-glow {
-    position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    pointer-events: none;
-}
-
-.rarity-common .ex-glow {
-    box-shadow: inset 0 0 18px #9aa4b255
-}
-
-.rarity-uncommon .ex-glow {
-    box-shadow: inset 0 0 18px #54c17a55
-}
-
-.rarity-rare .ex-glow {
-    box-shadow: inset 0 0 18px #6e8cff55
-}
-
-.rarity-mythic .ex-glow {
-    box-shadow: inset 0 0 18px #ffb84d55
-}
-
-.ex-meta {
-    font: 700 .95rem/1 'Bebas Neue',sans-serif;
-    letter-spacing: .02em;
-    color: #cfe2ff
-}
-
-/* ===== Quiz ===== */
-.quiz-root {
-    display: grid;
-    gap: .75rem
-}
-
-.quiz-q {
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .8rem;
-    padding: .75rem
-}
-
-.qq {
-    margin-bottom: .4rem;
-    color: #eef4ff
-}
-
-.qa {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem
-}
-
-.qr {
-    margin-top: .35rem;
-    min-height: 1.2em
-}
-
-/* ===== Tools ===== */
-.tools {
-    display: flex;
-    align-items: center;
-    gap: .6rem
-}
-
-.tool-result {
-    min-width: 3rem;
-    display: inline-block;
-    text-align: center;
-    background: #0f1620;
-    border: 1px solid #1b2836;
-    border-radius: .4rem;
-    padding: .3rem .4rem
 }
 
