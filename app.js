@@ -22,6 +22,32 @@ const compareArea = document.getElementById('compareArea');
 
 let CARDS = [];
 let SELECTED = []; // store Card IDs (or names if no ID – but ID is expected)
+let FOCUSED_FROM_QUERY = false;
+
+function focusCardFromQuery() {
+    if (FOCUSED_FROM_QUERY) return;
+    const params = new URLSearchParams(window.location.search);
+    const target = params.get('id');
+    if (!target) return;
+
+    // escape in case of weird chars
+    const safe = CSS.escape(target);
+    const tile = document.querySelector(`.tile[data-id="${safe}"]`);
+    if (!tile) return;
+
+    FOCUSED_FROM_QUERY = true;
+
+    // scroll into view and flash outline
+    tile.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    tile.animate(
+        [
+            { outline: '0px solid rgba(77,163,255,0)' },
+            { outline: '3px solid rgba(77,163,255,1)' },
+            { outline: '0px solid rgba(77,163,255,0)' }
+        ],
+        { duration: 1500, easing: 'ease-out' }
+    );
+}
 
 // Helpers
 const lc = s => (s ?? '').toString().trim().toLowerCase();
@@ -122,6 +148,9 @@ function applyFilters() {
 
     wireCards();
     updateDock();
+
+    // NEW: focus card from ?id=... the first time
+    focusCardFromQuery();
 }
 
 // after applyFilters() renders:
@@ -149,7 +178,10 @@ function wireCards() {
     grid.querySelectorAll('.card').forEach(cardEl => {
         cardEl.addEventListener('click', () => cardEl.classList.toggle('is-flipped'));
         cardEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cardEl.classList.toggle('is-flipped'); }
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                cardEl.classList.toggle('is-flipped');
+            }
         });
     });
 
@@ -166,23 +198,52 @@ function wireCards() {
             w.style.setProperty('--ry', ry.toFixed(2) + 'deg');
             w.style.setProperty('--tz', '12px');
         }
-        function reset() { w.style.setProperty('--rx', '0deg'); w.style.setProperty('--ry', '0deg'); w.style.setProperty('--tz', '0px'); }
+        function reset() {
+            w.style.setProperty('--rx', '0deg');
+            w.style.setProperty('--ry', '0deg');
+            w.style.setProperty('--tz', '0px');
+        }
         w.addEventListener('mousemove', setTilt);
         w.addEventListener('mouseleave', reset);
         w.addEventListener('touchstart', () => w.classList.add('touched'), { passive: true });
     });
 
-    // Compare toggle
+    // Compare toggle + deep-link URL update
     grid.querySelectorAll('.tile').forEach(tile => {
         const id = tile.dataset.id;
+        if (!id) return;
+
         const btn = tile.querySelector('.mark-compare');
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleSelect(id);
-            btn.setAttribute('aria-pressed', SELECTED.includes(id));
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // don't treat compare clicks as tile clicks
+                toggleSelect(id);
+                btn.setAttribute('aria-pressed', SELECTED.includes(id));
+            });
+        }
+
+        // Clicking anywhere on the tile updates ?id=... in the URL
+        tile.addEventListener('click', (e) => {
+            // ignore compare button, we handled it above
+            if (e.target.closest('.mark-compare')) return;
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('id', id);
+            window.history.replaceState({}, '', url);
+
+            // small highlight so you see what you clicked
+            tile.animate(
+                [
+                    { outline: '0px solid rgba(77,163,255,0)' },
+                    { outline: '4px solid rgba(77,163,255,1)' },
+                    { outline: '0px solid rgba(77,163,255,0)' }
+                ],
+                { duration: 800, easing: 'ease-out' }
+            );
         });
     });
 }
+
 
 function toggleSelect(id) {
     if (SELECTED.includes(id)) {
