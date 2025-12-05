@@ -62,6 +62,15 @@ function rarityClass(r) {
     return 'common';
 }
 
+function rarityOrder(r) {
+    const v = lc(r);
+    if (v.startsWith('common')) return 1;
+    if (v.startsWith('un')) return 2; // Uncommon
+    if (v.startsWith('rare') && !v.includes('un')) return 3;
+    if (v.startsWith('myth')) return 4;
+    return 99; // dump anything weird at the end
+}
+
 // Map your CSV columns
 function mapRow(row) {
     const out = {
@@ -95,9 +104,19 @@ function mapRow(row) {
 // Front image: use Card ID exactly
 function frontImagePath(card) {
     const id = txt(card.card_id);
-    if (!id) return ''; // no ID → no image (warn in console)
+    if (!id) return ''; // no ID → no image
+
+    const isFuel = lc(card.type) === 'fuel';
+
+    if (isFuel) {
+        // Fuel: filenames like f001.png, f002.png (no version suffix)
+        return `${FRONT_DIR}/${encodeURIComponent(id.toLowerCase())}.${FRONT_EXT}`;
+    }
+
+    // Everything else: keep current <CardID>_vv1.png pattern
     return `${FRONT_DIR}/${encodeURIComponent(id + "_vv1")}.${FRONT_EXT}`;
 }
+
 
 function renderTile(card) {
     const rar = rarityClass(card.rarity);
@@ -126,7 +145,7 @@ function renderTile(card) {
 
 function applyFilters() {
     const q = lc(qEl.value);
-    const t = lc(tEl.value);
+    const tVal = lc(tEl.value);
     const r = lc(rEl.value);
 
     let rows = CARDS.filter(c => {
@@ -134,14 +153,39 @@ function applyFilters() {
             c.name, c.card_id, c.type, c.rarity, c.off_text, c.def_text, c.utility_effect, c.flavour,
             c.off_ability, c.def_ability, c.artist
         ].join(' '));
+
         const qOk = !q || hay.includes(q);
-        const tOk = !t || lc(c.type) === t;
+
+        // If no explicit type selected → hide Fuel
+        const typeLc = lc(c.type);
+        const tOk = tVal
+            ? typeLc === tVal      // explicit filter: only that type
+            : typeLc !== 'fuel';   // default view: exclude Fuel
+
         const rOk = !r || lc(c.rarity).startsWith(r);
+
         return qOk && tOk && rOk;
     });
 
     const key = sEl.value;
-    rows.sort((a, b) => (a[key] ?? '').toString().localeCompare((b[key] ?? '').toString(), undefined, { numeric: true }));
+
+    rows.sort((a, b) => {
+        // Custom rarity ordering
+        if (key === 'rarity') {
+            const diff = rarityOrder(a.rarity) - rarityOrder(b.rarity);
+            if (diff !== 0) return diff;
+
+            // tie-breaker: name
+            return txt(a.name).localeCompare(txt(b.name));
+        }
+
+        // Default sorting for other keys (name, type, id, etc.)
+        return txt(a[key] ?? '').localeCompare(
+            txt(b[key] ?? ''),
+            undefined,
+            { numeric: true }
+        );
+    });
 
     grid.innerHTML = rows.map(renderTile).join('');
     empty.hidden = rows.length !== 0;
