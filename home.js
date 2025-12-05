@@ -59,12 +59,22 @@ function shuffle(arr){
  * - duplicate sequence for loop (A+B)
  * - duration computed from width for constant px/sec speed
  */
+function isFuelCard(c) {
+    return lc(c.type || '') === 'fuel';
+}
+
 function renderCarousel(cards){
   if (!carouselTrack) return; // page has no carousel section
 
-  const usable = cards
-    .filter(c => c.card_id)
-    .map(c => ({ id: c.card_id, name: c.name, rarity: rarityKey(c.rarity || 'Common') }));
+const usable = cards
+    // must have an ID and must NOT be fuel
+    .filter(c => c.card_id && c.card_id.length && !isFuelCard(c))
+    .map(c => ({
+        id: c.card_id,
+        name: c.name,
+        rarity: rarityKey(c.rarity || 'Common')
+    }));
+
 
   if (!usable.length) return;
 
