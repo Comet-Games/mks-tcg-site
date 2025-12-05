@@ -70,6 +70,24 @@ function rarityOrder(r) {
     return 99; // anything weird goes to the bottom
 }
 
+// Detect whether a card is Fuel, even if type is missing / messy
+function isFuel(card) {
+    const type = lc(card.type || '');
+    const name = lc(card.name || '');
+    const id = lc(card.card_id || '');
+
+    // If type explicitly mentions fuel
+    if (type.includes('fuel')) return true;
+
+    // If the name is literally "Fuel" or starts with "Fuel ..."
+    if (name === 'fuel' || name.startsWith('fuel ')) return true;
+
+    // If type is blank but ID is like f001, f002, etc.
+    if (!type && /^f\d{3,}$/i.test(id)) return true;
+
+    return false;
+}
+
 // Map your CSV columns
 function mapRow(row) {
     const out = {
@@ -103,19 +121,16 @@ function mapRow(row) {
 // Front image: use Card ID exactly
 function frontImagePath(card) {
     const id = txt(card.card_id);
-    if (!id) return ''; // no ID → no image
+    if (!id) return ''; // no ID → no image (warn in console)
 
-    const isFuel = lc(card.type) === 'fuel';
-
-    if (isFuel) {
-        // Fuel: filenames like f001.png, f002.png (no version suffix)
+    if (isFuel(card)) {
+        // Fuel: filenames like f001.png, f002.png
         return `${FRONT_DIR}/${encodeURIComponent(id.toLowerCase())}.${FRONT_EXT}`;
     }
 
-    // Everything else: keep current <CardID>_vv1.png pattern
+    // Everything else: <CardID>_vv1.png
     return `${FRONT_DIR}/${encodeURIComponent(id + "_vv1")}.${FRONT_EXT}`;
 }
-
 
 function renderTile(card) {
     const rar = rarityClass(card.rarity);
@@ -144,8 +159,8 @@ function renderTile(card) {
 
 function applyFilters() {
     const q = lc(qEl.value);
-    const tVal = lc(tEl.value);
-    const r = lc(rEl.value);
+    const tVal = lc(tEl.value);   // selected type from dropdown ('' or 'driver'/'fuel'/etc.)
+    const rVal = lc(rEl.value);   // selected rarity filter ('' or 'common'/'uncommon'/...)
 
     let rows = CARDS.filter(c => {
         const hay = lc([
@@ -155,35 +170,39 @@ function applyFilters() {
 
         const qOk = !q || hay.includes(q);
 
-        // Normalise the card's type, and treat anything containing "fuel" as fuel
-        const typeLcRaw = lc(c.type || '');
-        const typeKey = typeLcRaw.includes('fuel')
-            ? 'fuel'
-            : typeLcRaw.trim();
+        const fuel = isFuel(c);
+        const typeLc = lc(c.type || '');
 
         let tOk;
         if (tVal) {
-            // Explicit filter selected (Driver / Kart / Fuel, etc.)
-            tOk = typeKey === tVal;
+            // Explicit filter selected (Driver / Kart / Item / Utility / Fuel)
+            if (tVal === 'fuel') {
+                tOk = fuel;
+            } else {
+                // Non-fuel filter: don't show fuel unless explicitly chosen
+                tOk = !fuel && typeLc === tVal;
+            }
         } else if (!q) {
-            // No type filter AND no search: hide Fuel by default
-            tOk = typeKey !== 'fuel';
+            // No type filter AND no search: default view → hide Fuel
+            tOk = !fuel;
         } else {
-            // Searching: don't auto-hide Fuel
+            // Searching (q != '') with no type filter → allow Fuel
             tOk = true;
         }
 
-        const rOk = !r || lc(c.rarity).startsWith(r);
+        const rOk = !rVal || lc(c.rarity || '').startsWith(rVal);
 
         return qOk && tOk && rOk;
     });
 
     const key = sEl.value;
 
+    // Sort, with custom handling for rarity
     rows.sort((a, b) => {
         if (key === 'rarity') {
             const diff = rarityOrder(a.rarity) - rarityOrder(b.rarity);
             if (diff !== 0) return diff;
+
             // tie-breaker: name
             return txt(a.name).localeCompare(txt(b.name));
         }
@@ -200,8 +219,6 @@ function applyFilters() {
 
     wireCards();
     updateDock();
-
-    // NEW: focus card from ?id=... the first time
     focusCardFromQuery();
 }
 
