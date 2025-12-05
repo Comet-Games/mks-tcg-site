@@ -61,14 +61,13 @@ function rarityClass(r) {
     if (v.startsWith('un')) return 'uncommon';
     return 'common';
 }
-
 function rarityOrder(r) {
-    const v = lc(r);
+    const v = lc(r || '');
     if (v.startsWith('common')) return 1;
-    if (v.startsWith('un')) return 2; // Uncommon
-    if (v.startsWith('rare') && !v.includes('un')) return 3;
-    if (v.startsWith('myth')) return 4;
-    return 99; // dump anything weird at the end
+    if (v.startsWith('uncommon')) return 2;
+    if (v.startsWith('rare') && !v.startsWith('uncommon')) return 3;
+    if (v.startsWith('mythic')) return 4;
+    return 99; // anything weird goes to the bottom
 }
 
 // Map your CSV columns
@@ -156,11 +155,23 @@ function applyFilters() {
 
         const qOk = !q || hay.includes(q);
 
-        // If no explicit type selected → hide Fuel
-        const typeLc = lc(c.type);
-        const tOk = tVal
-            ? typeLc === tVal      // explicit filter: only that type
-            : typeLc !== 'fuel';   // default view: exclude Fuel
+        // Normalise the card's type, and treat anything containing "fuel" as fuel
+        const typeLcRaw = lc(c.type || '');
+        const typeKey = typeLcRaw.includes('fuel')
+            ? 'fuel'
+            : typeLcRaw.trim();
+
+        let tOk;
+        if (tVal) {
+            // Explicit filter selected (Driver / Kart / Fuel, etc.)
+            tOk = typeKey === tVal;
+        } else if (!q) {
+            // No type filter AND no search: hide Fuel by default
+            tOk = typeKey !== 'fuel';
+        } else {
+            // Searching: don't auto-hide Fuel
+            tOk = true;
+        }
 
         const rOk = !r || lc(c.rarity).startsWith(r);
 
@@ -170,16 +181,13 @@ function applyFilters() {
     const key = sEl.value;
 
     rows.sort((a, b) => {
-        // Custom rarity ordering
         if (key === 'rarity') {
             const diff = rarityOrder(a.rarity) - rarityOrder(b.rarity);
             if (diff !== 0) return diff;
-
             // tie-breaker: name
             return txt(a.name).localeCompare(txt(b.name));
         }
 
-        // Default sorting for other keys (name, type, id, etc.)
         return txt(a[key] ?? '').localeCompare(
             txt(b[key] ?? ''),
             undefined,
