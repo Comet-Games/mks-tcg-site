@@ -156,7 +156,6 @@ function renderTile(card) {
 
     <div class="card-info-row">
       <div class="title">${card.name}</div>
-      <!-- IMPORTANT: keep both classes: icon-btn + mark-compare -->
       <button
         class="icon-btn mark-compare"
         aria-pressed="${selected}"
@@ -170,7 +169,6 @@ function renderTile(card) {
     </div>
   </div>`;
 }
-
 
 function applyFilters() {
     const q = lc(qEl.value);
@@ -297,7 +295,7 @@ function wireCards() {
         const id = tile.dataset.id;
         if (!id) return;
 
-        const btn = tile.querySelector('.mark-compare');
+        const btn = tile.querySelector('.mark-compare, .compare-btn');
         if (btn) {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation(); // don't treat compare clicks as tile clicks
