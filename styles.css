@@ -251,6 +251,27 @@ main {
     letter-spacing: .02em;
 }
 
+/* Row under each card: name + Compare button */
+.card-info-row {
+    margin-top: .35rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    padding: 0 .1rem;
+}
+
+.card-info-row .title {
+    margin: 0;
+    text-align: left;
+}
+
+.card-info-row .icon-btn {
+    white-space: nowrap;
+    padding: .25rem .55rem;
+    font-size: .8rem;
+}
+
 .compare-btn {
     background: #0f1620;
     color: #fff;

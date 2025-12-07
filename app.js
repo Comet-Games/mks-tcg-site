@@ -141,18 +141,35 @@ function renderTile(card) {
     if (!front) console.warn('Missing Card ID (no front image):', card.name);
 
     return `
-    <div class="card-wrap">
-    <div class="card">
-        <div class="face front"><img src="${front}" alt="${c.name}"></div>
-        <div class="face back"><img src="${back}" alt="${c.name} back"></div>
+  <div class="tile" data-id="${idKey}">
+    <div class="card-wrap rarity-${rar}" data-name="${card.name}">
+      <div class="card" tabindex="0" aria-label="${card.name} card">
+        <span class="glow"></span>
+        <div class="face front">
+          <img loading="lazy" src="${front}" alt="${card.name} (front)">
+        </div>
+        <div class="face back">
+          <img loading="lazy" src="${BACK_IMAGE}" alt="Card back">
+        </div>
+      </div>
     </div>
 
     <div class="card-info-row">
-        <div class="title">${c.name}</div>
-        <button class="compare-btn" data-id="${c.card_id}">Compare</button>
+      <div class="title">${card.name}</div>
+      <button
+        class="icon-btn mark-compare"
+        aria-pressed="${selected}"
+        type="button">
+        Compare
+      </button>
     </div>
-    </div>`;
+
+    <div class="meta">
+      ${titleCase(card.type)}${card.card_id ? ` • ${card.card_id}` : ''} • ${card.rarity}
+    </div>
+  </div>`;
 }
+
 
 function applyFilters() {
     const q = lc(qEl.value);
