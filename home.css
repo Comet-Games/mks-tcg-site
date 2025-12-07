@@ -140,6 +140,12 @@
     padding-top: .5rem;
 }
 
+/* Make stats sit closer to the hero on the home page */
+.home .stats {
+    margin-top: 1rem;          /* was 1.5rem from styles.css */
+    margin-bottom: 1.5rem;
+}
+
 /* Responsive tweaks */
 
 @media (max-width: 720px) {
@@ -149,5 +155,20 @@
 
     .home-mode {
         margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .home .stats {
+        display: flex;
+        flex-wrap: nowrap;          /* keep everything on one line */
+        overflow-x: auto;           /* horizontal scroll on phone */
+        gap: .75rem;
+        padding: 0 1rem .4rem;      /* small bottom padding for scroll area */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .home .stats .stat {
+        flex: 0 0 auto;            /* prevent shrinking so they scroll */
     }
 }
