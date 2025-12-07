@@ -356,6 +356,8 @@
           <button class="pill" data-view="grid">Grid</button>
         </div>
         <div class="spacer"></div>
+        <button class="secondary" id="restartRaceBtn">Restart Race</button>
+        <button class="secondary" id="newGameBtn">New Game</button>
         <button class="secondary" id="diceToggleBtn">Dice Tools</button>
       </div>
       <div class="card">
@@ -479,6 +481,9 @@
     const rollD6Btn = $("#rollD6Btn");
     const rollD20Btn = $("#rollD20Btn");
 
+    const restartRaceBtn = $("#restartRaceBtn");
+    const newGameBtn = $("#newGameBtn");
+
     // --- Rendering ---
     function renderSetup() {
       // mode pills
@@ -575,8 +580,6 @@
       });
 
       playersContainer.appendChild(container);
-
-      // movement panel visibility is handled when opening/closing
     }
 
     function renderAll() {
@@ -630,6 +633,31 @@
     function handleRollD20() {
       const v = rollDie(20);
       diceOutput.textContent = `d20 → ${v}`;
+    }
+
+    // --- Restart/New Game helpers ---
+    function restartRace() {
+      if (!state.players.length) return;
+      if (!confirm("Restart race? All positions will reset to 0.")) return;
+
+      state.players.forEach(p => p.position = 0);
+      saveState();
+      renderGame();
+    }
+
+    function newGame() {
+      if (!confirm("Start a new game? All players and data will be cleared.")) return;
+
+      state = {
+        mode: "table",
+        players: [],
+        view: "list",
+        selectedPlayerId: null
+      };
+      saveState();
+      setupSection.style.display = "";
+      gameSection.style.display = "none";
+      renderAll();
     }
 
     // --- Event wiring ---
@@ -710,7 +738,7 @@
         renderGame();
       });
 
-      // Reset state
+      // Reset state (hard reset from setup)
       resetStateBtn.addEventListener("click", () => {
         if (!confirm("Clear all players and positions?")) return;
         state = {
@@ -745,6 +773,10 @@
         if (isNaN(val)) return;
         deltaInput.value = val;
       });
+
+      // Restart / New game
+      restartRaceBtn.addEventListener("click", restartRace);
+      newGameBtn.addEventListener("click", newGame);
 
       // If we loaded players, skip straight to game
       if (state.players.length > 0) {
