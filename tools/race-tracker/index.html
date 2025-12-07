@@ -117,14 +117,28 @@
       <!-- Slide-up panel -->
       <div id="dicePanel" class="dice-panel">
         <div class="dice-panel-inner">
-          <div class="dice-title">Dice Tools</div>
-          <div class="dice-buttons">
-            <button class="secondary" id="rollD6Btn">Roll d6</button>
-            <button class="secondary" id="rollD20Btn">Roll d20</button>
-          </div>
-          <div class="dice-output" id="diceOutput">No rolls yet.</div>
-          <button class="ghost" id="closeDiceBtn">Close</button>
+        <div class="dice-title">Dice Tools</div>
+
+        <!-- NEW: animation style selector -->
+        <div class="dice-mode-row">
+          <span>Style</span>
+          <select id="diceModeSelect">
+            <option value="roulette">Roulette</option>
+            <option value="spin">Number Spin</option>
+            <option value="3d">3D Roll</option>
+            <option value="explode">Explode</option>
+            <option value="mixed">Mixed</option>
+          </select>
         </div>
+
+        <div class="dice-buttons">
+          <button class="secondary" id="rollD6Btn">Roll d6</button>
+          <button class="secondary" id="rollD20Btn">Roll d20</button>
+        </div>
+
+        <div class="dice-output" id="diceOutput">No rolls yet.</div>
+        <button class="ghost" id="closeDiceBtn">Close</button>
+      </div>
       </div>
     </section>
   </main>

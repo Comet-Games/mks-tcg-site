@@ -5,8 +5,10 @@ let state = {
   mode: "table",          // "table" | "single"
   players: [],            // {id, name, position}
   view: "list",           // "list" | "grid"
-  selectedPlayerId: null
+  selectedPlayerId: null,
+  diceMode: "roulette"    // "roulette" | "spin" | "3d" | "explode" | "mixed"
 };
+
 
 let previousLeaderId = null;
 
@@ -28,13 +30,15 @@ function loadState() {
         mode: parsed.mode || "table",
         players: parsed.players,
         view: parsed.view || "list",
-        selectedPlayerId: null
+        selectedPlayerId: null,
+        diceMode: parsed.diceMode || "roulette"
       };
     }
   } catch (e) {
     console.warn("Could not load state", e);
   }
 }
+
 
 // --- DOM helpers ---
 const $ = (sel) => document.querySelector(sel);
@@ -340,27 +344,108 @@ function applyDelta() {
 }
 
 // --- Dice ---
+const diceOutputEl = $("#diceOutput");
+let diceAnimTimer = null;
+let diceAnimTimeout = null;
+
 function rollDie(sides) {
   return Math.floor(Math.random() * sides) + 1;
 }
 
+function resetDiceClasses() {
+  if (!diceOutputEl) return;
+  diceOutputEl.classList.remove("spin", "roll3d", "explode", "roulette", "bump");
+}
+
+function playDiceAnimation(finalValue, sides) {
+  if (!diceOutputEl) return;
+
+  // kill any previous animation loops
+  if (diceAnimTimer) {
+    clearInterval(diceAnimTimer);
+    diceAnimTimer = null;
+  }
+  if (diceAnimTimeout) {
+    clearTimeout(diceAnimTimeout);
+    diceAnimTimeout = null;
+  }
+
+  resetDiceClasses();
+
+  const rawMode = state.diceMode || "roulette";
+  const modesPool = ["spin", "3d", "explode", "roulette"];
+  const mode =
+    rawMode === "mixed"
+      ? modesPool[Math.floor(Math.random() * modesPool.length)]
+      : rawMode;
+
+  const randomFace = () => Math.floor(Math.random() * sides) + 1;
+
+  // A) Number spin
+  if (mode === "spin") {
+    diceOutputEl.classList.add("spin");
+    let t = 0;
+    const duration = 700;
+    const interval = 60;
+    diceAnimTimer = setInterval(() => {
+      diceOutputEl.textContent = randomFace();
+      t += interval;
+      if (t >= duration) {
+        clearInterval(diceAnimTimer);
+        diceAnimTimer = null;
+        diceOutputEl.textContent = finalValue;
+      }
+    }, interval);
+    return;
+  }
+
+  // D) Mario Kart-style roulette
+  if (mode === "roulette") {
+    diceOutputEl.classList.add("roulette");
+    const faces = Array.from({ length: sides }, (_, i) => i + 1);
+    let idx = Math.floor(Math.random() * faces.length);
+    const duration = 900;
+    const interval = 80;
+    let elapsed = 0;
+    diceAnimTimer = setInterval(() => {
+      diceOutputEl.textContent = faces[idx];
+      idx = (idx + 1) % faces.length;
+      elapsed += interval;
+      if (elapsed >= duration) {
+        clearInterval(diceAnimTimer);
+        diceAnimTimer = null;
+        diceOutputEl.textContent = finalValue;
+      }
+    }, interval);
+    return;
+  }
+
+  // B) 3D roll
+  if (mode === "3d") {
+    diceOutputEl.classList.add("roll3d");
+    diceOutputEl.textContent = finalValue;
+    return;
+  }
+
+  // C) Exploding digits
+  if (mode === "explode") {
+    diceOutputEl.classList.add("explode");
+    diceOutputEl.textContent = finalValue;
+    return;
+  }
+
+  // Fallback – just show the number
+  diceOutputEl.textContent = finalValue;
+}
+
 function handleRollD6() {
   const v = rollDie(6);
-  diceOutput.textContent = `d6 → ${v}`;
-  bumpDice();
+  playDiceAnimation(v, 6);
 }
 
 function handleRollD20() {
   const v = rollDie(20);
-  diceOutput.textContent = `d20 → ${v}`;
-  bumpDice();
-}
-
-function bumpDice() {
-  diceOutput.classList.remove("bump");
-  // force reflow to restart animation
-  void diceOutput.offsetWidth;
-  diceOutput.classList.add("bump");
+  playDiceAnimation(v, 20);
 }
 
 // --- Restart/New Game helpers ---
@@ -500,6 +585,15 @@ function init() {
   applyDeltaBtn.addEventListener("click", applyDelta);
   cancelMovementBtn.addEventListener("click", closeMovementPanel);
 
+  const diceModeSelect = $("#diceModeSelect");
+  if (diceModeSelect) {
+    diceModeSelect.value = state.diceMode || "roulette";
+    diceModeSelect.addEventListener("change", () => {
+      state.diceMode = diceModeSelect.value;
+      saveState();
+  });
+  }
+
   // Quick delta buttons
   movementPanel.addEventListener("click", (e) => {
     const btn = e.target.closest("button.secondary");
@@ -509,17 +603,20 @@ function init() {
     deltaInput.value = val;
   });
 
-  const diceToggle = $("#diceToggle");
-  const dicePanel = $("#dicePanel");
-  const closeDiceBtn = $("#closeDiceBtn");
+const diceToggle = $("#diceToggle");
+const dicePanel = $("#dicePanel");
+const closeDiceBtn = $("#closeDiceBtn");
 
+if (diceToggle && dicePanel && closeDiceBtn) {
   diceToggle.addEventListener("click", () => {
-  dicePanel.classList.add("open");
+    dicePanel.classList.add("open");
   });
 
   closeDiceBtn.addEventListener("click", () => {
-  dicePanel.classList.remove("open");
+    dicePanel.classList.remove("open");
   });
+}
+
 
   // Restart / New game
   restartRaceBtn.addEventListener("click", restartRace);

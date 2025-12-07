@@ -288,6 +288,95 @@ button.primary:hover:not(:disabled) {
   opacity: 0.7;
 }
 
+.dice-mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dice-mode-row select {
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: #fff;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  text-transform: none;
+}
+
+/* Base dice output tweaks */
+.dice-output {
+  font-size: 1.3rem;
+  min-height: 1.6rem;
+  opacity: 0.95;
+  font-weight: 700;
+}
+
+/* roulette background + shimmer */
+.dice-output.roulette {
+  background: linear-gradient(90deg, #ff5e5e, #ffb347, #ffe36a, #ff5e5e);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: diceRouletteBG 900ms linear;
+}
+
+/* spin wobble */
+.dice-output.spin {
+  animation: diceSpinWobble 700ms ease-out;
+}
+
+/* 3D roll effect */
+.dice-output.roll3d {
+  display: inline-block;
+  transform-origin: center;
+  animation: dice3DRoll 700ms cubic-bezier(.19,1.1,.22,1);
+}
+
+/* explode pop */
+.dice-output.explode {
+  animation: diceExplode 600ms ease-out;
+}
+
+/* optional: keep your old bump class if you want */
+.dice-output.bump {
+  animation: diceBump 280ms ease-out;
+}
+
+/* KEYFRAMES */
+
+@keyframes diceRouletteBG {
+  0%   { background-position: 0% 50%;   }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes diceSpinWobble {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.05) rotate(-2deg); }
+  60%  { transform: scale(1.05) rotate(2deg); }
+  100% { transform: scale(1); }
+}
+
+@keyframes dice3DRoll {
+  0%   { transform: rotateX(-90deg) scale(0.7); opacity: 0; }
+  50%  { transform: rotateX(15deg) scale(1.1); opacity: 1; }
+  100% { transform: rotateX(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes diceExplode {
+  0%   { transform: scale(0.6); opacity: 0; }
+  40%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
 /* Players list/grid */
 .players-list {
   display: flex;
