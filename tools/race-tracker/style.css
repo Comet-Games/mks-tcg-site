@@ -580,6 +580,72 @@ button.primary:hover:not(:disabled) {
   animation: tilePop 260ms ease-out;
 }
 
+/* Dice toggle button */
+.dice-toggle {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 40;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0.4rem 1rem rgba(0,0,0,0.5);
+  transition: 150ms ease;
+}
+
+.dice-toggle:hover {
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* Slide-up dice panel */
+.dice-panel {
+  position: fixed;
+  bottom: -300px;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: rgba(5,5,10,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 -0.5rem 1.4rem rgba(0,0,0,0.8);
+  transition: bottom 350ms cubic-bezier(.22,1.1,.32,1);
+  z-index: 50;
+}
+
+.dice-panel.open {
+  bottom: 0;
+}
+
+.dice-panel-inner {
+  padding: 1rem;
+  text-align: center;
+}
+
+.dice-panel .dice-title {
+  text-transform: uppercase;
+  opacity: 0.75;
+  font-size: 0.85rem;
+  letter-spacing: 0.13em;
+  margin-bottom: 0.65rem;
+}
+
+.dice-panel .dice-output {
+  margin-top: 0.7rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+#closeDiceBtn {
+  margin-top: 1rem;
+}
+
 /* animations */
 @keyframes gridDrift {
   0% {

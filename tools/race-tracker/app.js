@@ -509,6 +509,18 @@ function init() {
     deltaInput.value = val;
   });
 
+  const diceToggle = $("#diceToggle");
+  const dicePanel = $("#dicePanel");
+  const closeDiceBtn = $("#closeDiceBtn");
+
+  diceToggle.addEventListener("click", () => {
+  dicePanel.classList.add("open");
+  });
+
+  closeDiceBtn.addEventListener("click", () => {
+  dicePanel.classList.remove("open");
+  });
+
   // Restart / New game
   restartRaceBtn.addEventListener("click", restartRace);
   newGameBtn.addEventListener("click", newGame);
