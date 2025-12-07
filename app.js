@@ -156,6 +156,7 @@ function renderTile(card) {
 
     <div class="card-info-row">
       <div class="title">${card.name}</div>
+      <!-- IMPORTANT: keep both classes: icon-btn + mark-compare -->
       <button
         class="icon-btn mark-compare"
         aria-pressed="${selected}"
