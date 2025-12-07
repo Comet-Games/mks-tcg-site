@@ -304,12 +304,17 @@ main {
 
 /* Compare dock & modal */
 .compare-dock {
-    position: sticky;
+    position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
+    z-index: 20;
     background: linear-gradient(180deg,transparent, #0b0f14cc 30%, #0b0f14f0 100%);
     border-top: 1px solid #16202b;
     padding: .5rem 1rem;
+    backdrop-filter: blur(6px);
 }
+
 
 .dock-inner {
     max-width: 1300px;
@@ -388,6 +393,10 @@ main {
     flex-direction: column;
     gap: .5rem;
     align-items: center;
+}
+
+.catalogue-page main {
+    padding-bottom: 4.5rem; /* space for the fixed compare dock */
 }
 
 .small {
