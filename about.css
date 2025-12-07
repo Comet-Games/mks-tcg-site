@@ -1,0 +1,53 @@
+.about-page .about-main {
+    max-width: 1100px;
+    margin: 1rem auto 3rem;
+    padding: 0 1rem;
+}
+
+/* Hero */
+.about-hero {
+    margin: 0 0 1.5rem;
+    padding: 2rem 1.5rem 2rem;
+    border-radius: 1rem;
+    border: 1px solid #1b2836;
+    background: radial-gradient(circle at 0 0, #1f2937 0, #0b0f14 60%);
+}
+
+.about-hero h1 {
+    margin: 0 0 .5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: .04em;
+    font-size: 2.6rem;
+}
+
+.about-hero p {
+    margin: 0;
+    color: #cfe2ffcc;
+    line-height: 1.6;
+}
+
+/* Standard section */
+.about-section {
+    background: #0e151f;
+    border: 1px solid #1b2836;
+    border-radius: 1rem;
+    padding: 1.35rem 1.5rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.about-section h2 {
+    margin-top: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: .04em;
+}
+
+.about-section p {
+    margin-bottom: .9rem;
+    color: #cfe2ff;
+}
+
+.about-section ul {
+    margin: .5rem 0 .75rem 1.25rem;
+    color: #cfe2ffcc;
+}
