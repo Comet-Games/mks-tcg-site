@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MKS Race Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>MKS Race Tracker</h1>
+    <div class="pill-group" id="modePills">
+      <button class="pill active" data-mode="table">Table</button>
+      <button class="pill" data-mode="single">Single</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Setup section -->
+    <section id="setupSection" class="section">
+      <div class="section-title">Setup</div>
+      <div class="card">
+        <div class="setup-form" id="setupForm">
+          <div class="setup-mode-buttons">
+            <button class="secondary" id="setupTableBtn">Setup Table Game</button>
+            <button class="secondary" id="setupSingleBtn">Setup Single Player</button>
+          </div>
+          <div id="tableSetupFields" style="display:none;">
+            <label>
+              Add player
+              <input type="text" id="newPlayerName" placeholder="Driver name (e.g. Comet)" />
+            </label>
+            <button class="ghost" id="addPlayerBtn">+ Add Player</button>
+            <div style="font-size:0.8rem; opacity:0.7;" id="playerCountHint">
+              No players added yet.
+            </div>
+          </div>
+          <div id="singleSetupFields" style="display:none;">
+            <label>
+              Player name
+              <input type="text" id="singlePlayerName" placeholder="Your name" />
+            </label>
+          </div>
+          <div style="display:flex; gap:0.5rem; margin-top:0.25rem;">
+            <button class="primary" id="startGameBtn" disabled>Start Tracking</button>
+            <button class="secondary" id="resetStateBtn">Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active game section -->
+    <section id="gameSection" class="section" style="display:none;">
+      <div class="section-title">Race Positions</div>
+      <div class="top-controls">
+        <div class="pill-group" id="viewPills">
+          <button class="pill active" data-view="list">List</button>
+          <button class="pill" data-view="grid">Grid</button>
+        </div>
+        <div class="spacer"></div>
+        <button class="secondary" id="restartRaceBtn">Restart Race</button>
+        <button class="secondary" id="newGameBtn">New Game</button>
+        <button class="secondary" id="diceToggleBtn">Dice Tools</button>
+      </div>
+      <div class="card">
+        <div id="playersContainer"></div>
+
+        <div id="dicePanel" class="dice-panel" style="display:none;">
+          <div class="section-title" style="margin-top:0;">Dice</div>
+          <div class="dice-buttons">
+            <button class="secondary" id="rollD6Btn">Roll d6</button>
+            <button class="secondary" id="rollD20Btn">Roll d20</button>
+          </div>
+          <div class="dice-output" id="diceOutput">No rolls yet.</div>
+        </div>
+      </div>
+
+      <div id="movementPanel" class="movement-panel" style="display:none;">
+        <div class="movement-inner">
+          <div class="movement-title">Adjust Position</div>
+          <div class="movement-main">
+            <div class="movement-row">
+              <strong id="movementPlayerName">Player</strong>
+              <span id="movementPlayerPos" style="font-size:0.85rem; opacity:0.8;"></span>
+            </div>
+            <div class="movement-row">
+              <label style="flex:1; max-width:220px;">
+                Δ Position (use negative to move backwards)
+                <input type="number" id="deltaInput" class="movement-delta-input" value="0" />
+              </label>
+              <div class="quick-buttons">
+                <button class="secondary" data-delta="+1">+1</button>
+                <button class="secondary" data-delta="+2">+2</button>
+                <button class="secondary" data-delta="+3">+3</button>
+                <button class="secondary" data-delta="+5">+5</button>
+                <button class="secondary" data-delta="-1">-1</button>
+                <button class="secondary" data-delta="-2">-2</button>
+                <button class="secondary" data-delta="-5">-5</button>
+              </div>
+            </div>
+            <div class="movement-actions">
+              <button class="primary" id="applyDeltaBtn">Apply</button>
+              <button class="ghost" id="cancelMovementBtn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
