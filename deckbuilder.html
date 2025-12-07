@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MKS TCG - Deckbuilder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="deckbuilder.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="deckbuilder.js?v=1" defer></script>
+</head>
+<body class="deck-page">
+  <header class="topbar">
+    <nav class="nav">
+        <a class="brand" href="index.html">MKS TCG</a>
+        <a class="nav-link" href="catalogue.html">Catalogue</a>
+        <a class="nav-link" href="rules.html">Rules</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link active" href="deckbuilder.html">Deckbuilder</a>
+    </nav>
+  </header>
+
+  <main class="deck-main">
+    <!-- Hero / explanation -->
+    <section class="deck-hero">
+      <h1>Deckbuilder</h1>
+      <p>Click a slot, pick cards from the library, and share your deck using the URL. The <code>?deck=</code> part of the link encodes your choices.</p>
+    </section>
+
+    <!-- Deck slots + type summary / targets -->
+    <section class="deck-shell">
+      <div class="deck-header-row">
+        <h2>Your deck</h2>
+        <button id="clearDeck" class="btn btn-ghost" type="button">Clear deck</button>
+      </div>
+
+      <div id="deckSlots" class="deck-slots" aria-label="Deck slots"></div>
+
+      <section class="deck-settings">
+        <h3>Type breakdown</h3>
+        <p class="deck-settings-help">Configure rough targets for each card type and see how your current deck compares. These targets are optional and only used for guidance.</p>
+        <div class="deck-settings-grid">
+          <div class="deck-setting">
+            <label>Drivers
+              <input id="targetDriver" type="number" min="0" value="1" />
+            </label>
+            <div class="deck-type-count" data-type="driver"></div>
+          </div>
+          <div class="deck-setting">
+            <label>Karts
+              <input id="targetKart" type="number" min="0" value="1" />
+            </label>
+            <div class="deck-type-count" data-type="kart"></div>
+          </div>
+          <div class="deck-setting">
+            <label>Items
+              <input id="targetItem" type="number" min="0" value="10" />
+            </label>
+            <div class="deck-type-count" data-type="item"></div>
+          </div>
+          <div class="deck-setting">
+            <label>Utilities
+              <input id="targetUtility" type="number" min="0" value="10" />
+            </label>
+            <div class="deck-type-count" data-type="utility"></div>
+          </div>
+          <div class="deck-setting">
+            <label>Fuel
+              <input id="targetFuel" type="number" min="0" value="18" />
+            </label>
+            <div class="deck-type-count" data-type="fuel"></div>
+          </div>
+        </div>
+        <p class="deck-link-hint">Copy the URL above to share this exact deck (including your targets).</p>
+      </section>
+    </section>
+
+    <!-- Library / picker -->
+    <section class="deck-library">
+      <header class="deck-lib-header">
+        <div>
+          <h2>Card library</h2>
+          <p>Select a slot above, then click a card here to assign it.</p>
+        </div>
+        <button id="scrollTopBtn" class="btn btn-ghost" type="button">Scroll to deck</button>
+      </header>
+
+      <div class="deck-lib-controls">
+        <input id="libSearch" type="search" placeholder="Search name / ID / text..." />
+        <select id="libType">
+          <option value="">All Types</option>
+          <option value="driver">Driver</option>
+          <option value="kart">Kart</option>
+          <option value="item">Item</option>
+          <option value="utility">Utility</option>
+          <option value="fuel">Fuel</option>
+        </select>
+        <select id="libRarity">
+          <option value="">All Rarities</option>
+          <option value="common">Common</option>
+          <option value="uncommon">Uncommon</option>
+          <option value="rare">Rare</option>
+          <option value="mythic">Mythic</option>
+        </select>
+      </div>
+
+      <section id="libGrid" class="deck-grid" aria-live="polite"></section>
+      <div id="libEmpty" class="empty" hidden>No cards match your filters.</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Created and maintained by lee pryce</span>
+  </footer>
+</body>
+</html>
