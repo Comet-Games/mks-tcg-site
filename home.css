@@ -1,0 +1,149 @@
+/* ============================
+   MKS TCG – HOME PAGE EXTRAS
+   ============================ */
+
+.home .hero {
+    position: relative;
+    padding: 5rem 1rem 3rem;
+}
+
+.home .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Quick “lane” pills under hero buttons */
+.home-quick {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.quick-pill {
+    border-radius: 999px;
+    border: 1px solid #1b2836;
+    background: #0f1620;
+    color: #cfe2ff;
+    padding: .35rem .75rem;
+    font-size: .8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+}
+
+.quick-pill::before {
+    content: "●";
+    font-size: .55rem;
+    opacity: .8;
+}
+
+.quick-pill:hover {
+    background: #1b2836;
+}
+
+/* MODE SWITCHER */
+
+.home-mode {
+    max-width: 1100px;
+    margin: 2rem auto 2rem;
+    padding: 0 1rem;
+}
+
+.home-mode-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: .04em;
+    font-size: 1.8rem;
+    margin: 0 0 .25rem;
+}
+
+.home-mode-header p {
+    margin: 0 0 .85rem;
+    color: var(--muted);
+}
+
+.home-mode-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .8rem;
+}
+
+.home-mode-tab {
+    border-radius: 999px;
+    border: 1px solid #1b2836;
+    background: #0f1620;
+    color: #cfe2ff;
+    padding: .4rem .85rem;
+    font-size: .8rem;
+    cursor: pointer;
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease,
+        transform .08s ease;
+}
+
+.home-mode-tab:hover {
+    background: #141c28;
+    border-color: #2a3a4e;
+    transform: translateY(-1px);
+}
+
+.home-mode-tab.active {
+    border-color: var(--ring);
+    box-shadow: 0 0 0 1px #4da3ff55;
+}
+
+/* Panels */
+
+.home-mode-panels {
+    background: #0e151f;
+    border-radius: 1rem;
+    border: 1px solid #1b2836;
+    padding: 1rem 1.1rem 1.1rem;
+}
+
+.home-mode-panel {
+    display: none;
+}
+
+.home-mode-panel.active {
+    display: block;
+}
+
+.home-mode-panel h3 {
+    margin: 0 0 .4rem;
+    font-size: 1.1rem;
+    color: #e6f0ff;
+}
+
+.home-mode-panel p {
+    margin: 0 0 .6rem;
+    color: #cfe2ff;
+}
+
+.home-mode-panel ul {
+    margin: 0 0 .7rem 1.1rem;
+    color: #cfe2ffcc;
+}
+
+.home-tip {
+    font-size: .9rem;
+    color: #9fb2cb;
+    border-top: 1px solid #1b2836;
+    padding-top: .5rem;
+}
+
+/* Responsive tweaks */
+
+@media (max-width: 720px) {
+    .home .hero {
+        padding-top: 4rem;
+    }
+
+    .home-mode {
+        margin-top: 1.5rem;
+    }
+}

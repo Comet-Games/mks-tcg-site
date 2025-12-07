@@ -53,28 +53,29 @@ function shuffle(arr){
   return arr;
 }
 
+// Hide stuff from the carousel (fuel + future secret track cards)
+function isHiddenCard(c) {
+  const type = lc(c.type || '');
+  return type === 'fuel' || type === 'track';
+}
+
 /**
  * Build an infinite, seamless scrolling carousel:
  * - random order
  * - duplicate sequence for loop (A+B)
  * - duration computed from width for constant px/sec speed
  */
-function isFuelCard(c) {
-    return lc(c.type || '') === 'fuel';
-}
-
 function renderCarousel(cards){
   if (!carouselTrack) return; // page has no carousel section
 
-const usable = cards
-    // must have an ID and must NOT be fuel
-    .filter(c => c.card_id && c.card_id.length && !isFuelCard(c))
+  const usable = cards
+    // must have an ID and must NOT be fuel or track
+    .filter(c => c.card_id && c.card_id.length && !isHiddenCard(c))
     .map(c => ({
         id: c.card_id,
         name: c.name,
         rarity: rarityKey(c.rarity || 'Common')
     }));
-
 
   if (!usable.length) return;
 
@@ -86,7 +87,7 @@ const usable = cards
   seqA.style.display = 'flex';
   seqA.style.gap = '.75rem';
 
-const tile = (c) => {
+  const tile = (c) => {
     const href = `${CATALOGUE_HREF}?id=${encodeURIComponent(c.id)}`;
     const src = frontImage(c.id + IMG_VERSION_SUFFIX);
 
@@ -95,9 +96,9 @@ const tile = (c) => {
    href="${href}" 
    title="${c.name}">
    <span class="ring"></span>
-    <img loading="lazy" src="${src}" alt="${c.name}">
-   </a>`;
-};
+   <img loading="lazy" src="${src}" alt="${c.name}">
+</a>`;
+  };
 
   seqA.innerHTML = order.map(tile).join('');
 
@@ -121,6 +122,7 @@ const tile = (c) => {
 
 // ====== Boot ======
 document.addEventListener('DOMContentLoaded', ()=>{
+  // CSV → stats + carousel
   Papa.parse(CSV_URL, {
     download: true,
     header: true,
@@ -131,5 +133,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
       renderCarousel(rows);
     },
     error: (e)=> console.error(e)
+  });
+
+  // === HOME PAGE INTERACTIONS (mode switcher + quick pills) ===
+  const tabs = document.querySelectorAll(".home-mode-tab");
+  const panels = document.querySelectorAll(".home-mode-panel");
+
+  function setMode(mode) {
+    if (!mode) return;
+    tabs.forEach(tab => {
+      tab.classList.toggle("active", tab.dataset.mode === mode);
+    });
+    panels.forEach(panel => {
+      panel.classList.toggle("active", panel.dataset.modePanel === mode);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      setMode(tab.dataset.mode);
+    });
+  });
+
+  const quickPills = document.querySelectorAll(".quick-pill");
+  quickPills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      const mode = pill.dataset.mode;
+      setMode(mode);
+      const modeSection = document.querySelector(".home-mode");
+      if (modeSection) {
+        modeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
   });
 });

@@ -4,12 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MKS TCG - Home</title>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles & Scripts -->
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="home.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="home.js" defer></script>
 </head>
 <body class="home">
+  <!-- TOPBAR -->
   <header class="topbar">
     <nav class="nav">
         <a class="brand" href="index.html">MKS TCG</a>
@@ -23,48 +29,156 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-inner">
-        <h1 class="hero-title">Mario Kart Society<br><span>The Trading Card Game</span></h1>
-        <p class="hero-sub">Collect. Dodge. Overtake. Build the deck, win the race.</p>
+        <h1 class="hero-title">
+          Mario Kart Society<br>
+          <span>The Trading Card Game</span>
+        </h1>
+        <p class="hero-sub">
+          A custom-built racing TCG for Staffordshire University’s Mario Kart Society.
+          Build your deck, burn your Fuel, and fight your way to the finish line.
+        </p>
         <div class="hero-ctas">
-          <a class="btn btn-lg" href="catalogue.html">View Catalogue</a>
-          <a class="btn btn-ghost btn-lg" href="#latest">Latest Cards</a>
+          <a class="btn btn-lg" href="catalogue.html">Browse the Cards</a>
+          <a class="btn btn-ghost btn-lg" href="rules.html">Learn the Rules</a>
+        </div>
+
+        <!-- Quick lanes -->
+        <div class="home-quick">
+          <button class="quick-pill" data-mode="new">New Player</button>
+          <button class="quick-pill" data-mode="returning">Returning Player</button>
+          <button class="quick-pill" data-mode="deck">Deckbuilder</button>
         </div>
       </div>
     </section>
 
     <!-- STATS -->
-    <section class="stats">
+    <section class="stats" aria-label="Card statistics">
       <div class="stat">
         <div class="stat-num" id="totalCount">—</div>
         <div class="stat-label">Total Cards</div>
       </div>
-      <div class="stat"><div class="dot dot-common"></div><div class="stat-label">Common <span id="commonCount">—</span></div></div>
-      <div class="stat"><div class="dot dot-uncommon"></div><div class="stat-label">Uncommon <span id="uncommonCount">—</span></div></div>
-      <div class="stat"><div class="dot dot-rare"></div><div class="stat-label">Rare <span id="rareCount">—</span></div></div>
-      <div class="stat"><div class="dot dot-mythic"></div><div class="stat-label">Mythic <span id="mythicCount">—</span></div></div>
+      <div class="stat">
+        <div class="dot dot-common"></div>
+        <div class="stat-label">Common <span id="commonCount">—</span></div>
+      </div>
+      <div class="stat">
+        <div class="dot dot-uncommon"></div>
+        <div class="stat-label">Uncommon <span id="uncommonCount">—</span></div>
+      </div>
+      <div class="stat">
+        <div class="dot dot-rare"></div>
+        <div class="stat-label">Rare <span id="rareCount">—</span></div>
+      </div>
+      <div class="stat">
+        <div class="dot dot-mythic"></div>
+        <div class="stat-label">Mythic <span id="mythicCount">—</span></div>
+      </div>
     </section>
 
-    <!-- Carousel -->
-    <section class="carousel" aria-label="All cards">
-    <div class="carousel-viewport">
+    <!-- CAROUSEL -->
+    <section class="carousel" aria-label="Showcase of cards">
+      <div class="carousel-viewport">
         <div id="carouselTrack" class="carousel-track"></div>
-    </div>
+      </div>
     </section>
 
-    <!-- HOW TO PLAY (placeholder) -->
+    <!-- REACTIVE MODE SWITCHER -->
+    <section class="home-mode">
+      <div class="home-mode-header">
+        <h2>Choose Your Lane</h2>
+        <p>Select what you care about and the page will tell you where to go.</p>
+      </div>
+
+      <div class="home-mode-tabs" aria-label="Player type">
+        <button class="home-mode-tab active" data-mode="new">New to MKS TCG</button>
+        <button class="home-mode-tab" data-mode="returning">I’ve Played Before</button>
+        <button class="home-mode-tab" data-mode="deck">I Just Want to Build Decks</button>
+      </div>
+
+      <div class="home-mode-panels">
+        <div class="home-mode-panel active" data-mode-panel="new">
+          <h3>New to MKS TCG</h3>
+          <p>
+            Start here if you’ve never touched the game before or only seen it on tables.
+          </p>
+          <ul>
+            <li>Read the <a href="about.html" class="link">About</a> page to see what the game actually is.</li>
+            <li>Skim the <a href="rules.html" class="link">Rulebook</a> – focus on <strong>Setup</strong> and <strong>Turn Order</strong>.</li>
+            <li>At a session, ask to borrow a deck and play a guided game.</li>
+          </ul>
+          <p class="home-tip">
+            Tip: don’t worry about memorising everything. The rulebook is on your phone for quick checks mid-game.
+          </p>
+        </div>
+
+        <div class="home-mode-panel" data-mode-panel="returning">
+          <h3>Returning Player</h3>
+          <p>
+            You’ve played at least once and vaguely remember how Fuel, Items and Utilities work.
+          </p>
+          <ul>
+            <li>Use the <a href="catalogue.html" class="link">Catalogue</a> to look up any card you liked last time.</li>
+            <li>Revisit key sections in the <a href="rules.html" class="link">Rulebook</a>:
+              <strong>Timing Windows</strong> and <strong>Reaction Rules</strong>.
+            </li>
+            <li>Talk to whoever’s running the night about trying a different Driver/Vehicle combo.</li>
+          </ul>
+          <p class="home-tip">
+            Tip: focus on one Driver you enjoy and learn how to abuse their ability properly.
+          </p>
+        </div>
+
+        <div class="home-mode-panel" data-mode-panel="deck">
+          <h3>Deckbuilders & Gremlins</h3>
+          <p>
+            You’re here to optimise, break things, or brew something deeply cursed.
+          </p>
+          <ul>
+            <li>Open the <a href="catalogue.html" class="link">Catalogue</a> and filter by card type and rarity.</li>
+            <li>Check <strong>Driver</strong> and <strong>Vehicle</strong> synergies, then layer in Utilities.</li>
+            <li>Use the Rulebook to verify weird interactions before you start rules-lawyering in the room.</li>
+          </ul>
+          <p class="home-tip">
+            Tip: build around a plan: Fuel engine, Item loops, or pure position control. Don’t try to do everything.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW TO PLAY (HIGH LEVEL) -->
     <section class="how">
-      <h2>How to Play</h2>
+      <h2>Core Loop</h2>
       <ol>
-        <li>Pick a Driver & Kart. Build a 40 card deck.</li>
-        <li>Pick 10 Utilities and 10 Items, and fill the rest with Fuel</li>
-        <li>Spend Fuel to play Items/Utilities. Dodge, hit, overtake.</li>
-        <li>Highest position at race end wins. Simple—brutal—fun.</li>
+        <li>Pick a <strong>Driver</strong> and <strong>Vehicle</strong>. They define your style.</li>
+        <li>Build a <strong>40-card deck</strong> of Items, Utilities and Fuel.</li>
+        <li>Each turn: draw, place Fuel, roll for movement, then use Items/Utilities.</li>
+        <li>Use Fuel to power big effects, dodge attacks and manipulate positions.</li>
+        <li>Reach the finish line and survive a full round without being knocked back.</li>
       </ol>
+      <p>
+        The full breakdown – including edge cases and reaction rules – lives in the
+        <a href="rules.html" class="link">Rulebook</a>.
+      </p>
+    </section>
+
+    <!-- SOCIETY / FLAVOUR SECTION -->
+    <section class="how">
+      <h2>Built for the Mario Kart Society</h2>
+      <p>
+        MKS TCG is designed to be played in a real room with real people:
+        shouting, table politics, risky plays and last-second swings are all
+        part of the experience.
+      </p>
+      <p>
+        The website exists so you can quickly look up cards, double-check a rule,
+        or plan your next deck between sessions – not as a replacement for
+        actually sitting down and racing.
+      </p>
     </section>
   </main>
 
   <footer class="footer">
-    <span>© MKS • Data: <code>data/MasterSheet.csv</code></span>
+    <span>© MKS • Built for the Staffordshire Mario Kart Society • Data: <code>data/MasterSheet.csv</code></span>
   </footer>
 </body>
 </html>
