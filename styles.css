@@ -236,13 +236,35 @@ main {
     text-align: center;
 }
 
-.card-controls {
-    position: absolute;
-    top: .5rem;
-    right: .5rem;
+/* === Row under each card === */
+.card-info-row {
+    margin-top: 0.4rem;
     display: flex;
-    gap: .25rem;
-    z-index: 2;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 .25rem;
+}
+
+.card-info-row .title {
+    margin: 0;
+    font: 700 1rem/1 'Bebas Neue', sans-serif;
+    letter-spacing: .02em;
+}
+
+.compare-btn {
+    background: #0f1620;
+    color: #fff;
+    border: 1px solid #1c2a3a;
+    border-radius: .55rem;
+    padding: .25rem .55rem;
+    font-size: .8rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.compare-btn:hover {
+    background: #1a2433;
+    border-color: #4da3ff;
 }
 
 .icon-btn {
