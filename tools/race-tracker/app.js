@@ -118,11 +118,15 @@ function renderGame() {
     p.classList.toggle("active", p.dataset.view === state.view);
   });
 
-  // capture old positions for FLIP animation
+  // capture old positions & order for FLIP + overtake detection
   const oldRects = {};
-  playersContainer.querySelectorAll(".player-tile").forEach((tile) => {
+  const oldRankById = {};
+  const oldTiles = playersContainer.querySelectorAll(".player-tile");
+  oldTiles.forEach((tile, idx) => {
     const id = tile.dataset.playerId;
+    if (!id) return;
     oldRects[id] = tile.getBoundingClientRect();
+    oldRankById[id] = idx;
   });
 
   // clear container
@@ -162,6 +166,9 @@ function renderGame() {
 
     tile.dataset.playerId = player.id;
 
+    const inner = document.createElement("div");
+    inner.className = "player-inner";
+
     const header = document.createElement("div");
     header.className = "player-header";
 
@@ -179,7 +186,6 @@ function renderGame() {
     const meta = document.createElement("div");
     meta.className = "player-meta";
 
-    // Rank badge
     const rankBadge = document.createElement("span");
     rankBadge.className = "rank-badge";
 
@@ -200,7 +206,6 @@ function renderGame() {
     rankBadge.appendChild(rankNum);
     rankBadge.appendChild(rankText);
 
-    // Position tag
     const tag = document.createElement("span");
     tag.className = "tag";
     const dot = document.createElement("span");
@@ -210,7 +215,6 @@ function renderGame() {
     tag.appendChild(dot);
     tag.appendChild(label);
 
-    // Gap info (distance to racer ahead)
     const gapSpan = document.createElement("span");
     gapSpan.className = "gap";
     if (rank === 1) {
@@ -227,8 +231,9 @@ function renderGame() {
     meta.appendChild(tag);
     meta.appendChild(gapSpan);
 
-    tile.appendChild(header);
-    tile.appendChild(meta);
+    inner.appendChild(header);
+    inner.appendChild(meta);
+    tile.appendChild(inner);
 
     tile.addEventListener("click", () => openMovementPanel(player.id));
 
@@ -237,14 +242,25 @@ function renderGame() {
 
   playersContainer.appendChild(container);
 
-  // FLIP animate reordering
+  // FLIP animate reordering + mark overtakes
   const newTiles = Array.from(playersContainer.querySelectorAll(".player-tile"));
 
   requestAnimationFrame(() => {
-    newTiles.forEach((tile) => {
+    newTiles.forEach((tile, newIndex) => {
       const id = tile.dataset.playerId;
       const oldRect = oldRects[id];
       const newRect = tile.getBoundingClientRect();
+      const oldRank = oldRankById[id];
+
+      // mark moved up / down for dust/ghost effects
+      if (oldRank !== undefined) {
+        if (oldRank > newIndex) {
+          // overtook someone (moved up the standings)
+          tile.classList.add("moved-up");
+        } else if (oldRank < newIndex) {
+          tile.classList.add("moved-down");
+        }
+      }
 
       if (oldRect) {
         const dx = oldRect.left - newRect.left;
@@ -253,11 +269,29 @@ function renderGame() {
           tile.style.transition = "none";
           tile.style.transform = `translate(${dx}px, ${dy}px)`;
 
+          const inner = tile.querySelector(".player-inner");
+          if (inner) {
+            inner.classList.remove("moving");
+            void inner.offsetWidth; // restart animation
+            inner.classList.add("moving");
+          }
+
           requestAnimationFrame(() => {
             tile.style.transition =
-              "transform 260ms cubic-bezier(.22,1.25,.32,1)";
+              "transform 650ms cubic-bezier(.22,1.15,.32,1)";
             tile.style.transform = "translate(0,0)";
           });
+
+          tile.addEventListener(
+            "transitionend",
+            (e) => {
+              if (e.propertyName !== "transform") return;
+              tile.classList.remove("moved-up", "moved-down");
+              const innerEl = tile.querySelector(".player-inner");
+              if (innerEl) innerEl.classList.remove("moving");
+            },
+            { once: true }
+          );
         }
       } else {
         // new tile
