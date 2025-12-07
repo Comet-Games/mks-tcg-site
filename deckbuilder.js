@@ -276,11 +276,15 @@ function requiredTypeForActiveGroup(card) {
     if (!ACTIVE_GROUP) return true;
 
     const t = lc(card.type || '');
+
     if (ACTIVE_GROUP === 'driver')  return t === 'driver';
     if (ACTIVE_GROUP === 'kart')    return t === 'kart';
     if (ACTIVE_GROUP === 'item')    return t === 'item';
     if (ACTIVE_GROUP === 'utility') return t === 'utility';
-    if (ACTIVE_GROUP === 'fuel')    return isFuel(card);
+
+    // For fuel, don't hard-filter – show everything so the user
+    // can pick any card as the fuel art.
+    if (ACTIVE_GROUP === 'fuel')    return true;
 
     return true;
 }
