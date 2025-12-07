@@ -614,3 +614,84 @@ button.primary:hover:not(:disabled) {
     font-size: 1.1rem;
   }
 }
+
+/* --- Desktop scale-up --- */
+@media (min-width: 900px) {
+  body {
+    font-size: 18px;
+  }
+
+  main {
+    max-width: 1300px;
+    padding: 1.25rem 1.5rem 1.75rem;
+  }
+
+  header h1 {
+    font-size: 1.9rem;
+    letter-spacing: 0.22em;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+  }
+
+  button.primary,
+  button.secondary,
+  button.ghost {
+    padding: 0.6rem 1.15rem;
+    font-size: 0.95rem;
+  }
+
+  .card {
+    border-radius: 1.1rem;
+    padding: 1.1rem;
+  }
+
+  .players-list {
+    gap: 0.8rem;
+  }
+
+  .players-grid {
+    gap: 0.8rem;
+  }
+
+  .player-tile {
+    border-radius: 1.05rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .player-name {
+    font-size: 1.25rem;
+  }
+
+  .player-pos {
+    font-size: 1.35rem;
+  }
+
+  .player-meta {
+    font-size: 0.8rem;
+  }
+
+  .rank-badge,
+  .tag,
+  .gap {
+    font-size: 0.8rem;
+  }
+
+  .dice-card {
+    padding: 1.1rem;
+  }
+
+  .dice-output {
+    font-size: 1.3rem;
+  }
+
+  .movement-inner {
+    padding: 0.9rem 1rem 1rem;
+  }
+
+  .movement-row strong {
+    font-size: 1rem;
+  }
+}
