@@ -8,6 +8,8 @@ let state = {
   selectedPlayerId: null
 };
 
+let previousLeaderId = null;
+
 function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -44,9 +46,6 @@ const playersContainer = $("#playersContainer");
 
 const modePills = $("#modePills");
 const viewPills = $("#viewPills");
-const diceToggleBtn = $("#diceToggleBtn");
-const dicePanel = $("#dicePanel");
-const diceOutput = $("#diceOutput");
 
 const setupTableBtn = $("#setupTableBtn");
 const setupSingleBtn = $("#setupSingleBtn");
@@ -70,6 +69,7 @@ const cancelMovementBtn = $("#cancelMovementBtn");
 
 const rollD6Btn = $("#rollD6Btn");
 const rollD20Btn = $("#rollD20Btn");
+const diceOutput = $("#diceOutput");
 
 const restartRaceBtn = $("#restartRaceBtn");
 const newGameBtn = $("#newGameBtn");
@@ -118,6 +118,13 @@ function renderGame() {
     p.classList.toggle("active", p.dataset.view === state.view);
   });
 
+  // capture old positions for FLIP animation
+  const oldRects = {};
+  playersContainer.querySelectorAll(".player-tile").forEach((tile) => {
+    const id = tile.dataset.playerId;
+    oldRects[id] = tile.getBoundingClientRect();
+  });
+
   // clear container
   playersContainer.innerHTML = "";
 
@@ -127,6 +134,15 @@ function renderGame() {
     if (b.position !== a.position) return b.position - a.position;
     return a._idx - b._idx;
   });
+
+  // detect leader change
+  const newLeader = withIndex[0] || null;
+  if (newLeader && previousLeaderId && newLeader.id !== previousLeaderId) {
+    triggerLeaderFlash();
+  }
+  if (newLeader) {
+    previousLeaderId = newLeader.id;
+  }
 
   const container =
     state.view === "list"
@@ -194,8 +210,22 @@ function renderGame() {
     tag.appendChild(dot);
     tag.appendChild(label);
 
+    // Gap info (distance to racer ahead)
+    const gapSpan = document.createElement("span");
+    gapSpan.className = "gap";
+    if (rank === 1) {
+      gapSpan.textContent = "Leader";
+    } else {
+      const ahead = withIndex[i - 1];
+      const diff = ahead.position - player.position;
+      const nameShort =
+        ahead.name.length > 10 ? ahead.name.slice(0, 9) + "…" : ahead.name;
+      gapSpan.textContent = `-${diff} behind ${nameShort}`;
+    }
+
     meta.appendChild(rankBadge);
     meta.appendChild(tag);
+    meta.appendChild(gapSpan);
 
     tile.appendChild(header);
     tile.appendChild(meta);
@@ -206,6 +236,35 @@ function renderGame() {
   });
 
   playersContainer.appendChild(container);
+
+  // FLIP animate reordering
+  const newTiles = Array.from(playersContainer.querySelectorAll(".player-tile"));
+
+  requestAnimationFrame(() => {
+    newTiles.forEach((tile) => {
+      const id = tile.dataset.playerId;
+      const oldRect = oldRects[id];
+      const newRect = tile.getBoundingClientRect();
+
+      if (oldRect) {
+        const dx = oldRect.left - newRect.left;
+        const dy = oldRect.top - newRect.top;
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+          tile.style.transition = "none";
+          tile.style.transform = `translate(${dx}px, ${dy}px)`;
+
+          requestAnimationFrame(() => {
+            tile.style.transition =
+              "transform 260ms cubic-bezier(.22,1.25,.32,1)";
+            tile.style.transform = "translate(0,0)";
+          });
+        }
+      } else {
+        // new tile
+        tile.classList.add("tile-enter");
+      }
+    });
+  });
 }
 
 function renderAll() {
@@ -254,11 +313,20 @@ function rollDie(sides) {
 function handleRollD6() {
   const v = rollDie(6);
   diceOutput.textContent = `d6 → ${v}`;
+  bumpDice();
 }
 
 function handleRollD20() {
   const v = rollDie(20);
   diceOutput.textContent = `d20 → ${v}`;
+  bumpDice();
+}
+
+function bumpDice() {
+  diceOutput.classList.remove("bump");
+  // force reflow to restart animation
+  void diceOutput.offsetWidth;
+  diceOutput.classList.add("bump");
 }
 
 // --- Restart/New Game helpers ---
@@ -266,7 +334,7 @@ function restartRace() {
   if (!state.players.length) return;
   if (!confirm("Restart race? All positions will reset to 0.")) return;
 
-  state.players.forEach(p => p.position = 0);
+  state.players.forEach((p) => (p.position = 0));
   saveState();
   renderGame();
 }
@@ -280,10 +348,18 @@ function newGame() {
     view: "list",
     selectedPlayerId: null
   };
+  previousLeaderId = null;
   saveState();
   setupSection.style.display = "";
   gameSection.style.display = "none";
   renderAll();
+}
+
+function triggerLeaderFlash() {
+  document.body.classList.add("leader-flash");
+  setTimeout(() => {
+    document.body.classList.remove("leader-flash");
+  }, 600);
 }
 
 // --- Event wiring ---
@@ -301,6 +377,7 @@ function init() {
     if (mode === "single" && state.players.length > 1) {
       // wipe players if coming from table multi
       state.players = [];
+      previousLeaderId = null;
     }
     saveState();
     renderAll();
@@ -355,6 +432,7 @@ function init() {
           position: 0
         }
       ];
+      previousLeaderId = "p_single";
     } else if (state.players.length === 0) {
       return;
     }
@@ -373,6 +451,7 @@ function init() {
       view: "list",
       selectedPlayerId: null
     };
+    previousLeaderId = null;
     saveState();
     setupSection.style.display = "";
     gameSection.style.display = "none";
@@ -380,10 +459,6 @@ function init() {
   });
 
   // Dice
-  diceToggleBtn.addEventListener("click", () => {
-    const visible = dicePanel.style.display !== "none";
-    dicePanel.style.display = visible ? "none" : "";
-  });
   rollD6Btn.addEventListener("click", handleRollD6);
   rollD20Btn.addEventListener("click", handleRollD20);
 
