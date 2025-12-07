@@ -356,12 +356,14 @@ function assignCardToActive(cardId) {
         return;
     }
 
-    // Duplicate limit
-    const currentCopies = countCardCopies(cardId);
-    const maxCopies     = allowedCopiesFor(card);
-    if (currentCopies >= maxCopies) {
-        flashCopyStatus(`Max copies reached for ${card.name} (${maxCopies}×).`);
-        return;
+    // Duplicate limit (NOT for fuel – fuel can exceed rarity limits)
+    if (ACTIVE_GROUP !== 'fuel') {
+        const currentCopies = countCardCopies(cardId);
+        const maxCopies     = allowedCopiesFor(card);
+        if (currentCopies >= maxCopies) {
+            flashCopyStatus(`Max copies reached for ${card.name} (${maxCopies}×).`);
+            return;
+        }
     }
 
     // Deck size limit (non-leaders)
@@ -381,12 +383,43 @@ function assignCardToActive(cardId) {
     }
 
     if (ACTIVE_GROUP === 'item') {
-        if (ACTIVE_INDEX == null || ACTIVE_INDEX < 0 || ACTIVE_INDEX >= itemSlots.length) return;
-        if (!itemSlots[ACTIVE_INDEX]) addingNew = true;
+        // Make sure we have a valid target slot:
+        //  - if ACTIVE_INDEX is invalid or points at a filled slot,
+        //    pick the first empty.
+        //  - if there are no empty slots and we are below 40 slots and
+        //    below the 40-card cap, append a new slot.
+        if (
+            ACTIVE_INDEX == null ||
+            ACTIVE_INDEX < 0 ||
+            ACTIVE_INDEX >= itemSlots.length ||
+            itemSlots[ACTIVE_INDEX] // already filled
+        ) {
+            let idx = itemSlots.findIndex(id => !id);
+
+            if (idx === -1) {
+                // No empty slots left: try to grow the slot array
+                const nonLeaderNow = totalNonLeaderCount();
+                if (itemSlots.length < 40 && nonLeaderNow < MAX_DECK_NON_LEADERS) {
+                    itemSlots.push(null);
+                    itemCountEl.value = itemSlots.length;
+                    idx = itemSlots.length - 1;
+                } else {
+                    flashCopyStatus('No more item slots available (40-card cap reached).');
+                    return;
+                }
+            }
+
+            ACTIVE_INDEX = idx;
+        }
+
+        const addingNew = !itemSlots[ACTIVE_INDEX];
+
+        // Enforce 40-card non-leader cap
         if (addingNew && totalNonLeaderCount() >= MAX_DECK_NON_LEADERS) {
-            flashCopyStatus(`Deck is at the 40 non-leader card limit.`);
+            flashCopyStatus('Deck is at the 40 non-leader card limit.');
             return;
         }
+
         itemSlots[ACTIVE_INDEX] = cardId;
         advanceToNextEmpty('item');
         refreshAll();
@@ -394,12 +427,36 @@ function assignCardToActive(cardId) {
     }
 
     if (ACTIVE_GROUP === 'utility') {
-        if (ACTIVE_INDEX == null || ACTIVE_INDEX < 0 || ACTIVE_INDEX >= utilitySlots.length) return;
-        if (!utilitySlots[ACTIVE_INDEX]) addingNew = true;
+        if (
+            ACTIVE_INDEX == null ||
+            ACTIVE_INDEX < 0 ||
+            ACTIVE_INDEX >= utilitySlots.length ||
+            utilitySlots[ACTIVE_INDEX] // already filled
+        ) {
+            let idx = utilitySlots.findIndex(id => !id);
+
+            if (idx === -1) {
+                const nonLeaderNow = totalNonLeaderCount();
+                if (utilitySlots.length < 40 && nonLeaderNow < MAX_DECK_NON_LEADERS) {
+                    utilitySlots.push(null);
+                    utilityCountEl.value = utilitySlots.length;
+                    idx = utilitySlots.length - 1;
+                } else {
+                    flashCopyStatus('No more utility slots available (40-card cap reached).');
+                    return;
+                }
+            }
+
+            ACTIVE_INDEX = idx;
+        }
+
+        const addingNew = !utilitySlots[ACTIVE_INDEX];
+
         if (addingNew && totalNonLeaderCount() >= MAX_DECK_NON_LEADERS) {
-            flashCopyStatus(`Deck is at the 40 non-leader card limit.`);
+            flashCopyStatus('Deck is at the 40 non-leader card limit.');
             return;
         }
+
         utilitySlots[ACTIVE_INDEX] = cardId;
         advanceToNextEmpty('utility');
         refreshAll();
@@ -407,8 +464,18 @@ function assignCardToActive(cardId) {
     }
 
     if (ACTIVE_GROUP === 'fuel') {
-        // Setting / changing the fuel card ID doesn't change deck size.
         fuelCardId = cardId;
+
+        // Clamp existing fuelCount only to the 40-card cap
+        const nonLeaderNow = totalNonLeaderCount();
+        const maxByDeck    = MAX_DECK_NON_LEADERS - (nonLeaderNow - fuelCount);
+        const maxAllowed   = Math.max(0, maxByDeck);
+
+        if (fuelCount > maxAllowed) {
+            fuelCount = maxAllowed;
+        }
+        fuelCountEl.value = fuelCount;
+
         refreshAll();
         return;
     }
@@ -603,25 +670,13 @@ fuelCountEl.addEventListener('input', () => {
     let val = parseInt(fuelCountEl.value || '0', 10) || 0;
     if (val < 0) val = 0;
 
-    // Enforce deck size
+    // Enforce deck size only
     const currentNonLeader = totalNonLeaderCount();
     const fuelDelta = val - fuelCount;
     if (fuelDelta > 0 && currentNonLeader + fuelDelta > MAX_DECK_NON_LEADERS) {
-        const allowed = MAX_DECK_NON_LEADERS - (currentNonLeader);
+        const allowed = MAX_DECK_NON_LEADERS - currentNonLeader;
         val = fuelCount + Math.max(0, allowed);
         flashCopyStatus('Fuel limited by 40-card cap.');
-    }
-
-    // Enforce duplicate limit for this fuel card
-    if (fuelCardId && CARD_MAP.has(fuelCardId)) {
-        const card       = CARD_MAP.get(fuelCardId);
-        const maxCopies  = allowedCopiesFor(card);
-        const othersUsed = countCardCopies(fuelCardId) - fuelCount; // other zones
-        const maxHere    = Math.max(0, maxCopies - othersUsed);
-        if (val > maxHere) {
-            val = maxHere;
-            flashCopyStatus(`Fuel copies limited to ${maxHere}× for this card.`);
-        }
     }
 
     fuelCount = val;
