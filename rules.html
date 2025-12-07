@@ -4,17 +4,20 @@
   <meta charset="UTF-8" />
   <title>MKS: TCG Rulebook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="rules.css" />
   <script src="rules.js" defer></script>
 </head>
-<body>
-  <div class="rules-container">
+<body class="rules-page">
+  <!-- If you have a shared header/nav, include it here -->
+
+  <main class="rules-main">
     <h1>MKS: TCG Rulebook</h1>
-    <div class="subtitle">
+    <div class="rules-subtitle">
       Core gameplay rules for the Staffordshire Mario Kart Society TCG.
     </div>
 
-    <div class="toc">
+    <div class="rules-toc">
       <strong>Sections</strong>
       <ul>
         <li><a href="#setup">1. Game Setup</a></li>
@@ -35,12 +38,12 @@
     </div>
 
     <!-- 1. GAME SETUP -->
-    <section id="setup" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">1</span> Game Setup</span>
+    <section id="setup" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">1</span> Game Setup</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>Before you begin, each player must prepare the following:</p>
         <ul>
           <li>One <strong>Driver</strong> card</li>
@@ -110,12 +113,12 @@
     </section>
 
     <!-- 2. TURN ORDER -->
-    <section id="turnorder" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">2</span> Turn Order</span>
+    <section id="turnorder" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">2</span> Turn Order</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>Each player’s turn follows this structure:</p>
         <ol>
           <li>
@@ -227,12 +230,12 @@
     </section>
 
     <!-- 3. ZONES OF PLAY -->
-    <section id="zones" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">3</span> Zones of Play</span>
+    <section id="zones" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">3</span> Zones of Play</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           The game uses several distinct areas (“zones”) that define where cards
           are and how they interact.
@@ -283,12 +286,12 @@
     </section>
 
     <!-- 4. KEYWORD DEFINITIONS -->
-    <section id="keywords" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">4</span> Keyword Definitions</span>
+    <section id="keywords" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">4</span> Keyword Definitions</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           The following terms are used consistently throughout the rules and on
           cards. They have fixed meanings.
@@ -360,12 +363,12 @@
     </section>
 
     <!-- 5. TIMING WINDOWS -->
-    <section id="timing" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">5</span> Timing Windows</span>
+    <section id="timing" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">5</span> Timing Windows</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           To keep games fair and clear, abilities and effects are grouped into
           specific timing windows.
@@ -435,12 +438,12 @@
     </section>
 
     <!-- 6. DRIVER ABILITIES -->
-    <section id="driver" class="collapsible">
-      <button class="collapse-toggle">
-        <span class="label"><span class="pill">6</span> Driver Abilities</span>
+    <section id="driver" class="rules-collapsible">
+      <button class="rules-toggle">
+        <span class="label"><span class="rules-pill">6</span> Driver Abilities</span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Driver abilities in MKS: TCG are always activated abilities that
           require burning Fuel. Drivers do not have passive or purely triggered
@@ -474,14 +477,14 @@
     </section>
 
     <!-- 7. ACTIONS OUTSIDE TURN -->
-    <section id="actions" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="actions" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">7</span> Actions Outside of Turn
+          <span class="rules-pill">7</span> Actions Outside of Turn
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           You cannot freely play cards during another player’s turn. You may
           only act in response to something happening that allows a reaction.
@@ -523,14 +526,14 @@
     </section>
 
     <!-- 8. ITEM RESOLUTION RULES -->
-    <section id="itemres" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="itemres" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">8</span> Item Resolution Rules
+          <span class="rules-pill">8</span> Item Resolution Rules
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           When an Item is used, follow this process unless the card states
           otherwise.
@@ -579,14 +582,14 @@
     </section>
 
     <!-- 9. WINNING THE GAME -->
-    <section id="endgame" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="endgame" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">9</span> Winning the Game
+          <span class="rules-pill">9</span> Winning the Game
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Reaching the finish line is not an instant win. A player must survive
           a full round at or beyond the finishing position.
@@ -623,14 +626,14 @@
     </section>
 
     <!-- 10. EDGE CASES -->
-    <section id="edge" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="edge" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">10</span> Edge Cases &amp; House Rules
+          <span class="rules-pill">10</span> Edge Cases &amp; House Rules
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Some situations are intentionally left open to house rulings so each
           playgroup can choose how chaotic or precise they want their games to
@@ -684,14 +687,14 @@
     </section>
 
     <!-- 11. UTILITY SUBTYPES -->
-    <section id="utils" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="utils" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">11</span> Utility Subtypes
+          <span class="rules-pill">11</span> Utility Subtypes
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Utilities cover a broad range of effects. Understanding their general
           roles helps with deckbuilding and play.
@@ -732,14 +735,14 @@
     </section>
 
     <!-- 12. CONFLICT RESOLUTION -->
-    <section id="priority" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="priority" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">12</span> Conflict Resolution &amp; Priority
+          <span class="rules-pill">12</span> Conflict Resolution &amp; Priority
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           When multiple effects interact or conflict, use the following order to
           determine what happens.
@@ -785,14 +788,14 @@
     </section>
 
     <!-- 13. SIMULTANEOUS TRIGGERS -->
-    <section id="triggers" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="triggers" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">13</span> Simultaneous Trigger Rules
+          <span class="rules-pill">13</span> Simultaneous Trigger Rules
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Sometimes multiple abilities will trigger at the same time (for
           example, when several players cross certain thresholds or play similar
@@ -821,14 +824,14 @@
     </section>
 
     <!-- 14. POWER SCALING -->
-    <section id="scaling" class="collapsible">
-      <button class="collapse-toggle">
+    <section id="scaling" class="rules-collapsible">
+      <button class="rules-toggle">
         <span class="label">
-          <span class="pill">14</span> Power Scaling &amp; Rarity
+          <span class="rules-pill">14</span> Power Scaling &amp; Rarity
         </span>
         <span class="chevron">▶</span>
       </button>
-      <div class="content">
+      <div class="rules-content">
         <p>
           Rarity in MKS: TCG is a guideline for how impactful a card tends to
           be, but it does not automatically make a card unbeatable.
@@ -859,6 +862,6 @@
         </p>
       </div>
     </section>
-  </div>
+  </main>
 </body>
 </html>
