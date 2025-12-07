@@ -440,7 +440,13 @@ body {
 .link:hover{text-decoration:underline}
 
 /* How-to */
-.how{max-width:900px; margin:2rem auto; padding:0 1rem; color:#cfe2ff}
+.how{
+    max-width:1200px;   /* match hero/stats width */
+    margin:2rem auto;
+    padding:0 1rem;
+    color:#cfe2ff;
+}
+
 .how ol{margin:.25rem 0 0 1.25rem}
 
 /* Carousel */
