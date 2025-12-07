@@ -4,12 +4,33 @@
   <meta charset="UTF-8" />
   <title>MKS: TCG Rulebook</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Main site styles + rules-specific styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="rules.css" />
   <script src="rules.js" defer></script>
 </head>
 <body class="rules-page">
-  <!-- If you have a shared header/nav, include it here -->
+
+  <!-- Shared top bar -->
+  <header class="topbar">
+    <a href="index.html" class="brand">MKS TCG</a>
+
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Cards</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="rules.html" class="nav-link active">Rules</a>
+      <!-- add/remove links as needed -->
+    </nav>
+  </header>
 
   <main class="rules-main">
     <h1>MKS: TCG Rulebook</h1>
