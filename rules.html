@@ -1,219 +1,864 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MKS TCG - Rules</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
-    <script src="rules.js?v=2" defer></script>
+  <meta charset="UTF-8" />
+  <title>MKS: TCG Rulebook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="rules.css" />
+  <script src="rules.js" defer></script>
 </head>
-<body class="rules-page">
-    <header class="topbar">
-        <nav class="nav">
-            <a class="brand" href="index.html">MKS TCG</a>
-            <a class="nav-link" href="catalogue.html">Catalogue</a>
-            <a class="nav-link active" href="rules.html">Rules</a>
-            <a class="nav-link" href="about.html">About</a>
-        </nav>
-    </header>
+<body>
+  <div class="rules-container">
+    <h1>MKS: TCG Rulebook</h1>
+    <div class="subtitle">
+      Core gameplay rules for the Staffordshire Mario Kart Society TCG.
+    </div>
 
-    <main class="rules-main">
-        <!-- HERO -->
-        <section class="rules-hero">
-            <h1>How to Play</h1>
-            <p>Race for <strong>place</strong>, not life total. Build a deck, dodge like a maniac, and cross the line first.</p>
-            <div class="rules-hero-actions">
-                <a class="btn btn-lg" href="catalogue.html">Open Card Catalogue</a>
-                <button id="shuffleExamples" class="btn btn-ghost btn-lg" type="button">Shuffle Example Cards</button>
-            </div>
+    <div class="toc">
+      <strong>Sections</strong>
+      <ul>
+        <li><a href="#setup">1. Game Setup</a></li>
+        <li><a href="#turnorder">2. Turn Order</a></li>
+        <li><a href="#zones">3. Zones of Play</a></li>
+        <li><a href="#keywords">4. Keyword Definitions</a></li>
+        <li><a href="#timing">5. Timing Windows</a></li>
+        <li><a href="#driver">6. Driver Abilities</a></li>
+        <li><a href="#actions">7. Actions Outside of Turn</a></li>
+        <li><a href="#itemres">8. Item Resolution Rules</a></li>
+        <li><a href="#endgame">9. Winning the Game</a></li>
+        <li><a href="#edge">10. Edge Cases</a></li>
+        <li><a href="#utils">11. Utility Subtypes</a></li>
+        <li><a href="#priority">12. Conflict Resolution</a></li>
+        <li><a href="#triggers">13. Simultaneous Trigger Rules</a></li>
+        <li><a href="#scaling">14. Power Scaling</a></li>
+      </ul>
+    </div>
 
-            <!-- chip nav -->
-            <div class="rules-nav-chips">
-                <a href="#objective">Objective</a>
-                <a href="#setup">Setup</a>
-                <a href="#turn">Turn</a>
-                <a href="#card-types">Card Types</a>
-                <a href="#place">place</a>
-                <a href="#hits">Hits & Dodges</a>
-                <a href="#faq">FAQ</a>
-                <a href="#tools">Play Tools</a>
-            </div>
-        </section>
+    <!-- 1. GAME SETUP -->
+    <section id="setup" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">1</span> Game Setup</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>Before you begin, each player must prepare the following:</p>
+        <ul>
+          <li>One <strong>Driver</strong> card</li>
+          <li>One <strong>Vehicle</strong> card</li>
+          <li>One <strong>personal deck</strong> of exactly 40 cards</li>
+        </ul>
 
-        <!-- OBJECTIVE -->
-        <section id="objective" class="rules-section">
-            <h2>Objective</h2>
-            <p>
-                The winner is the player with the highest <strong>place</strong> when the race ends.
-                place is where you are on the track. Cards move you forward or shove others back.
-            </p>
+        <h3>Driver &amp; Vehicle</h3>
+        <ul>
+          <li>
+            Each player chooses one Driver and one Vehicle and places them
+            face-up in their respective zones.
+          </li>
+          <li>
+            Once the game begins, your Driver and Vehicle do not change for the
+            duration of that game.
+          </li>
+        </ul>
+
+        <h3>Deckbuilding Rules</h3>
+        <ul>
+          <li>Your deck must contain exactly 40 cards.</li>
+          <li>
+            Your deck can be a mix of <strong>Fuel</strong>, <strong>Items</strong>,
+            and <strong>Utilities</strong> in any ratio you choose.
+          </li>
+          <li>
+            There are no restrictions on how many cards of each rarity you
+            include overall, but there <em>are</em> restrictions on duplicates
+            of the same card:
             <ul>
-                <li>Everyone starts at <strong>0</strong>.</li>
-                <li>Card effects will say things like “Gain 8 places” or “Target loses 6 places”.</li>
-                <li>Whoever reaches the finish line first, wins!.</li>
+              <li>Common (green): up to 4 copies of the same card</li>
+              <li>Uncommon (yellow): up to 3 copies of the same card</li>
+              <li>Rare (purple): up to 2 copies of the same card</li>
+              <li>Mythical (blue): only 1 copy of a given card</li>
             </ul>
-        </section>
+            Example: you may only have one Bullet Bill of a specific version,
+            but you could have both Blue Shell and Spiny Shell because they are
+            different cards.
+          </li>
+        </ul>
 
-        <!-- SETUP -->
-        <section id="setup" class="rules-section">
-            <h2>Setup</h2>
-            <ol>
-                <li>Each player chooses <strong>1 Driver</strong> and <strong>1 Kart</strong>.</li>
-                <li>Build a deck of <strong>20</strong> cards (Items and Utilities).</li>
-                <li>Then add <strong>20</strong> fuel to your deck.</li>
-                <li>Shuffle your deck and draw <strong>7</strong> cards.</li>
-                <li>Everyone starts at place <strong>0</strong>.</li>
-            </ol>
+        <h3>Starting the Game</h3>
+        <ul>
+          <li>Thoroughly shuffle each player’s deck.</li>
+          <li>Each player draws a starting hand of 7 cards.</li>
+          <li>
+            Your hand may go above 7 during the turn, but at the
+            <strong>end</strong> of your turn you must discard down to 7.
+          </li>
+          <li>
+            Turn order is decided by each player rolling a d20. Highest roll
+            goes first, then play proceeds clockwise.
+          </li>
+          <li>
+            Players agree on the <strong>finish line</strong> (the number of
+            positions required to win), and all players begin at position 0.
+          </li>
+          <li>
+            Any card in your opening hand that states it must be played
+            immediately (for example, Starting Boost or Thundercloud) is played
+            before the game officially begins. Any ongoing passive or delayed
+            effects start from that point.
+          </li>
+        </ul>
+      </div>
+    </section>
 
-            <div class="rules-row">
-                <div class="rules-col">
-                    <h3>Drivers</h3>
-                    <p>Drivers are your character card. They have a unique ability or once-per-turn trick.</p>
-                    <ul>
-                        <li>Only one Driver per player.</li>
-                        <li>Some Drivers swap positions, copy abilities, or bend dodge rules.</li>
-                    </ul>
-                </div>
-                <div class="rules-col rules-example">
-                    <h4>Example Driver</h4>
-                    <div id="driverExample" class="example-card-slot"></div>
-                </div>
-            </div>
-
-            <div class="rules-row">
-                <div class="rules-col">
-                    <h3>Karts</h3>
-                    <p>Karts define how your racer handles.</p>
-                    <ul>
-                        <li><strong>Speed</strong> – how fast you can move up the track.</li>
-                        <li><strong>Handling</strong> – how good you are at dodging attacks.</li>
-                        <li>All Karts have a passive ability (“When you dodge…”, “When you play a Utility…” etc.).</li>
-                    </ul>
-                </div>
-                <div class="rules-col rules-example">
-                    <h4>Example Kart</h4>
-                    <div id="kartExample" class="example-card-slot"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TURN -->
-        <section id="turn" class="rules-section">
-            <h2>Turn Structure</h2>
-            <ol class="rules-steps">
-                <li><strong>Start:</strong> Resolve any “at the start of your turn” effects.</li>
-                <li><strong>Draw:</strong> Draw 1 card.</li>
-                <li><strong>Draw:</strong> Place 1 fuel card.</li>
-                <li><strong>Race:</strong> Roll your movement for this turn.</li>
-                <li><strong>Main:</strong> Play Items and Utilities, activate abilities.</li>
-                <li><strong>End:</strong> Check any passive abilities, discard down to 7 cards if you have more than that.</li>
-            </ol>
-            <p class="rules-note">
-                First player is chosen by rolling the highest number. Then it goes clockwise.
-            </p>
-        </section>
-
-        <!-- CARD TYPES -->
-        <section id="card-types" class="rules-section">
-            <h2>Card Types</h2>
-
-            <div class="rules-row">
-                <div class="rules-col">
-                    <h3>Items</h3>
-                    <p>Items are the chaos. Shells, bombs, dodgy mushrooms… all the good stuff.</p>
-                    <ul>
-                        <li>They usually have <strong>2</strong> abilities</li>
-                        <li>Some of these abilities attack other player(s).</li>
-                        <li>Other abilities help you dodge or move places!</li>
-                    </ul>
-                </div>
-                <div class="rules-col rules-example">
-                    <h4>Example Item</h4>
-                    <div id="itemExample" class="example-card-slot"></div>
-                </div>
-            </div>
-
-            <div class="rules-row">
-                <div class="rules-col">
-                    <h3>Utilities</h3>
-                    <p>Utilities are one-shot tactical plays. They don’t require hit rolls.</p>
-                    <ul>
-                        <li>Draw extra cards, recycle your discard, or spike someone’s place.</li>
-                        <li>Often say things like “For the rest of this turn…” or “This round…”.</li>
-                        <li>These are special cards that do lots of cool things.</li>
-                    </ul>
-                </div>
-                <div class="rules-col rules-example">
-                    <h4>Example Utility</h4>
-                    <div id="utilityExample" class="example-card-slot"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- place -->
-        <section id="place" class="rules-section">
-            <h2>places & Movement</h2>
-            <p>
-                Most effects either gain you places or make someone else lose it.
-            </p>
+    <!-- 2. TURN ORDER -->
+    <section id="turnorder" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">2</span> Turn Order</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>Each player’s turn follows this structure:</p>
+        <ol>
+          <li>
+            <strong>Start-of-Turn Effects</strong><br />
+            Resolve any effects that say “At the start of your turn…”.
+          </li>
+          <li>
+            <strong>Draw</strong><br />
+            Draw one card from the top of your deck. If this card states it
+            must be played immediately, do so before continuing.
+          </li>
+          <li>
+            <strong>Untap Fuel</strong><br />
+            Untap (stand upright) any Fuel cards you tapped on previous turns.
+            If you have no Fuel in your Fuel Zone, skip this step.
+          </li>
+          <li>
+            <strong>Place Fuel</strong><br />
+            You may place one Fuel card from your hand into your Fuel Zone
+            (unless a Utility or effect allows you to place more).
             <ul>
-                <li>If a card says “gain 10 places”, move yourself forward 10.</li>
-                <li>If it says “target driver loses 6 places”, they move backwards 6.</li>
-                <li>Some effects care whether a driver is <strong>ahead</strong> or <strong>behind</strong> you.</li>
+              <li>You cannot place Fuel if there are already 8 Fuel cards.</li>
+              <li>
+                Cards like Superfuel may provide multiple fuel points but still
+                only occupy one of the 8 Fuel card slots.
+              </li>
             </ul>
-            <p class="rules-note">
-                If an effect would take someone below 0, they just stay at 0. No negative track... yet.
-            </p>
-        </section>
-
-        <!-- HITS & DODGES -->
-        <section id="hits" class="rules-section">
-            <h2>Hits, Dodges & Handling</h2>
+          </li>
+          <li>
+            <strong>Movement Roll</strong><br />
+            Roll a d6 to determine your base movement. Your total movement is:
+            <br />
+            <em>d6 result + Driver Speed + Vehicle Speed + relevant passive
+            modifiers</em>.
+            <br />
+            Apply all relevant passive effects as you calculate this movement.
+          </li>
+          <li>
+            <strong>Update Position</strong><br />
+            Add your total movement to your current position on the track.
+          </li>
+          <li>
+            <strong>Main Action Window</strong><br />
+            In any order:
             <ul>
-                <li>Most Item abilities have a <strong>Hit</strong> value (like “Hit 17+”).</li>
-                <li>Target Driver must Roll the die: if their roll + handling beats the Hit, they dodge the attack.</li>
-                <li>Some cards add flat bonuses to hit/dodge, or say “unblockable” (no dodging).</li>
+              <li>
+                Place Items into your primary and/or pocket slots (respecting
+                any fuel costs to place if applicable).
+              </li>
+              <li>
+                Use Utilities, as long as you have sufficient Fuel to pay any
+                tap/burn costs.
+              </li>
+              <li>
+                Activate Driver abilities by
+                <strong>burning Fuel</strong>, if you have enough Fuel cards in
+                your Fuel Zone.
+              </li>
+              <li>
+                You may burn Fuel to discard an Item card in your primary slot
+                that you do not wish to use, moving your pocket item up:
+                <ul>
+                  <li>Common (green) discard: free</li>
+                  <li>Uncommon (yellow) discard: burn 1 Fuel card</li>
+                  <li>Rare (purple) discard: burn 2 Fuel cards</li>
+                  <li>Mythical (blue) discard: burn 3 Fuel cards</li>
+                </ul>
+              </li>
+              <li>
+                You may place at most <strong>two</strong> Items at a time:
+                <ul>
+                  <li>The first Item is placed face-up as your primary item.</li>
+                  <li>
+                    The second Item may be placed face-down as your pocket
+                    item.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                An Item placed this turn usually cannot be used until your next
+                turn (unless a card explicitly says otherwise).
+              </li>
+              <li>
+                When you use your primary Item, discard it. Your pocket Item is
+                then flipped face-up and becomes the new primary Item, leaving a
+                free pocket slot.
+              </li>
+              <li>
+                Items have two abilities (offensive and defensive). You may use
+                <strong>one or the other</strong> when you play them, never
+                both.
+              </li>
+              <li>
+                All Items and Utilities used go to your discard pile after
+                resolving.
+              </li>
+              <li>
+                Use any applicable passive abilities from your Vehicle card.
+              </li>
             </ul>
-            <p class="rules-note">
-                Write something here as a little tip.
-            </p>
-        </section>
+          </li>
+          <li>
+            <strong>End of Turn</strong><br />
+            If your hand exceeds 7 cards, discard down to 7. Then formally end
+            your turn so play passes to the next player.
+          </li>
+        </ol>
+      </div>
+    </section>
 
-        <!-- FAQ -->
-        <section id="faq" class="rules-section">
-            <h2>FAQ (Quick Rulings)</h2>
-            <details>
-                <summary>Can I play more than one card in a turn?</summary>
-                <p>Yes, as long as you can pay all costs and nothing on the table says you can’t.</p>
-            </details>
-            <details>
-                <summary>What if two things trigger at the same time?</summary>
-                <p>The current player chooses the order their effects go on the stack. Then the next player, and so on.</p>
-            </details>
-            <details>
-                <summary>What if a card doesn’t say when it ends?</summary>
-                <p>Unless it clearly says “this round” or “this turn”, treat it as a one-off effect that resolves and is done.</p>
-            </details>
-        </section>
+    <!-- 3. ZONES OF PLAY -->
+    <section id="zones" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">3</span> Zones of Play</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          The game uses several distinct areas (“zones”) that define where cards
+          are and how they interact.
+        </p>
+        <ul>
+          <li>
+            <strong>Deck</strong> – A face-down pile of exactly 40 cards. Cards
+            are drawn from the top unless a card effect states otherwise.
+          </li>
+          <li>
+            <strong>Hand</strong> – Cards drawn from your deck that you may
+            choose to play. Cards in hand cannot be used defensively.
+          </li>
+          <li>
+            <strong>Driver Zone</strong> – Holds your chosen Driver card. It
+            remains face-up for the entire game.
+          </li>
+          <li>
+            <strong>Vehicle Zone</strong> – Holds your chosen Vehicle card. It
+            remains face-up and provides passive abilities.
+          </li>
+          <li>
+            <strong>Fuel Zone</strong> – Where you place Fuel cards. You may
+            have up to 8 Fuel <em>cards</em> here, though total fuel points may
+            exceed 8. Fuel can be tapped and burnt from this zone.
+          </li>
+          <li>
+            <strong>Primary Item Slot</strong> – The face-up Item ready to be
+            used first.
+          </li>
+          <li>
+            <strong>Pocket Item Slot</strong> – The face-down reserve Item. When
+            your primary is used or discarded, your pocket flips face-up and
+            becomes the new primary Item.
+          </li>
+          <li>
+            <strong>Discard Pile</strong> – A face-up pile where used Items,
+            used Utilities, burnt Fuel and other discarded cards go. You may
+            inspect your own discard pile any time.
+          </li>
+          <li>
+            <strong>Position Track</strong> – The track (or representation of
+            it) showing each player’s current position in the race. All
+            movement, knock-backs, and win conditions reference this track.
+          </li>
+        </ul>
+      </div>
+    </section>
 
-        <!-- TOOLS -->
-        <section id="tools" class="rules-section">
-            <h2>Play Tools</h2>
-            <p>Don’t have dice on you? Use these.</p>
-            <div class="rules-tools">
-                <button id="rollD6" type="button" class="btn">Roll d6</button>
-                <span id="d6Result" class="tool-badge">–</span>
-                <button id="flipCoin" type="button" class="btn">Flip Coin</button>
-                <span id="coinResult" class="tool-badge">–</span>
-            </div>
-        </section>
-    </main>
+    <!-- 4. KEYWORD DEFINITIONS -->
+    <section id="keywords" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">4</span> Keyword Definitions</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          The following terms are used consistently throughout the rules and on
+          cards. They have fixed meanings.
+        </p>
+        <ul>
+          <li>
+            <strong>Tap</strong> – Rotate a Fuel card sideways to show it has
+            been used this turn. Tapped Fuel cannot be used again until it
+            untaps at the start of your next turn.
+          </li>
+          <li>
+            <strong>Burn</strong> – Permanently discard a Fuel card from your
+            Fuel Zone. Burning is usually required for Driver abilities or to
+            discard certain high-rarity Items.
+          </li>
+          <li>
+            <strong>Fuel Points</strong> – The usable amount of fuel a card
+            provides when tapped or burnt. Some cards grant multiple fuel
+            points.
+          </li>
+          <li>
+            <strong>Primary Item</strong> – The face-up Item in your primary
+            slot that must be used before your pocket Item becomes active.
+          </li>
+          <li>
+            <strong>Pocket Item</strong> – The face-down Item stored in your
+            pocket slot. Once the primary Item is used or discarded, the pocket
+            Item is flipped and becomes the new primary Item.
+          </li>
+          <li>
+            <strong>Passive Ability</strong> – An ability that is always active
+            while the card is in play. In MKS: TCG, passive abilities belong to
+            Vehicle cards.
+          </li>
+          <li>
+            <strong>Trigger</strong> – An ability that activates when a specific
+            condition is met (e.g., “When you dodge an attack…”).
+          </li>
+          <li>
+            <strong>Activated Ability</strong> – An ability that requires a cost
+            to use. For Drivers this cost is always burning Fuel. For Utilities
+            and other cards, this may involve tapping or burning Fuel.
+          </li>
+          <li>
+            <strong>Hit Threshold</strong> – The number an attacking Item needs
+            to meet or exceed in order to successfully hit a defender who rolls
+            a dodge.
+          </li>
+          <li>
+            <strong>Undodgeable</strong> – An Item or effect that cannot be
+            avoided with a dodge roll. Other forms of defence may still apply
+            (e.g., reflection or suppression).
+          </li>
+          <li>
+            <strong>Suppress</strong> – Negates an effect entirely as though it
+            never occurred.
+          </li>
+          <li>
+            <strong>Reflect</strong> – Redirects the final effect of an Item or
+            ability to a different legal target. Reflected effects may be
+            reflected again unless stated otherwise.
+          </li>
+          <li>
+            <strong>Override</strong> – Replaces the normal outcome of an Item
+            or ability with a new stated outcome.
+          </li>
+        </ul>
+      </div>
+    </section>
 
-    <footer class="footer">
-        <span>© MKS • Rules page uses <code>data/MasterSheet.csv</code> and <code>images/cards/&lt;CardID&gt;_vv1.png</code></span>
-    </footer>
+    <!-- 5. TIMING WINDOWS -->
+    <section id="timing" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">5</span> Timing Windows</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          To keep games fair and clear, abilities and effects are grouped into
+          specific timing windows.
+        </p>
+
+        <h3>Start-of-Turn Window</h3>
+        <ul>
+          <li>
+            Resolve all effects that say “At the start of your turn…”.
+          </li>
+          <li>
+            Any automatically played cards that trigger at the start of your
+            turn also resolve here.
+          </li>
+        </ul>
+
+        <h3>Movement Window</h3>
+        <ul>
+          <li>Roll your d6 for movement.</li>
+          <li>
+            Apply Speed from your Driver and Vehicle, plus relevant passive
+            modifiers.
+          </li>
+          <li>Update your position on the track.</li>
+        </ul>
+
+        <h3>Main Action Window</h3>
+        <ul>
+          <li>Place Fuel (if you have not already done so this turn).</li>
+          <li>Play Utilities (paying any required Fuel costs).</li>
+          <li>Activate Driver abilities by burning Fuel.</li>
+          <li>Place Items into your primary and/or pocket Item slots.</li>
+        </ul>
+
+        <h3>End-of-Turn Window</h3>
+        <ul>
+          <li>Discard down to 7 cards if you have more.</li>
+          <li>Formally end your turn.</li>
+        </ul>
+
+        <h3>Reaction Window (Outside of Turn)</h3>
+        <ul>
+          <li>
+            Triggered when another player takes an action that targets you or
+            affects the table (usually Items or certain Utilities).
+          </li>
+          <li>
+            During this window, you may defend yourself using:
+            <ul>
+              <li>Your primary Item (or pocket Item once it becomes primary)</li>
+              <li>
+                Driver abilities that explicitly state they can be used in
+                response
+              </li>
+              <li>
+                Utilities that the table has agreed may be used reactively
+              </li>
+              <li>
+                A dodge roll (d20 + your total Handling), if the Item is
+                dodgeable
+              </li>
+            </ul>
+          </li>
+          <li>You cannot place new Fuel during this window.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6. DRIVER ABILITIES -->
+    <section id="driver" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label"><span class="pill">6</span> Driver Abilities</span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Driver abilities in MKS: TCG are always activated abilities that
+          require burning Fuel. Drivers do not have passive or purely triggered
+          abilities.
+        </p>
+        <ul>
+          <li>
+            Each Driver has one or more abilities that show a Fuel burn cost.
+          </li>
+          <li>
+            To use a Driver ability, you must burn (discard) that many Fuel
+            cards from your Fuel Zone.
+          </li>
+          <li>
+            Driver abilities normally can only be activated during your
+            <strong>Main Action Window</strong>.
+          </li>
+          <li>
+            Some Driver abilities will explicitly state they can be used in
+            response to other actions (for example, to block, dodge, suppress,
+            ignore, copy, or override an effect). These may be used during the
+            <strong>Reaction Window</strong> when their conditions are met.
+          </li>
+        </ul>
+        <p>
+          All passive effects belong to Vehicles. Any “always on” abilities on
+          Drivers should be treated as misprints and clarified by the project
+          team if they appear.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7. ACTIONS OUTSIDE TURN -->
+    <section id="actions" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">7</span> Actions Outside of Turn
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          You cannot freely play cards during another player’s turn. You may
+          only act in response to something happening that allows a reaction.
+        </p>
+        <ul>
+          <li>
+            You may use Items to defend yourself if:
+            <ul>
+              <li>
+                They are already placed as your primary Item, or
+              </li>
+              <li>
+                Your pocket Item becomes the primary Item after you use/discard
+                your original primary.
+              </li>
+            </ul>
+          </li>
+          <li>
+            You cannot use Items from your hand as defence. They must be placed
+            on the table first.
+          </li>
+          <li>
+            For a dodge attempt, you roll a <strong>d20 + your total Handling
+            stat</strong>. Whether this succeeds depends on the Item’s hit
+            threshold. Some Items are undodgeable.
+          </li>
+          <li>
+            Certain Driver abilities dealing with blocking, dodging, suppressing,
+            ignoring, copying, or overriding effects may be used defensively if
+            the card text allows it.
+          </li>
+          <li>
+            Fuel cannot be placed during another player’s turn, and passive
+            Vehicle abilities do not change timing: they remain passive and
+            continuous.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 8. ITEM RESOLUTION RULES -->
+    <section id="itemres" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">8</span> Item Resolution Rules
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          When an Item is used, follow this process unless the card states
+          otherwise.
+        </p>
+        <ol>
+          <li>
+            <strong>Declare the Item</strong><br />
+            Choose which ability you are using (offensive or defensive). You
+            may only use one of the two abilities.
+          </li>
+          <li>
+            <strong>Choose Targets</strong><br />
+            Declare which player(s) or object(s) are being targeted. If multiple
+            players are equally valid (for example, tied for closest or
+            farthest), the selection method (e.g. coin flip) should follow the
+            card text or a mutually agreed house rule.
+          </li>
+          <li>
+            <strong>Allow Responses</strong><br />
+            Other players may now respond with defensive Items, Utilities, or
+            Driver abilities that are allowed during the Reaction Window.
+          </li>
+          <li>
+            <strong>Resolve Dodge Rolls</strong><br />
+            If the Item is dodgeable, the targeted player may roll a d20 and add
+            their total Handling. Compare this to the Item’s hit threshold to
+            see if the attack lands.
+          </li>
+          <li>
+            <strong>Apply Effects</strong><br />
+            Apply the Item’s results, taking into account any suppressions,
+            reflections, overrides, or other modifications that have been
+            declared.
+          </li>
+          <li>
+            <strong>Discard the Item</strong><br />
+            After resolution, place the used Item into its owner’s discard pile.
+          </li>
+        </ol>
+        <p>
+          If the user’s position changes during resolution (for example due to
+          reflection or some other effect), continue resolving the Item based on
+          their new position unless the card specifically prevents this.
+        </p>
+      </div>
+    </section>
+
+    <!-- 9. WINNING THE GAME -->
+    <section id="endgame" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">9</span> Winning the Game
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Reaching the finish line is not an instant win. A player must survive
+          a full round at or beyond the finishing position.
+        </p>
+        <ul>
+          <li>
+            When your position first reaches or exceeds the agreed finishing
+            threshold, place your marker at the finish.
+          </li>
+          <li>
+            The game continues until it is your turn again.
+          </li>
+          <li>
+            At the start of your next turn, if you are still at or beyond the
+            finishing threshold, you win the race.
+          </li>
+          <li>
+            If at any point before your next turn you are knocked back below
+            the finishing threshold, you have not won yet. You must move back to
+            or beyond the finish line and then again reach the start of your
+            next turn there.
+          </li>
+          <li>
+            Multiple players may be at or beyond the finish line at the same
+            time. The player who first completes a full turn at or beyond the
+            threshold wins.
+          </li>
+        </ul>
+        <p>
+          After a winner is declared, the game can end or you can continue
+          playing to determine second, third, and further positions.
+        </p>
+      </div>
+    </section>
+
+    <!-- 10. EDGE CASES -->
+    <section id="edge" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">10</span> Edge Cases &amp; House Rules
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Some situations are intentionally left open to house rulings so each
+          playgroup can choose how chaotic or precise they want their games to
+          be.
+        </p>
+
+        <h3>Negative Positions</h3>
+        <p>
+          If a player would be moved to a position below zero, agree as a table
+          how to handle this. Some common variants:
+        </p>
+        <ul>
+          <li>
+            <strong>Burnout</strong> – Position cannot go below 0. Any further
+            negative movement is ignored.
+          </li>
+          <li>
+            <strong>False Start</strong> – Position cannot go below 0, but excess
+            negative movement ‘rolls over’ into penalties (for example, losing
+            Fuel or suffering debuffs).
+          </li>
+          <li>
+            <strong>Handicap / Pity Bill</strong> – Position cannot go below 0,
+            and additional negative movement instead grants a compensating
+            effect (e.g., temporary Speed or Handling buffs).
+          </li>
+          <li>
+            <strong>Bagging</strong> – Allow positions to go into negative
+            numbers. Players may choose to fall far behind to benefit from
+            powerful catch-up Items later.
+          </li>
+        </ul>
+
+        <h3>Tied Positions</h3>
+        <p>
+          Many Items or Utilities may reference “the player in X position” or
+          “the furthest behind player”. When multiple players are tied at that
+          position, you may:
+        </p>
+        <ul>
+          <li>Agree that the current player chooses among tied players, or</li>
+          <li>
+            Decide via random method (e.g., coin flip, highest d20 roll among
+            tied players).
+          </li>
+        </ul>
+        <p>
+          As long as the method is agreed and consistent, it is valid.
+        </p>
+      </div>
+    </section>
+
+    <!-- 11. UTILITY SUBTYPES -->
+    <section id="utils" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">11</span> Utility Subtypes
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Utilities cover a broad range of effects. Understanding their general
+          roles helps with deckbuilding and play.
+        </p>
+        <ul>
+          <li>
+            <strong>Boost Utilities</strong> – Increase your movement or adjust
+            your position on the track.
+          </li>
+          <li>
+            <strong>Fuel Utilities</strong> – Manipulate Fuel (adding, untapping,
+            burning in specific ways, etc.).
+          </li>
+          <li>
+            <strong>Defensive Utilities</strong> – Block, reduce, reflect, or
+            suppress incoming attacks or effects.
+          </li>
+          <li>
+            <strong>Item Utilities</strong> – Swap Items, steal Items, move
+            Items between slots, or alter how Items behave.
+          </li>
+          <li>
+            <strong>Position Utilities</strong> – Move you or other players
+            forwards or backwards or interact directly with the track and
+            positions.
+          </li>
+          <li>
+            <strong>Meta Utilities</strong> – Draw extra cards, search your
+            deck, change your hand size, manipulate the discard pile, etc.
+          </li>
+        </ul>
+        <p>
+          A single Utility may fall into more than one category. When in doubt,
+          the specific text on the card always overrides any general behaviour
+          described here.
+        </p>
+      </div>
+    </section>
+
+    <!-- 12. CONFLICT RESOLUTION -->
+    <section id="priority" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">12</span> Conflict Resolution &amp; Priority
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          When multiple effects interact or conflict, use the following order to
+          determine what happens.
+        </p>
+        <ol>
+          <li>
+            <strong>Suppression</strong><br />
+            If an effect is suppressed, it is treated as if it never occurred.
+            Suppression resolves before other modifications.
+          </li>
+          <li>
+            <strong>Override</strong><br />
+            If an ability overrides an effect, replace the original result with
+            the new one specified by the overriding effect.
+          </li>
+          <li>
+            <strong>Reflection</strong><br />
+            If an effect is reflected, redirect the final outcome of the effect
+            to a new legal target. The reflected effect may itself be reflected
+            again if allowed.
+          </li>
+          <li>
+            <strong>Normal Resolution</strong><br />
+            If no suppression, override, or reflection applies, resolve the
+            effect as written on the card.
+          </li>
+        </ol>
+        <p>
+          When multiple abilities or effects are trying to resolve at the same
+          time:
+        </p>
+        <ul>
+          <li>
+            The <strong>active player</strong> chooses the order in which their
+            own simultaneous effects resolve.
+          </li>
+          <li>
+            Then, in turn order, each other player chooses the order in which
+            their effects resolve.
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 13. SIMULTANEOUS TRIGGERS -->
+    <section id="triggers" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">13</span> Simultaneous Trigger Rules
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Sometimes multiple abilities will trigger at the same time (for
+          example, when several players cross certain thresholds or play similar
+          effects).
+        </p>
+        <ul>
+          <li>
+            First, the <strong>active player</strong> resolves all of their
+            triggered abilities in any order they choose.
+          </li>
+          <li>
+            Then, moving clockwise, each other player resolves their triggered
+            abilities, also choosing the order for their own triggers.
+          </li>
+          <li>
+            If an effect would target one of several players equally (e.g., tied
+            positions), use whatever tie-breaking method your table has agreed
+            on (usually a random method like a coin flip or d20).
+          </li>
+        </ul>
+        <p>
+          This structure prevents timing deadlocks and keeps the game flowing
+          even in chaotic situations.
+        </p>
+      </div>
+    </section>
+
+    <!-- 14. POWER SCALING -->
+    <section id="scaling" class="collapsible">
+      <button class="collapse-toggle">
+        <span class="label">
+          <span class="pill">14</span> Power Scaling &amp; Rarity
+        </span>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="content">
+        <p>
+          Rarity in MKS: TCG is a guideline for how impactful a card tends to
+          be, but it does not automatically make a card unbeatable.
+        </p>
+        <ul>
+          <li>
+            Higher-rarity cards (Rare, Mythical) generally have stronger or more
+            complex effects than Common and Uncommon cards.
+          </li>
+          <li>
+            However, a Common card can absolutely shut down or counter a
+            higher-rarity card in the right circumstances.
+          </li>
+          <li>
+            Some Utilities and Items have “universal” effects — for example, a
+            reflector-style card that can reflect any level of Item, including
+            Mythicals.
+          </li>
+          <li>
+            Deckbuilding, timing, and clever play matter more than simply
+            stacking all your highest-rarity cards.
+          </li>
+        </ul>
+        <p>
+          The design philosophy is that higher rarity typically offers more
+          flexibility, explosiveness, or consistency, but it never guarantees
+          victory on its own.
+        </p>
+      </div>
+    </section>
+  </div>
 </body>
 </html>
