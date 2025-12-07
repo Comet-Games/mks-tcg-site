@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="deckbuilder.css" />
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
-  <script src="deckbuilder.js?v=1" defer></script>
+  <script src="deckbuilder.js?v=2" defer></script>
 </head>
 <body class="deck-page">
   <header class="topbar">
@@ -22,80 +22,111 @@
   </header>
 
   <main class="deck-main">
-    <!-- Hero / explanation -->
     <section class="deck-hero">
       <h1>Deckbuilder</h1>
-      <p>Click a slot, pick cards from the library, and share your deck using the URL. The <code>?deck=</code> part of the link encodes your choices.</p>
+      <p>
+        Build a sharable 40-card deck (excluding your Driver and Kart).
+        Click a slot to pick cards, then copy the URL to share your list.
+      </p>
+      <p class="deck-hero-note">
+        Limits per card: <strong>4× Common</strong>, <strong>3× Uncommon</strong>, <strong>2× Rare</strong>, <strong>1× Mythic</strong>.
+      </p>
+      <p class="deck-hero-note" id="deckCountSummary"></p>
     </section>
 
-    <!-- Deck slots + type summary / targets -->
-    <section class="deck-shell">
-      <div class="deck-header-row">
-        <h2>Your deck</h2>
-        <button id="clearDeck" class="btn btn-ghost" type="button">Clear deck</button>
+    <!-- LEADERS -->
+    <section class="deck-section">
+      <div class="deck-section-head">
+        <h2>Leaders</h2>
+        <p>Choose exactly one Driver and one Kart.</p>
       </div>
-
-      <div id="deckSlots" class="deck-slots" aria-label="Deck slots"></div>
-
-      <section class="deck-settings">
-        <h3>Type breakdown</h3>
-        <p class="deck-settings-help">Configure rough targets for each card type and see how your current deck compares. These targets are optional and only used for guidance.</p>
-        <div class="deck-settings-grid">
-          <div class="deck-setting">
-            <label>Drivers
-              <input id="targetDriver" type="number" min="0" value="1" />
-            </label>
-            <div class="deck-type-count" data-type="driver"></div>
+      <div class="deck-leaders">
+        <button class="leader-slot deck-card-slot" data-group="driver" type="button">
+          <div class="slot-placeholder">
+            <span class="plus">+</span>
+            <span class="label">Driver</span>
           </div>
-          <div class="deck-setting">
-            <label>Karts
-              <input id="targetKart" type="number" min="0" value="1" />
-            </label>
-            <div class="deck-type-count" data-type="kart"></div>
+        </button>
+        <button class="leader-slot deck-card-slot" data-group="kart" type="button">
+          <div class="slot-placeholder">
+            <span class="plus">+</span>
+            <span class="label">Kart</span>
           </div>
-          <div class="deck-setting">
-            <label>Items
-              <input id="targetItem" type="number" min="0" value="10" />
-            </label>
-            <div class="deck-type-count" data-type="item"></div>
-          </div>
-          <div class="deck-setting">
-            <label>Utilities
-              <input id="targetUtility" type="number" min="0" value="10" />
-            </label>
-            <div class="deck-type-count" data-type="utility"></div>
-          </div>
-          <div class="deck-setting">
-            <label>Fuel
-              <input id="targetFuel" type="number" min="0" value="18" />
-            </label>
-            <div class="deck-type-count" data-type="fuel"></div>
-          </div>
-        </div>
-        <p class="deck-link-hint">Copy the URL above to share this exact deck (including your targets).</p>
-      </section>
+        </button>
+      </div>
     </section>
 
-    <!-- Library / picker -->
+    <!-- ITEMS -->
+    <section class="deck-section">
+      <div class="deck-section-head">
+        <div>
+          <h2>Items</h2>
+          <p>Fill your offensive and defensive toolbox.</p>
+        </div>
+        <label class="slot-count-label">
+          Item slots:
+          <input id="itemSlotCount" type="number" min="0" max="40" value="10" />
+        </label>
+      </div>
+      <div id="itemSlots" class="deck-slot-grid" aria-label="Item slots"></div>
+    </section>
+
+    <!-- UTILITIES -->
+    <section class="deck-section">
+      <div class="deck-section-head">
+        <div>
+          <h2>Utilities</h2>
+          <p>Support, manipulation, and chaos.</p>
+        </div>
+        <label class="slot-count-label">
+          Utility slots:
+          <input id="utilitySlotCount" type="number" min="0" max="40" value="10" />
+        </label>
+      </div>
+      <div id="utilitySlots" class="deck-slot-grid" aria-label="Utility slots"></div>
+    </section>
+
+    <!-- FUEL -->
+    <section class="deck-section">
+      <div class="deck-section-head">
+        <div>
+          <h2>Fuel</h2>
+          <p>Pick a Fuel card, then choose how many copies.</p>
+        </div>
+      </div>
+      <div class="deck-fuel-row">
+        <button id="fuelSlot" class="deck-card-slot fuel-slot" data-group="fuel" type="button">
+          <div class="slot-placeholder">
+            <span class="plus">+</span>
+            <span class="label">Fuel card</span>
+          </div>
+        </button>
+        <label class="fuel-count-label">
+          Copies in deck:
+          <input id="fuelCount" type="number" min="0" max="40" value="0" />
+        </label>
+      </div>
+      <p class="deck-hero-note small">Fuel copies count towards your 40-card limit.</p>
+    </section>
+
+    <section class="deck-actions">
+      <button id="clearDeck" class="btn btn-ghost" type="button">Clear deck</button>
+      <button id="copyLink" class="btn" type="button">Copy deck link</button>
+      <span id="copyStatus" class="copy-status" aria-live="polite"></span>
+    </section>
+
+    <!-- LIBRARY -->
     <section class="deck-library">
       <header class="deck-lib-header">
         <div>
           <h2>Card library</h2>
-          <p>Select a slot above, then click a card here to assign it.</p>
+          <p>Select a slot above, then pick cards here. Library auto-filters by the active slot type.</p>
         </div>
         <button id="scrollTopBtn" class="btn btn-ghost" type="button">Scroll to deck</button>
       </header>
 
       <div class="deck-lib-controls">
         <input id="libSearch" type="search" placeholder="Search name / ID / text..." />
-        <select id="libType">
-          <option value="">All Types</option>
-          <option value="driver">Driver</option>
-          <option value="kart">Kart</option>
-          <option value="item">Item</option>
-          <option value="utility">Utility</option>
-          <option value="fuel">Fuel</option>
-        </select>
         <select id="libRarity">
           <option value="">All Rarities</option>
           <option value="common">Common</option>
@@ -106,7 +137,7 @@
       </div>
 
       <section id="libGrid" class="deck-grid" aria-live="polite"></section>
-      <div id="libEmpty" class="empty" hidden>No cards match your filters.</div>
+      <div id="libEmpty" class="empty" hidden>No cards match your filters or the active slot type.</div>
     </section>
   </main>
 

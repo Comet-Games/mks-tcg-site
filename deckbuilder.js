@@ -3,417 +3,679 @@ const CSV_URL   = 'data/MasterSheet.csv';
 const FRONT_DIR = 'images/cards';
 const FRONT_EXT = 'png';
 const BACK_IMAGE = 'images/back.png';
-const DECK_SLOTS = 12; // tweak if you want more / fewer slots
+
+const DEFAULT_ITEM_SLOTS    = 10;
+const DEFAULT_UTILITY_SLOTS = 10;
+const MAX_DECK_NON_LEADERS  = 40;
+
+// Rarity-based duplicate limits
+const DUP_LIMIT = {
+    common: 4,
+    uncommon: 3,
+    rare: 2,
+    mythic: 1
+};
 
 // ===== State =====
 let CARDS = [];
 let CARD_MAP = new Map(); // card_id -> card
-let DECK = new Array(DECK_SLOTS).fill(null); // stores card_id or null
-let ACTIVE_SLOT = 0;
+
+let driverId = null;
+let kartId   = null;
+
+let itemSlots    = new Array(DEFAULT_ITEM_SLOTS).fill(null);
+let utilitySlots = new Array(DEFAULT_UTILITY_SLOTS).fill(null);
+
+let fuelCardId = null;
+let fuelCount  = 0;
+
+// which section / slot is "active" for assigning from library
+// group: 'driver' | 'kart' | 'item' | 'utility' | 'fuel' | null
+let ACTIVE_GROUP = null;
+// index for item / utility slots
+let ACTIVE_INDEX = null;
 
 // ===== DOM =====
-const deckSlotsEl = document.getElementById('deckSlots');
-const clearDeckBtn = document.getElementById('clearDeck');
+const leaderSlotsEls   = document.querySelectorAll('.leader-slot');
+const itemSlotsEl      = document.getElementById('itemSlots');
+const utilitySlotsEl   = document.getElementById('utilitySlots');
+const fuelSlotEl       = document.getElementById('fuelSlot');
+const fuelCountEl      = document.getElementById('fuelCount');
+const itemCountEl      = document.getElementById('itemSlotCount');
+const utilityCountEl   = document.getElementById('utilitySlotCount');
+
+const clearDeckBtn     = document.getElementById('clearDeck');
+const copyLinkBtn      = document.getElementById('copyLink');
+const copyStatusEl     = document.getElementById('copyStatus');
+const deckCountSummary = document.getElementById('deckCountSummary');
 
 const libGrid   = document.getElementById('libGrid');
 const libEmpty  = document.getElementById('libEmpty');
 const libSearch = document.getElementById('libSearch');
-const libType   = document.getElementById('libType');
 const libRarity = document.getElementById('libRarity');
 
 const scrollTopBtn = document.getElementById('scrollTopBtn');
-
-const targetDriver  = document.getElementById('targetDriver');
-const targetKart    = document.getElementById('targetKart');
-const targetItem    = document.getElementById('targetItem');
-const targetUtility = document.getElementById('targetUtility');
-const targetFuel    = document.getElementById('targetFuel');
-
-const typeCountEls  = document.querySelectorAll('.deck-type-count');
 
 // ===== Helpers =====
 const txt = s => (s ?? '').toString().trim();
 const lc  = s => txt(s).toLowerCase();
 
 function rarityKey(r) {
-  const v = lc(r);
-  if (v.startsWith('myth')) return 'mythic';
-  if (v.startsWith('rare') && !v.includes('un')) return 'rare';
-  if (v.startsWith('un')) return 'uncommon';
-  return 'common';
+    const v = lc(r);
+    if (v.startsWith('myth')) return 'mythic';
+    if (v.startsWith('rare') && !v.includes('un')) return 'rare';
+    if (v.startsWith('un')) return 'uncommon';
+    return 'common';
 }
 
-function titleCase(s) {
-  s = txt(s);
-  return s ? s[0].toUpperCase() + s.slice(1) + s.slice(1) : s;
+function allowedCopiesFor(card) {
+    return DUP_LIMIT[rarityKey(card.rarity)] ?? 4;
 }
 
-// Fuel detection, similar to catalogue
 function isFuel(card) {
-  const type = lc(card.type || '');
-  const name = lc(card.name || '');
-  const id   = lc(card.card_id || '');
+    const type = lc(card.type || '');
+    const name = lc(card.name || '');
+    const id   = lc(card.card_id || '');
 
-  if (type.includes('fuel')) return true;
-  if (name === 'fuel' || name.startsWith('fuel ')) return true;
-  if (!type && /^f\d{3,}$/i.test(id)) return true;
-  return false;
+    if (type.includes('fuel')) return true;
+    if (name === 'fuel' || name.startsWith('fuel ')) return true;
+    if (!type && /^f\d{3,}$/i.test(id)) return true;
+    return false;
 }
 
 function mapRow(row) {
-  const card = {
-    name:    row['Card Name'] ?? '',
-    type:    row['Card Type'] ?? '',
-    rarity:  row['Rarity']    ?? 'Common',
-    card_id: row['Card ID']   ?? '',
-    text:    [
-      row['Offensive Text'], row['Defensive Text'],
-      row['Utility Effect'], row['Flavour Text']
-    ].filter(Boolean).join(' ')
-  };
+    const card = {
+        name:    row['Card Name'] ?? '',
+        type:    row['Card Type'] ?? '',
+        rarity:  row['Rarity']    ?? 'Common',
+        card_id: row['Card ID']   ?? '',
+        text:    [
+            row['Offensive Text'], row['Defensive Text'],
+            row['Utility Effect'], row['Flavour Text']
+        ].filter(Boolean).join(' ')
+    };
 
-  card.type   = txt(card.type);
-  card.rarity = txt(card.rarity);
-  card.name   = txt(card.name);
-  card.card_id = txt(card.card_id);
+    card.name    = txt(card.name);
+    card.type    = txt(card.type);
+    card.rarity  = txt(card.rarity);
+    card.card_id = txt(card.card_id);
 
-  return card;
+    return card;
 }
 
 function frontImagePath(card) {
-  const id = txt(card.card_id);
-  if (!id) return '';
+    const id = txt(card.card_id);
+    if (!id) return '';
 
-  if (isFuel(card)) {
-    // Fuel: f001.png, etc.
-    return `${FRONT_DIR}/${encodeURIComponent(id.toLowerCase())}.${FRONT_EXT}`;
-  }
-  // Everything else: ID_vv1.png
-  return `${FRONT_DIR}/${encodeURIComponent(id + "_vv1")}.${FRONT_EXT}`;
+    if (isFuel(card)) {
+        return `${FRONT_DIR}/${encodeURIComponent(id.toLowerCase())}.${FRONT_EXT}`;
+    }
+    return `${FRONT_DIR}/${encodeURIComponent(id + "_vv1")}.${FRONT_EXT}`;
 }
 
-// ===== Deck rendering =====
-function renderDeck() {
-  deckSlotsEl.innerHTML = DECK.map((id, idx) => {
-    const isActive = idx === ACTIVE_SLOT;
-    const card = id ? CARD_MAP.get(id) : null;
-    const front = card ? frontImagePath(card) : null;
-    const type  = card ? (isFuel(card) ? 'Fuel' : card.type || 'Unknown') : null;
+// ===== Deck counts & limits =====
+function totalNonLeaderCount() {
+    const items    = itemSlots.filter(Boolean).length;
+    const utilities= utilitySlots.filter(Boolean).length;
+    const fuel     = fuelCount;
+    return items + utilities + fuel;
+}
+
+function countCardCopies(cardId) {
+    let n = 0;
+    for (const id of itemSlots) if (id === cardId) n++;
+    for (const id of utilitySlots) if (id === cardId) n++;
+    if (fuelCardId === cardId) n += fuelCount;
+    return n;
+}
+
+// ===== Rendering slots =====
+function renderLeaderSlots() {
+    leaderSlotsEls.forEach(btn => {
+        const group = btn.dataset.group; // 'driver' or 'kart'
+        const id    = group === 'driver' ? driverId : kartId;
+        const card  = id ? CARD_MAP.get(id) : null;
+
+        btn.innerHTML = ''; // clear
+
+        if (card) {
+            const front = frontImagePath(card);
+            btn.classList.add('filled');
+            btn.insertAdjacentHTML('beforeend', `
+                <div class="card-wrap rarity-${rarityKey(card.rarity)}">
+                  <div class="card">
+                    <span class="glow"></span>
+                    <div class="face front">
+                      <img src="${front}" alt="${card.name} front">
+                    </div>
+                  </div>
+                </div>
+            `);
+        } else {
+            btn.classList.remove('filled');
+            btn.insertAdjacentHTML('beforeend', `
+                <div class="slot-placeholder">
+                  <span class="plus">+</span>
+                  <span class="label">${group === 'driver' ? 'Driver' : 'Kart'}</span>
+                </div>
+            `);
+        }
+
+        if (ACTIVE_GROUP === group) {
+            btn.style.outline = '2px solid rgba(77,163,255,0.9)';
+        } else {
+            btn.style.outline = 'none';
+        }
+    });
+}
+
+function renderCardSlot(cardId, placeholderLabel, isActive) {
+    const card = cardId ? CARD_MAP.get(cardId) : null;
+
+    if (!card) {
+        return `
+      <button class="deck-card-slot" type="button">
+        <div class="slot-placeholder">
+          <span class="plus">+</span>
+          <span class="label">${placeholderLabel}</span>
+        </div>
+      </button>`;
+    }
+
+    const front = frontImagePath(card);
+    const rar   = rarityKey(card.rarity);
 
     return `
-      <button class="deck-slot${isActive ? ' active' : ''}" data-slot="${idx}" type="button">
-        ${card ? `
-          <div class="deck-slot-thumb">
-            <img src="${front}" alt="${card.name} front">
+      <button class="deck-card-slot" type="button">
+        <div class="card-wrap rarity-${rar}">
+          <div class="card">
+            <span class="glow"></span>
+            <div class="face front">
+              <img src="${front}" alt="${card.name} front">
+            </div>
           </div>
-          <div class="deck-slot-meta">
-            <div class="deck-slot-name">${card.name}</div>
-            <div class="deck-slot-type">${type}${card.card_id ? ` • ${card.card_id}` : ''}</div>
-          </div>
-          <span class="deck-slot-clear" data-clear="${idx}" aria-label="Remove card">×</span>
-        ` : `
-          <div class="deck-slot-empty">
-            <span class="plus">+</span>
-            <span class="label">Empty slot</span>
-          </div>
-        `}
-      </button>
-    `;
-  }).join('');
-
-  wireDeckSlotEvents();
-  updateTypeSummary();
-  updateUrlFromState();
+        </div>
+      </button>`;
 }
 
-function wireDeckSlotEvents() {
-  deckSlotsEl.querySelectorAll('.deck-slot').forEach(btn => {
-    const idx = Number(btn.dataset.slot);
-    btn.addEventListener('click', (e) => {
-      const clear = e.target.closest('.deck-slot-clear');
-      if (clear) {
-        // Clear this slot
-        const ci = Number(clear.dataset.clear);
-        DECK[ci] = null;
-        if (ACTIVE_SLOT === ci) ACTIVE_SLOT = 0;
-        renderDeck();
-        return;
-      }
+function renderItemSlots() {
+    const label = 'Item';
+    itemSlotsEl.innerHTML = itemSlots
+      .map((id, idx) => renderCardSlot(id, label, ACTIVE_GROUP === 'item' && ACTIVE_INDEX === idx))
+      .join('');
 
-      ACTIVE_SLOT = idx;
-      renderDeck();
-      document.querySelector('.deck-shell').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    Array.from(itemSlotsEl.querySelectorAll('.deck-card-slot')).forEach((btn, idx) => {
+        btn.dataset.group = 'item';
+        btn.dataset.index = idx;
+        if (ACTIVE_GROUP === 'item' && ACTIVE_INDEX === idx) {
+            btn.style.outline = '2px solid rgba(77,163,255,0.9)';
+        }
+        btn.addEventListener('click', () => {
+            ACTIVE_GROUP = 'item';
+            ACTIVE_INDEX = idx;
+            refreshAll();
+            scrollToLibrary();
+        });
     });
-  });
+}
+
+function renderUtilitySlots() {
+    const label = 'Utility';
+    utilitySlotsEl.innerHTML = utilitySlots
+      .map((id, idx) => renderCardSlot(id, label, ACTIVE_GROUP === 'utility' && ACTIVE_INDEX === idx))
+      .join('');
+
+    Array.from(utilitySlotsEl.querySelectorAll('.deck-card-slot')).forEach((btn, idx) => {
+        btn.dataset.group = 'utility';
+        btn.dataset.index = idx;
+        if (ACTIVE_GROUP === 'utility' && ACTIVE_INDEX === idx) {
+            btn.style.outline = '2px solid rgba(77,163,255,0.9)';
+        }
+        btn.addEventListener('click', () => {
+            ACTIVE_GROUP = 'utility';
+            ACTIVE_INDEX = idx;
+            refreshAll();
+            scrollToLibrary();
+        });
+    });
+}
+
+function renderFuelSlot() {
+    fuelSlotEl.innerHTML = '';
+    const card = fuelCardId ? CARD_MAP.get(fuelCardId) : null;
+
+    if (card) {
+        const front = frontImagePath(card);
+        const rar   = rarityKey(card.rarity);
+        fuelSlotEl.insertAdjacentHTML('beforeend', `
+          <div class="card-wrap rarity-${rar}">
+            <div class="card">
+              <span class="glow"></span>
+              <div class="face front">
+                <img src="${front}" alt="${card.name} front">
+              </div>
+            </div>
+          </div>
+        `);
+    } else {
+        fuelSlotEl.insertAdjacentHTML('beforeend', `
+          <div class="slot-placeholder">
+            <span class="plus">+</span>
+            <span class="label">Fuel card</span>
+          </div>
+        `);
+    }
+
+    fuelSlotEl.style.outline =
+      ACTIVE_GROUP === 'fuel' ? '2px solid rgba(77,163,255,0.9)' : 'none';
 }
 
 // ===== Library rendering =====
+function requiredTypeForActiveGroup(card) {
+    // Return true if card is allowed for the currently active group
+    if (!ACTIVE_GROUP) return true;
+
+    const t = lc(card.type || '');
+    if (ACTIVE_GROUP === 'driver')  return t === 'driver';
+    if (ACTIVE_GROUP === 'kart')    return t === 'kart';
+    if (ACTIVE_GROUP === 'item')    return t === 'item';
+    if (ACTIVE_GROUP === 'utility') return t === 'utility';
+    if (ACTIVE_GROUP === 'fuel')    return isFuel(card);
+
+    return true;
+}
+
 function applyLibFilters() {
-  const q   = lc(libSearch.value);
-  const t   = lc(libType.value);
-  const rar = lc(libRarity.value);
+    const q   = lc(libSearch.value);
+    const rar = lc(libRarity.value);
 
-  let rows = CARDS.filter(c => {
-    const hay = lc([
-      c.name, c.card_id, c.type, c.rarity, c.text
-    ].join(' '));
+    let rows = CARDS.filter(c => {
+        // respect active group type constraint
+        if (!requiredTypeForActiveGroup(c)) return false;
 
-    const qOk = !q || hay.includes(q);
+        const hay = lc([
+            c.name, c.card_id, c.type, c.rarity, c.text
+        ].join(' '));
 
-    let typeOk = true;
-    const typeLc = lc(c.type || '');
-    const fuel = isFuel(c);
+        const qOk  = !q || hay.includes(q);
+        const rOk  = !rar || rarityKey(c.rarity) === rar;
 
-    if (t) {
-      if (t === 'fuel') {
-        typeOk = fuel;
-      } else {
-        if (t === 'driver')   typeOk = !fuel && typeLc === 'driver';
-        else if (t === 'kart')    typeOk = !fuel && typeLc === 'kart';
-        else if (t === 'item')    typeOk = !fuel && typeLc === 'item';
-        else if (t === 'utility') typeOk = !fuel && typeLc === 'utility';
-        else typeOk = !fuel && typeLc === t;
-      }
-    }
+        return qOk && rOk;
+    });
 
-    const rOk = !rar || rarityKey(c.rarity) === rar;
+    rows.sort((a, b) => txt(a.name).localeCompare(txt(b.name)));
 
-    return qOk && typeOk && rOk;
-  });
+    libGrid.innerHTML = rows.map(renderLibCard).join('');
+    libEmpty.hidden = rows.length !== 0;
 
-  // Sort by name then rarity
-  rows.sort((a, b) => txt(a.name).localeCompare(txt(b.name)));
-
-  libGrid.innerHTML = rows.map(renderLibCard).join('');
-  libEmpty.hidden = rows.length !== 0;
-  wireLibCardEvents();
+    wireLibCardEvents();
 }
 
 function renderLibCard(card) {
-  const front = frontImagePath(card);
-  const rar   = rarityKey(card.rarity);
-  const type  = isFuel(card) ? 'Fuel' : (card.type || 'Unknown');
+    const front = frontImagePath(card);
+    const rar   = rarityKey(card.rarity);
+    const typeLabel = isFuel(card) ? 'Fuel' : (card.type || 'Unknown');
 
-  return `
-    <button class="lib-card tile" data-id="${card.card_id}" type="button">
-      <div class="card-wrap rarity-${rar}" data-name="${card.name}">
-        <div class="card">
-          <span class="glow"></span>
-          <div class="face front">
-            <img loading="lazy" src="${front}" alt="${card.name} front">
-          </div>
-          <div class="face back">
-            <img loading="lazy" src="${BACK_IMAGE}" alt="Card back">
+    return `
+      <button class="lib-card tile" data-id="${card.card_id}" type="button">
+        <div class="card-wrap rarity-${rar}">
+          <div class="card">
+            <span class="glow"></span>
+            <div class="face front">
+              <img loading="lazy" src="${front}" alt="${card.name} front">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="title">${card.name}</div>
-      <div class="meta">${type}${card.card_id ? ` • ${card.card_id}` : ''} • ${card.rarity}</div>
-    </button>
-  `;
+        <div class="title">${card.name}</div>
+        <div class="meta">${typeLabel}${card.card_id ? ` • ${card.card_id}` : ''} • ${card.rarity}</div>
+      </button>
+    `;
 }
 
 function wireLibCardEvents() {
-  libGrid.querySelectorAll('.lib-card').forEach(btn => {
-    const id = btn.dataset.id;
-    btn.addEventListener('click', () => {
-      if (!id || !CARD_MAP.has(id)) return;
-
-      // If no active slot, pick first empty or 0
-      if (ACTIVE_SLOT == null) ACTIVE_SLOT = 0;
-      if (DECK[ACTIVE_SLOT] !== null) {
-        const emptyIdx = DECK.findIndex(x => x === null);
-        if (emptyIdx !== -1) ACTIVE_SLOT = emptyIdx;
-      }
-
-      DECK[ACTIVE_SLOT] = id;
-
-      // Advance to next empty slot (nice QoL)
-      const nextEmpty = DECK.findIndex((x, i) => x === null && i > ACTIVE_SLOT);
-      if (nextEmpty !== -1) ACTIVE_SLOT = nextEmpty;
-
-      renderDeck();
+    libGrid.querySelectorAll('.lib-card').forEach(btn => {
+        const id = btn.dataset.id;
+        btn.addEventListener('click', () => {
+            assignCardToActive(id);
+        });
     });
-  });
 }
 
-// ===== Type breakdown / targets =====
-function getDeckTypeCounts() {
-  const counts = {
-    driver: 0,
-    kart: 0,
-    item: 0,
-    utility: 0,
-    fuel: 0,
-    other: 0
-  };
+// ===== Assigning cards to slots =====
+function assignCardToActive(cardId) {
+    if (!ACTIVE_GROUP || !cardId) return;
+    const card = CARD_MAP.get(cardId);
+    if (!card) return;
 
-  for (const id of DECK) {
-    if (!id) continue;
-    const card = CARD_MAP.get(id);
-    if (!card) continue;
-
-    if (isFuel(card)) {
-      counts.fuel++;
-      continue;
+    // Type safety
+    if (!requiredTypeForActiveGroup(card)) {
+        return;
     }
 
-    const t = lc(card.type || '');
-    if (t === 'driver') counts.driver++;
-    else if (t === 'kart') counts.kart++;
-    else if (t === 'item') counts.item++;
-    else if (t === 'utility') counts.utility++;
-    else counts.other++;
-  }
+    // Duplicate limit
+    const currentCopies = countCardCopies(cardId);
+    const maxCopies     = allowedCopiesFor(card);
+    if (currentCopies >= maxCopies) {
+        flashCopyStatus(`Max copies reached for ${card.name} (${maxCopies}×).`);
+        return;
+    }
 
-  return counts;
+    // Deck size limit (non-leaders)
+    // If this operation adds a new non-leader card, respect 40-card cap.
+    let addingNew = false;
+
+    if (ACTIVE_GROUP === 'driver') {
+        driverId = cardId;
+        refreshAll();
+        return;
+    }
+
+    if (ACTIVE_GROUP === 'kart') {
+        kartId = cardId;
+        refreshAll();
+        return;
+    }
+
+    if (ACTIVE_GROUP === 'item') {
+        if (ACTIVE_INDEX == null || ACTIVE_INDEX < 0 || ACTIVE_INDEX >= itemSlots.length) return;
+        if (!itemSlots[ACTIVE_INDEX]) addingNew = true;
+        if (addingNew && totalNonLeaderCount() >= MAX_DECK_NON_LEADERS) {
+            flashCopyStatus(`Deck is at the 40 non-leader card limit.`);
+            return;
+        }
+        itemSlots[ACTIVE_INDEX] = cardId;
+        advanceToNextEmpty('item');
+        refreshAll();
+        return;
+    }
+
+    if (ACTIVE_GROUP === 'utility') {
+        if (ACTIVE_INDEX == null || ACTIVE_INDEX < 0 || ACTIVE_INDEX >= utilitySlots.length) return;
+        if (!utilitySlots[ACTIVE_INDEX]) addingNew = true;
+        if (addingNew && totalNonLeaderCount() >= MAX_DECK_NON_LEADERS) {
+            flashCopyStatus(`Deck is at the 40 non-leader card limit.`);
+            return;
+        }
+        utilitySlots[ACTIVE_INDEX] = cardId;
+        advanceToNextEmpty('utility');
+        refreshAll();
+        return;
+    }
+
+    if (ACTIVE_GROUP === 'fuel') {
+        // Setting / changing the fuel card ID doesn't change deck size.
+        fuelCardId = cardId;
+        refreshAll();
+        return;
+    }
 }
 
-function updateTypeSummary() {
-  const counts = getDeckTypeCounts();
-
-  const targets = {
-    driver:  Number(targetDriver.value)  || 0,
-    kart:    Number(targetKart.value)    || 0,
-    item:    Number(targetItem.value)    || 0,
-    utility: Number(targetUtility.value) || 0,
-    fuel:    Number(targetFuel.value)    || 0
-  };
-
-  typeCountEls.forEach(el => {
-    const type = el.dataset.type;
-    const current = counts[type] ?? 0;
-    const target  = targets[type] ?? 0;
-
-    el.textContent = `${current} / ${target}`;
-
-    el.classList.remove('ok', 'warn');
-    if (!target) return;
-    if (current === target) {
-      el.classList.add('ok');
-    } else {
-      el.classList.add('warn');
+function advanceToNextEmpty(group) {
+    if (group === 'item') {
+        const idx = itemSlots.findIndex((id, i) => !id && i > (ACTIVE_INDEX ?? -1));
+        if (idx !== -1) ACTIVE_INDEX = idx;
+    } else if (group === 'utility') {
+        const idx = utilitySlots.findIndex((id, i) => !id && i > (ACTIVE_INDEX ?? -1));
+        if (idx !== -1) ACTIVE_INDEX = idx;
     }
-  });
+}
+
+// ===== Deck size summary =====
+function updateDeckSummary() {
+    const items  = itemSlots.filter(Boolean).length;
+    const utils  = utilitySlots.filter(Boolean).length;
+    const fuel   = fuelCount;
+    const total  = items + utils + fuel;
+
+    deckCountSummary.textContent =
+        `Deck size (excluding Driver & Kart): ${total} / ${MAX_DECK_NON_LEADERS} `
+        + `(Items: ${items}, Utilities: ${utils}, Fuel: ${fuel})`;
 }
 
 // ===== URL encoding / decoding =====
+// We'll encode as:
+// d=<driverId> (optional)
+// k=<kartId>
+// i=<itemId1.itemId2...> (null slots skipped)
+// u=<utilId1.utilId2...>
+// f=<fuelCardId>,<fuelCount>
+// s=<itemSlotsCount>,<utilitySlotsCount>
 function encodeStateToUrl() {
-  const url = new URL(window.location.href);
+    const url = new URL(window.location.href);
 
-  // Deck: list of IDs, skipping empty slots
-  const ids = DECK.filter(Boolean);
-  if (ids.length) {
-    url.searchParams.set('deck', ids.join('.'));
-  } else {
-    url.searchParams.delete('deck');
-  }
+    if (driverId) url.searchParams.set('d', driverId); else url.searchParams.delete('d');
+    if (kartId)   url.searchParams.set('k', kartId);   else url.searchParams.delete('k');
 
-  // Targets: d:,k:,i:,u:,f:
-  const cfgParts = [
-    `d:${Number(targetDriver.value)  || 0}`,
-    `k:${Number(targetKart.value)    || 0}`,
-    `i:${Number(targetItem.value)    || 0}`,
-    `u:${Number(targetUtility.value) || 0}`,
-    `f:${Number(targetFuel.value)    || 0}`
-  ];
-  const cfgStr = cfgParts.join('.');
+    const items = itemSlots.filter(Boolean);
+    if (items.length) url.searchParams.set('i', items.join('.')); else url.searchParams.delete('i');
 
-  if (cfgStr) {
-    url.searchParams.set('cfg', cfgStr);
-  } else {
-    url.searchParams.delete('cfg');
-  }
+    const utils = utilitySlots.filter(Boolean);
+    if (utils.length) url.searchParams.set('u', utils.join('.')); else url.searchParams.delete('u');
 
-  return url;
+    if (fuelCardId && fuelCount > 0) {
+        url.searchParams.set('f', `${fuelCardId},${fuelCount}`);
+    } else {
+        url.searchParams.delete('f');
+    }
+
+    const s = `${itemSlots.length},${utilitySlots.length}`;
+    url.searchParams.set('s', s);
+
+    return url;
 }
 
 function updateUrlFromState() {
-  const url = encodeStateToUrl();
-  window.history.replaceState({}, '', url);
+    const url = encodeStateToUrl();
+    window.history.replaceState({}, '', url);
 }
 
 function hydrateStateFromUrl() {
-  const url = new URL(window.location.href);
-  const deckParam = url.searchParams.get('deck');
-  const cfgParam  = url.searchParams.get('cfg');
+    const url = new URL(window.location.href);
 
-  // Deck
-  if (deckParam) {
-    const ids = deckParam.split('.').map(s => txt(s)).filter(Boolean);
-    DECK = new Array(DECK_SLOTS).fill(null);
-    ids.slice(0, DECK_SLOTS).forEach((id, i) => {
-      if (CARD_MAP.has(id)) DECK[i] = id;
-    });
-  }
+    const d = txt(url.searchParams.get('d'));
+    const k = txt(url.searchParams.get('k'));
+    const i = txt(url.searchParams.get('i'));
+    const u = txt(url.searchParams.get('u'));
+    const f = txt(url.searchParams.get('f'));
+    const s = txt(url.searchParams.get('s'));
 
-  // Targets
-  if (cfgParam) {
-    const parts = cfgParam.split('.');
-    const map = {};
-    for (const p of parts) {
-      const [k, v] = p.split(':');
-      if (!k) continue;
-      map[k] = Number(v) || 0;
+    if (d && CARD_MAP.has(d)) driverId = d;
+    if (k && CARD_MAP.has(k)) kartId   = k;
+
+    // Slots config
+    if (s) {
+        const parts = s.split(',');
+        const itemLen = Math.min(Math.max(parseInt(parts[0] || DEFAULT_ITEM_SLOTS, 10) || DEFAULT_ITEM_SLOTS, 0), 40);
+        const utilLen = Math.min(Math.max(parseInt(parts[1] || DEFAULT_UTILITY_SLOTS, 10) || DEFAULT_UTILITY_SLOTS, 0), 40);
+        itemSlots    = new Array(itemLen).fill(null);
+        utilitySlots = new Array(utilLen).fill(null);
     }
-    if (map.d != null) targetDriver.value  = map.d;
-    if (map.k != null) targetKart.value    = map.k;
-    if (map.i != null) targetItem.value    = map.i;
-    if (map.u != null) targetUtility.value = map.u;
-    if (map.f != null) targetFuel.value    = map.f;
-  }
+
+    // Items
+    if (i) {
+        const ids = i.split('.').map(txt).filter(Boolean);
+        ids.slice(0, itemSlots.length).forEach((id, idx) => {
+            if (CARD_MAP.has(id)) itemSlots[idx] = id;
+        });
+    }
+
+    // Utilities
+    if (u) {
+        const ids = u.split('.').map(txt).filter(Boolean);
+        ids.slice(0, utilitySlots.length).forEach((id, idx) => {
+            if (CARD_MAP.has(id)) utilitySlots[idx] = id;
+        });
+    }
+
+    // Fuel
+    if (f) {
+        const [fid, nStr] = f.split(',');
+        const n = Math.max(0, Math.min(parseInt(nStr || '0', 10) || 0, MAX_DECK_NON_LEADERS));
+        if (fid && CARD_MAP.has(fid)) {
+            fuelCardId = fid;
+            fuelCount  = n;
+        }
+    }
+
+    // Reflect slot counts in inputs
+    itemCountEl.value    = itemSlots.length;
+    utilityCountEl.value = utilitySlots.length;
+    fuelCountEl.value    = fuelCount;
+}
+
+// ===== Misc =====
+function scrollToLibrary() {
+    document.querySelector('.deck-library').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function flashCopyStatus(msg) {
+    copyStatusEl.textContent = msg;
+    if (!msg) return;
+    setTimeout(() => {
+        if (copyStatusEl.textContent === msg) copyStatusEl.textContent = '';
+    }, 2500);
+}
+
+// ===== Refresh all derived UI =====
+function refreshAll() {
+    renderLeaderSlots();
+    renderItemSlots();
+    renderUtilitySlots();
+    renderFuelSlot();
+    applyLibFilters();
+    updateDeckSummary();
+    updateUrlFromState();
 }
 
 // ===== CSV load =====
 function loadCSV() {
-  Papa.parse(CSV_URL, {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: (res) => {
-      CARDS = res.data
-        .map(mapRow)
-        .filter(c => c.name); // ignore blanks
+    Papa.parse(CSV_URL, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: (res) => {
+            CARDS = res.data
+                .map(mapRow)
+                .filter(c => c.name);
 
-      CARD_MAP = new Map();
-      CARDS.forEach(c => {
-        if (c.card_id) CARD_MAP.set(c.card_id, c);
-      });
+            CARD_MAP = new Map();
+            CARDS.forEach(c => {
+                if (c.card_id) CARD_MAP.set(c.card_id, c);
+            });
 
-      // Hydrate from URL after we know what cards exist
-      hydrateStateFromUrl();
-
-      renderDeck();
-      applyLibFilters();
-    },
-    error: (e) => {
-      console.error(e);
-      libEmpty.textContent = 'Failed to load card data.';
-      libEmpty.hidden = false;
-    }
-  });
+            hydrateStateFromUrl();
+            refreshAll();
+        },
+        error: (e) => {
+            console.error(e);
+            libEmpty.textContent = 'Failed to load card data.';
+            libEmpty.hidden = false;
+        }
+    });
 }
 
-// ===== Wiring =====
-[libSearch, libType, libRarity].forEach(el => {
-  el.addEventListener('input', applyLibFilters);
+// ===== Wire events =====
+
+// Leader slots: click to activate & filter library
+leaderSlotsEls.forEach(btn => {
+    btn.addEventListener('click', () => {
+        ACTIVE_GROUP = btn.dataset.group; // driver / kart
+        ACTIVE_INDEX = null;
+        refreshAll();
+        scrollToLibrary();
+    });
 });
 
-[targetDriver, targetKart, targetItem, targetUtility, targetFuel].forEach(el => {
-  el.addEventListener('input', () => {
-    updateTypeSummary();
+// Fuel slot
+fuelSlotEl.addEventListener('click', () => {
+    ACTIVE_GROUP = 'fuel';
+    ACTIVE_INDEX = null;
+    refreshAll();
+    scrollToLibrary();
+});
+
+// Fuel count change
+fuelCountEl.addEventListener('input', () => {
+    let val = parseInt(fuelCountEl.value || '0', 10) || 0;
+    if (val < 0) val = 0;
+
+    // Enforce deck size
+    const currentNonLeader = totalNonLeaderCount();
+    const fuelDelta = val - fuelCount;
+    if (fuelDelta > 0 && currentNonLeader + fuelDelta > MAX_DECK_NON_LEADERS) {
+        const allowed = MAX_DECK_NON_LEADERS - (currentNonLeader);
+        val = fuelCount + Math.max(0, allowed);
+        flashCopyStatus('Fuel limited by 40-card cap.');
+    }
+
+    // Enforce duplicate limit for this fuel card
+    if (fuelCardId && CARD_MAP.has(fuelCardId)) {
+        const card       = CARD_MAP.get(fuelCardId);
+        const maxCopies  = allowedCopiesFor(card);
+        const othersUsed = countCardCopies(fuelCardId) - fuelCount; // other zones
+        const maxHere    = Math.max(0, maxCopies - othersUsed);
+        if (val > maxHere) {
+            val = maxHere;
+            flashCopyStatus(`Fuel copies limited to ${maxHere}× for this card.`);
+        }
+    }
+
+    fuelCount = val;
+    fuelCountEl.value = fuelCount;
+    updateDeckSummary();
     updateUrlFromState();
-  });
 });
 
+// Item / utility slot count changes
+itemCountEl.addEventListener('input', () => {
+    let n = Math.min(40, Math.max(0, parseInt(itemCountEl.value || '0', 10) || 0));
+    itemSlots.length = n;
+    for (let i = 0; i < n; i++) if (itemSlots[i] === undefined) itemSlots[i] = null;
+    refreshAll();
+});
+
+utilityCountEl.addEventListener('input', () => {
+    let n = Math.min(40, Math.max(0, parseInt(utilityCountEl.value || '0', 10) || 0));
+    utilitySlots.length = n;
+    for (let i = 0; i < n; i++) if (utilitySlots[i] === undefined) utilitySlots[i] = null;
+    refreshAll();
+});
+
+// Library filters
+[libSearch, libRarity].forEach(el => {
+    el.addEventListener('input', applyLibFilters);
+});
+
+// Clear deck
 clearDeckBtn.addEventListener('click', () => {
-  DECK = new Array(DECK_SLOTS).fill(null);
-  ACTIVE_SLOT = 0;
-  renderDeck();
+    driverId = null;
+    kartId   = null;
+    itemSlots    = new Array(DEFAULT_ITEM_SLOTS).fill(null);
+    utilitySlots = new Array(DEFAULT_UTILITY_SLOTS).fill(null);
+    fuelCardId = null;
+    fuelCount  = 0;
+    itemCountEl.value    = DEFAULT_ITEM_SLOTS;
+    utilityCountEl.value = DEFAULT_UTILITY_SLOTS;
+    fuelCountEl.value    = 0;
+    ACTIVE_GROUP = null;
+    ACTIVE_INDEX = null;
+    refreshAll();
 });
 
+// Copy link
+copyLinkBtn.addEventListener('click', async () => {
+    const url = encodeStateToUrl().toString();
+    try {
+        await navigator.clipboard.writeText(url);
+        flashCopyStatus('Deck link copied to clipboard.');
+    } catch {
+        flashCopyStatus('Unable to copy link. You can copy the URL bar manually.');
+    }
+});
+
+// Scroll to top
 scrollTopBtn.addEventListener('click', () => {
-  document.querySelector('.deck-shell').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelector('.deck-main').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 document.addEventListener('DOMContentLoaded', loadCSV);

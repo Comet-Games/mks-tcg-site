@@ -1,6 +1,6 @@
-/* =======================
-   MKS TCG – DECKBUILDER
-   ======================= */
+/* ============================
+   MKS TCG — DECKBUILDER PAGE
+   ============================ */
 
 .deck-page .deck-main {
     max-width: 1200px;
@@ -8,6 +8,7 @@
     padding: 0 1rem 2.5rem;
 }
 
+/* ===== Hero ===== */
 .deck-hero {
     margin: 0 0 1.25rem;
     padding: 1.25rem 1rem;
@@ -23,15 +24,26 @@
     font-size: 2.2rem;
 }
 
-.deck-shell {
+.deck-hero-note {
+    margin: .2rem 0 0;
+    font-size: .85rem;
+    color: #cfe2ff;
+}
+
+.deck-hero-note.small {
+    font-size: .8rem;
+}
+
+/* ===== Sections ===== */
+.deck-section {
     border-radius: 1rem;
     border: 1px solid #1b2836;
     background: #0e151f;
     padding: 1rem 1rem 1.25rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
-.deck-header-row {
+.deck-section-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -39,137 +51,29 @@
     margin-bottom: .75rem;
 }
 
-.deck-header-row h2 {
+.deck-section-head h2 {
     margin: 0;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: .04em;
     font-size: 1.6rem;
 }
 
-/* Slots */
-.deck-slots {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: .75rem;
-    margin-bottom: 1rem;
-}
-
-.deck-slot {
-    position: relative;
-    border-radius: .8rem;
-    border: 1px solid #1b2836;
-    background: #0f1620;
-    padding: .4rem .45rem;
-    display: flex;
-    align-items: center;
-    gap: .45rem;
-    cursor: pointer;
-    text-align: left;
-}
-
-.deck-slot.active {
-    border-color: #4da3ff;
-    box-shadow: 0 0 0 1px #4da3ff55;
-}
-
-.deck-slot-thumb {
-    width: 3rem;
-    aspect-ratio: 5/7;
-    border-radius: .4rem;
-    overflow: hidden;
-    border: 1px solid #1b2836;
-    flex-shrink: 0;
-}
-
-.deck-slot-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.deck-slot-meta {
-    min-width: 0;
-}
-
-.deck-slot-name {
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: .03em;
-    font-size: .95rem;
-    margin-bottom: .1rem;
-}
-
-.deck-slot-type {
-    font-size: .75rem;
-    color: var(--muted);
-}
-
-.deck-slot-clear {
-    position: absolute;
-    top: .25rem;
-    right: .35rem;
-    font-size: .9rem;
-    opacity: .7;
-}
-
-.deck-slot-clear:hover {
-    opacity: 1;
-}
-
-.deck-slot-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: .2rem;
-    width: 100%;
-    padding: .2rem 0;
-}
-
-.deck-slot-empty .plus {
-    font-size: 1.3rem;
-    line-height: 1;
-}
-
-.deck-slot-empty .label {
-    font-size: .8rem;
-    color: var(--muted);
-}
-
-/* Settings / type breakdown */
-.deck-settings {
-    margin-top: .5rem;
-}
-
-.deck-settings h3 {
-    margin: 0 0 .3rem;
-    font-family: 'Bebas Neue', sans-serif;
-    letter-spacing: .04em;
-    font-size: 1.3rem;
-}
-
-.deck-settings-help {
-    margin: 0 0 .6rem;
+.deck-section-head p {
+    margin: .15rem 0 0;
     font-size: .85rem;
-    color: #9fb2cb;
-}
-
-.deck-settings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: .5rem;
-    margin-bottom: .4rem;
-}
-
-.deck-setting label {
-    display: flex;
-    flex-direction: column;
-    gap: .2rem;
-    font-size: .8rem;
     color: #cfe2ff;
 }
 
-.deck-setting input[type="number"] {
+/* ===== Slot count labels ===== */
+.slot-count-label {
+    font-size: .85rem;
+    color: #cfe2ff;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.slot-count-label input[type="number"] {
     background: #0f1620;
     color: var(--ink);
     border: 1px solid #1c2a3a;
@@ -179,26 +83,130 @@
     font-size: .85rem;
 }
 
-.deck-type-count {
-    margin-top: .2rem;
+/* ===== Leaders ===== */
+.deck-leaders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: .75rem;
+}
+
+/* ===== Generic card slot ===== */
+.deck-card-slot {
+    border-radius: .8rem;
+    border: 1px solid #1b2836;
+    background: #0f1620;
+    padding: .4rem;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deck-card-slot .card-wrap,
+.deck-card-slot .card {
+    width: 100%;
+    max-width: 8rem;
+    aspect-ratio: var(--ratio);
+}
+
+/* When a card is slotted, show the full card */
+.deck-card-slot .card-wrap {
+    perspective: 1200px;
+}
+
+.deck-card-slot .card {
+    position: relative;
+    transform-style: preserve-3d;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.deck-card-slot .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+}
+
+.deck-card-slot .face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Placeholder state */
+.slot-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .15rem;
+    padding: .3rem 0;
+    color: var(--muted);
+}
+
+.slot-placeholder .plus {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.slot-placeholder .label {
     font-size: .8rem;
 }
 
-.deck-type-count.ok {
-    color: #4ade80;
+/* ===== Item / Utility slot grids ===== */
+.deck-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: .5rem;
 }
 
-.deck-type-count.warn {
-    color: #fb923c;
+/* ===== Fuel row ===== */
+.deck-fuel-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: center;
 }
 
-.deck-link-hint {
-    margin: .1rem 0 0;
+.fuel-slot .card-wrap,
+.fuel-slot .card {
+    max-width: 6rem;
+}
+
+.fuel-count-label {
+    font-size: .85rem;
+    color: #cfe2ff;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+}
+
+.fuel-count-label input[type="number"] {
+    background: #0f1620;
+    color: var(--ink);
+    border: 1px solid #1c2a3a;
+    border-radius: .45rem;
+    padding: .2rem .4rem;
+    max-width: 5rem;
+    font-size: .85rem;
+}
+
+/* ===== Actions row ===== */
+.deck-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.copy-status {
     font-size: .8rem;
     color: #9fb2cb;
 }
 
-/* Library */
+/* ===== Library ===== */
 .deck-library {
     border-radius: 1rem;
     border: 1px solid #1b2836;
@@ -244,13 +252,59 @@
     font-size: .85rem;
 }
 
-/* Library grid – reuse tile style but with own grid wrapper */
+/* ===== Library grid (search results) ===== */
 .deck-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: .75rem;
 }
 
+/* Make sure library cards fit their tiles, not overflow */
 .deck-grid .tile {
+    border-radius: .75rem;
+    border: 1px solid #1b2836;
+    background: #0f1620;
+    padding: .3rem .3rem .45rem;
+    text-align: left;
+}
+
+.deck-grid .card-wrap,
+.deck-grid .card {
+    width: 100%;
+    aspect-ratio: var(--ratio);
+}
+
+.deck-grid .card {
+    border-radius: 1rem;
+    overflow: hidden;
     position: relative;
+}
+
+.deck-grid .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+}
+
+.deck-grid .face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.deck-grid .title {
+    margin-top: .3rem;
+    font-size: .9rem;
+}
+
+.deck-grid .meta {
+    font-size: .75rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 720px) {
+    .deck-fuel-row {
+        align-items: flex-start;
+    }
 }
