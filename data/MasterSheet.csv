@@ -38,8 +38,8 @@ blue shell,item,mythical,0,,,track breaker:,Target the leading Driver. they lose
 thunder cloud,item,mythical,0,,,passing storm:,"When drawn: Immediately place this card into your Item Slot and activate it. (discard the card that was in there... if any) Roll an extra d6 each movement phase. If you pass another driver, give them this card. After 2 rounds, if you still have it, lose 8 places and -2 Speed next turn",0,,,0,0,,,Jamie you tosser!,lee pryce,s037,v1
 jamie - grandad jam,driver,mythical,0,3,3,jack of trades,Copy the ability of another Driver in play. It costs 1 extra Fuel burnt to activate,,,,,,0,,Well that was easy,lee pryce,d001,v1
 dom - funky kong,driver,mythical,0,5,1,monkey business,Ignore incoming item,,,,,,3,,funktastic!,lee pryce,d002,v1
-brandon - the off roader,driver,mythical,0,2,4,top formula,"For each Fuel burned, roll 1d6 and move forward that many places",,,,,,01-Apr,,FerBrando is faster than you,lee pryce,d003,v1
-poppy - golden goose,driver,rare,0,2,4,remember when... ,Return up to (Fuel burned -2) cards from your discard pile to your hand,,,,,,03-May,,HONK,lee pryce,d004,v1
+brandon - the off roader,driver,mythical,0,2,4,top formula,"For each Fuel burned, roll 1d6 and move forward that many places",,,,,,1-4,,FerBrando is faster than you,lee pryce,d003,v1
+poppy - golden goose,driver,rare,0,2,4,remember when... ,Return up to (Fuel burned -2) cards from your discard pile to your hand,,,,,,3-5,,HONK,lee pryce,d004,v1
 harry - the scruffle,driver,rare,0,4,2,fight for it,"Target a Driver ahead. If your Speed is greater than theirs, gain 15 places. Otherwise, gain 7 places and they lose 10 places",,,,,,2,,"I can't lie, you caught me with my pants down...",lee pryce,d005,v1
 lee - shy guy,driver,rare,0,3,3,bribery,Swap position with the driver ahead of you,,,,,,3,,wibbly wobbly timey wimey,lee pryce,d006,v1
 ethan - the dunk master,driver,rare,0,3,3,slam dunk,"You may target any Driver with any Item this turn, regardless of distance",,,,,,3,,For the Dunknation!,lee pryce,d007,v1
@@ -156,7 +156,7 @@ double bob-omb,item,uncommon,1,,,twin toss:,"target up to 2 drivers within 20 pl
 giga bob-omb,item,uncommon,0,,,mega detonation:,all drivers ahead lose 8 places. You lose 3 places,3,core blast:,"target any driver, they lose 12 places and you lose 2 places",3,18,,,For when subtlety's already exploded,lee pryce,s044,v1
 dash ring,item,uncommon,1,,,aero burst:,"all drivers behind gain 3 places, you gain 6 places",1,wind zone:,all drivers move 4 places,0,0,,,Catch my draft-if you can keep up,lee pryce,s045,v1
 bob-omb cannon,item,rare,0,,,bombardment:,"target a driver, on fail they lose 12 places",3,explosive volley,all other drivers lose 6 places,2,16,,,"Hold the trigger, pray for survivors",lee pryce,s046,v1
-fuel,fuel,common,,,,,,,,,,,,,,lee pryce,f001,v1
+fuel,fuel,common,,,,,,,,,,,,plain ol fuel,,lee pryce,f001,v1
 fuel,fuel,uncommon,,,,,,,,,,,,one-up racing,,matthew gleeson,f002,v1
 fuel,fuel,rare,,,,,,,,,,,,mario motors,,lee pryce,f003,v1
 fuel,fuel,rare,,,,,,,,,,,,luigi tires,,lee pryce,f004,v1
@@ -165,3 +165,9 @@ fuel,fuel,uncommon,,,,,,,,,,,,squid motor oil,,matthew gleeson,f006,v1
 fuel,fuel,uncommon,,,,,,,,,,,,natural oil banana,,matthew gleeson,f007,v1
 fuel,fuel,rare,,,,,,,,,,,,bowser oil red,,lee pryce,f008,v1
 fuel,fuel,rare,,,,,,,,,,,,bowser oil yellow,,lee pryce,f009,v1
+kian - rainbow master,driver,mythical,0,1,5,KIRYU CHAN:,Burn X Fuel: Advance X multiplied by your position,,,,,,1-5,,oh Luuuuigiiii,lee pryce,d022,v1
+John - High Commander,driver,mythical,0,4,2,Chaos Demon:,"Burn X Fuel: Choose another driver.
+They may burn up to X Fuel.
+For each Fuel burned this way, you gain 2 places.
+For each Fuel not burned, you draw 1 card.",,,,,,1-5,,I'm using tilt controls! I'm using tilt controls!,lee pryce,d023,v1
+,,,,,,,,,,,,,,,,,,
