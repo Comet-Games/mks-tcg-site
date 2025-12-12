@@ -2,7 +2,7 @@ Card Name,Card Type,Rarity,Play Cost,Speed,Handling,Offensive Ability,Offensive 
 banana,item,common,0,,,banana toss:,"Target any driver, on fail they lose 8 Places",1,banana trail:,Add 4 to your dodge for this defence,1,16,,,Classic defense in a yellow package,lee pryce,s001,v1
 blooper,item,uncommon,0,,,inkstorm:,all other drivers roll 1d6 and subtract it from their next movement roll,2,blinding spray:,give the attacker -3 handling on their next dodge roll,1,0,,,A splash of chaos,lee pryce,s002,v1
 bob-omb,item,rare,0,,,chain detonation:,"target all drivers within 15 places, on fail they lose 12 places",2,final blast:,explode... all drivers within 15 places lose 8 places,1,18,,,High risk - big boom,lee pryce,s003,v1
-boo,item,rare,0,,,sneaky snatch:,Steal 1 random card from any opponents hand,2,vanishing act:,become intangible until your next turn,2,0,,,Now you see me - now you dont…,lee pryce,s004,v1
+boo,item,rare,0,,,sneaky snatch:,Steal 1 random card from any opponents hand,2,vanishing act:,become intangible until your next turn,2,0,,,Now you see me - now you dontï¿½,lee pryce,s004,v1
 boomerang,item,uncommon,0,,,boomer bash:,"target up to 2 drivers within 15 places, on fail they lose 12 places",2,rebound rush:,"if you dodge successfully, send the item back at the attacker",1,0,,,What goes around - comes around,lee pryce,s005,v1
 bullet bill,item,mythical,3,,,full throttle:,move up to 15 places behind first place,3,bill boost:,gain 15 places,3,0,,,When in doubt - blast past,lee pryce,s006,v1
 bowser shell,item,rare,0,,,royal rampage:,"Target all drivers within 15 places, on fail they lose 10 places",2,spiky payback:,"negate the attack, attacker loses 8 places",2,17,,,Big Shell - Bigger Problem,lee pryce,s007,v1
@@ -170,4 +170,3 @@ John - High Commander,driver,mythical,0,4,2,Chaos Demon:,"Burn X Fuel: Choose an
 They may burn up to X Fuel.
 For each Fuel burned this way, you gain 2 places.
 For each Fuel not burned, you draw 1 card.",,,,,,1-5,,I'm using tilt controls! I'm using tilt controls!,lee pryce,d023,v1
-,,,,,,,,,,,,,,,,,,
